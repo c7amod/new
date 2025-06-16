@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>احمد تيوب</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-color: #2b2d31;
-      --card-color: #3a3d41;
+      --bg-color: #1e1e1e;
+      --card-color: #2a2a2a;
       --accent-color: #00bcd4;
       --accent-dark: #0097a7;
       --text-color: #f0f0f0;
-      --text-muted: #b0b0b0;
+      --text-muted: #999;
       --input-bg: #2e2e2e;
       --input-border: #444;
     }
@@ -21,7 +21,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Tajawal', sans-serif;
+      font-family: 'Cairo', sans-serif;
     }
 
     body {
@@ -40,13 +40,13 @@
     .header h1 {
       color: var(--accent-color);
       font-size: 2.5rem;
-      margin-bottom: 10px;
       font-weight: 900;
     }
 
     .header p {
       color: var(--text-muted);
       font-size: 1.1rem;
+      margin-top: 10px;
     }
 
     .videos-container {
@@ -72,7 +72,8 @@
     .video-player {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%;
+      aspect-ratio: 1 / 1; /* مربعة */
+      background: black;
     }
 
     .video-player video {
@@ -137,7 +138,7 @@
     #contact {
       margin-top: 80px;
       padding: 50px 20px;
-      background-color: #202225;
+      background-color: #181818;
     }
 
     .contact-container {
@@ -219,12 +220,10 @@
   </div>
 
   <div class="videos-container">
-    <!-- الفيديو الأول -->
     <div class="video-item">
       <div class="video-player">
         <video controls style="display: none;">
           <source src="videos/video1.mp4" type="video/mp4">
-          المتصفح لا يدعم تشغيل الفيديو
         </video>
         <div class="video-thumbnail">
           <img src="thumbnails/video1-thumb.jpg" alt="ثمبنيل الفيديو الأول">
@@ -232,17 +231,15 @@
         </div>
       </div>
       <div class="video-info">
-        <h2> الفيديو الأول</h2>
-        <p>الوصف.</p>
+        <h2>Fuck SOCIETY</h2>
+        <p>.</p>
       </div>
     </div>
 
-    <!-- الفيديو الثاني -->
     <div class="video-item">
       <div class="video-player">
         <video controls style="display: none;">
           <source src="videos/video2.mp4" type="video/mp4">
-          المتصفح لا يدعم تشغيل الفيديو
         </video>
         <div class="video-thumbnail">
           <img src="thumbnails/video2-thumb.jpg" alt="ثمبنيل الفيديو الثاني">
@@ -250,33 +247,28 @@
         </div>
       </div>
       <div class="video-info">
-        <h2>الفيديو الثاني</h2>
-        <p>الوصف.</p>
+        <h2>I Did It for Me..</h2>
+        <p>.</p>
       </div>
     </div>
   </div>
 
-  <!-- قسم التواصل -->
   <section id="contact">
     <div class="contact-container">
       <h2>📬 تواصل معنا</h2>
       <form action="https://formspree.io/f/movwwrkn" method="POST">
         <label for="name">الاسم:</label>
         <input type="text" id="name" name="name" required>
-
         <label for="email">البريد الإلكتروني:</label>
         <input type="email" id="email" name="email" required>
-
         <label for="message">الرسالة:</label>
         <textarea id="message" name="message" rows="5" required></textarea>
-
         <button type="submit">إرسال</button>
       </form>
     </div>
   </section>
 
   <script>
-    // تفعيل تشغيل الفيديو عند النقر على الثمبنيل
     document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
       thumbnail.addEventListener('click', function () {
         const videoContainer = this.parentElement;
