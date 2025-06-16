@@ -1,238 +1,293 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع الفيديوهات الخاص بي</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --dark-bg: #121212;
-            --darker-bg: #0a0a0a;
-            --accent: #ff4757;
-            --text: #e0e0e0;
-            --text-secondary: #a0a0a0;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'El Messiri', sans-serif; /* الخط المميز */
-        }
-        
-        body {
-            background-color: var(--dark-bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .header h1 {
-            color: var(--accent);
-            margin-bottom: 5px;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        
-        .header p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-        
-        .videos-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .video-item {
-            background-color: var(--darker-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-        
-        .video-item:hover {
-            transform: translateY(-5px);
-        }
-        
-        .video-player {
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* نسبة 16:9 */
-            position: relative;
-            background-color: black;
-        }
-        
-        .video-player video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover; /* لضمان تغطية المساحة */
-        }
-        
-        /* ثيمنيل الفيديو */
-        .video-thumbnail {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000;
-            cursor: pointer;
-            z-index: 2;
-        }
-        
-        .video-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .play-icon {
-            position: absolute;
-            color: white;
-            font-size: 3rem;
-            opacity: 0.8;
-            transition: all 0.3s ease;
-        }
-        
-        .video-thumbnail:hover .play-icon {
-            transform: scale(1.1);
-            opacity: 1;
-        }
-        
-        .video-info {
-            padding: 18px;
-        }
-        
-        .video-info h2 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: white;
-            font-weight: 600;
-        }
-        
-        .video-info p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        /* تصميم متجاوب للجوال */
-        @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.6rem;
-            }
-            
-            .video-info {
-                padding: 15px;
-            }
-            
-            .video-info h2 {
-                font-size: 1.15rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>موقع الفيديوهات الخاص بي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #2b2d31;
+      --card-color: #3a3d41;
+      --accent-color: #00bcd4;
+      --accent-dark: #0097a7;
+      --text-color: #f0f0f0;
+      --text-muted: #b0b0b0;
+      --input-bg: #2e2e2e;
+      --input-border: #444;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    .header {
+      text-align: center;
+      padding: 50px 20px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .header h1 {
+      color: var(--accent-color);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .videos-container {
+      max-width: 900px;
+      margin: 40px auto 0;
+      padding: 0 20px;
+    }
+
+    .video-item {
+      background-color: var(--card-color);
+      border-radius: 12px;
+      margin-bottom: 30px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .video-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+
+    .video-player {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+    }
+
+    .video-player video {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-thumbnail {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      cursor: pointer;
+    }
+
+    .video-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      transition: opacity 0.3s;
+    }
+
+    .video-thumbnail:hover img {
+      opacity: 0.6;
+    }
+
+    .play-icon {
+      position: absolute;
+      font-size: 3rem;
+      color: white;
+      opacity: 0.9;
+      transition: transform 0.3s;
+    }
+
+    .video-thumbnail:hover .play-icon {
+      transform: scale(1.2);
+    }
+
+    .video-info {
+      padding: 20px;
+    }
+
+    .video-info h2 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: var(--accent-color);
+    }
+
+    .video-info p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    #contact {
+      margin-top: 80px;
+      padding: 50px 20px;
+      background-color: #202225;
+    }
+
+    .contact-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: var(--card-color);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    #contact h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.9rem;
+      color: var(--accent-color);
+    }
+
+    #contact label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-color);
+    }
+
+    #contact input,
+    #contact textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    #contact input:focus,
+    #contact textarea:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    #contact button {
+      width: 100%;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    #contact button:hover {
+      background-color: var(--accent-dark);
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .video-info h2 {
+        font-size: 1.2rem;
+      }
+
+      #contact h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>احمد تيوب</h1>
-        <p>أفضل 3 فيديوهات مختارة بعناية</p>
-    </div>
-    
-    <div class="videos-container">
-        <!-- الفيديو الأول -->
-        <div class="video-item">
-            <div class="video-player">
-                <video controls style="display: none;">
-                    <source src="videos/video1.mp4" type="video/mp4">
-                    المتصفح لا يدعم تشغيل الفيديو
-                </video>
-                <div class="video-thumbnail">
-                    <img src="thumbnails/video1-thumb.jpg" alt="ثمبنيل الفيديو الأول">
-                    <div class="play-icon">▶</div>
-                </div>
-            </div>
-            <div class="video-info">
-                <h2>الفيديو الأول</h2>
-                <p>فيديو رايع.</p>
-            </div>
+  <div class="header">
+    <h1>فيديوهاتي المميزة</h1>
+    <p>أفضل فيديوهين تم اختيارهم بعناية</p>
+  </div>
+
+  <div class="videos-container">
+    <!-- الفيديو الأول -->
+    <div class="video-item">
+      <div class="video-player">
+        <video controls style="display: none;">
+          <source src="videos/video1.mp4" type="video/mp4">
+          المتصفح لا يدعم تشغيل الفيديو
+        </video>
+        <div class="video-thumbnail">
+          <img src="thumbnails/video1-thumb.jpg" alt="ثمبنيل الفيديو الأول">
+          <div class="play-icon">▶</div>
         </div>
-        
-        <!-- الفيديو الثاني -->
-        <div class="video-item">
-            <div class="video-player">
-                <video controls style="display: none;">
-                    <source src="videos/video2.mp4" type="video/mp4">
-                    المتصفح لا يدعم تشغيل الفيديو
-                </video>
-                <div class="video-thumbnail">
-                    <img src="thumbnails/video2-thumb.jpg" alt="ثمبنيل الفيديو الثاني">
-                    <div class="play-icon">▶</div>
-                </div>
-            </div>
-            <div class="video-info">
-                <h2>الفيديو الثاني</h2>
-                <p>حميل.</p>
-            </div>
-        </div>
-        
-        <!-- الفيديو الثالث -->
-        <div class="video-item">
-            <div class="video-player">
-                <video controls style="display: none;">
-                    <source src="videos/video3.mp4" type="video/mp4">
-                    المتصفح لا يدعم تشغيل الفيديو
-                </video>
-                <div class="video-thumbnail">
-                    <img src="thumbnails/video3-thumb.jpg" alt="ثمبنيل الفيديو الثالث">
-                    <div class="play-icon">▶</div>
-                </div>
-            </div>
-            <div class="video-info">
-                <h2>الفيديو الثالث</h2>
-                <p>جميل.</p>
-            </div>
-        </div>
+      </div>
+      <div class="video-info">
+        <h2>عنوان الفيديو الأول</h2>
+        <p>شرح مبسط وسريع لمحتوى الفيديو الأول. هذا النص يعطي لمحة للمستخدم عن موضوع الفيديو ويشجعه على المشاهدة.</p>
+      </div>
     </div>
 
-    <script>
-        // تفعيل تشغيل الفيديو عند النقر على الثمبنيل
-        document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
-            thumbnail.addEventListener('click', function() {
-                const videoContainer = this.parentElement;
-                const video = videoContainer.querySelector('video');
-                const thumbnail = videoContainer.querySelector('.video-thumbnail');
-                
-                video.style.display = 'block';
-                thumbnail.style.display = 'none';
-                video.play();
-            });
-        });
-    </script>
+    <!-- الفيديو الثاني -->
+    <div class="video-item">
+      <div class="video-player">
+        <video controls style="display: none;">
+          <source src="videos/video2.mp4" type="video/mp4">
+          المتصفح لا يدعم تشغيل الفيديو
+        </video>
+        <div class="video-thumbnail">
+          <img src="thumbnails/video2-thumb.jpg" alt="ثمبنيل الفيديو الثاني">
+          <div class="play-icon">▶</div>
+        </div>
+      </div>
+      <div class="video-info">
+        <h2>عنوان الفيديو الثاني</h2>
+        <p>وصف مختصر يوضح للمشاهد محتوى الفيديو الثاني ويثير اهتمامه لمتابعة المشاهدة.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- قسم التواصل -->
+  <section id="contact">
+    <div class="contact-container">
+      <h2>📬 تواصل معنا</h2>
+      <form action="https://formspree.io/f/movwwrkn" method="POST">
+        <label for="name">الاسم:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">البريد الإلكتروني:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="message">الرسالة:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">إرسال</button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    // تفعيل تشغيل الفيديو عند النقر على الثمبنيل
+    document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
+      thumbnail.addEventListener('click', function () {
+        const videoContainer = this.parentElement;
+        const video = videoContainer.querySelector('video');
+        const thumb = videoContainer.querySelector('.video-thumbnail');
+
+        video.style.display = 'block';
+        thumb.style.display = 'none';
+        video.play();
+      });
+    });
+  </script>
 </body>
 </html>
