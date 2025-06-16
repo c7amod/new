@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حساباتي على السوشيال ميديا</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166d67;
+            --accent-color: #ff7e5f;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .social-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .social-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .social-card h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .social-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--secondary-color);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px 0;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            .social-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://via.placeholder.com/150" alt="صورة الملف الشخصي" class="profile-img">
+            <h1>حساباتي على السوشيال ميديا</h1>
+            <p>تواصل معي عبر منصات التواصل الاجتماعي</p>
+        </header>
+        
+        <div class="social-links">
+            <!-- فيسبوك -->
+            <div class="social-card">
+                <div class="social-icon">
+                    <i class="fab fa-facebook" style="color: #1877f2;"></i>
+                </div>
+                <h3>فيسبوك</h3>
+                <p>تابعني على فيسبوك لمشاركاتي اليومية</p>
+                <a href="https://facebook.com/yourprofile" class="btn" target="_blank">زيارة الصفحة</a>
+            </div>
+            
+            <!-- تويتر -->
+            <div class="social-card">
+                <div class="social-icon">
+                    <i class="fab fa-twitter" style="color: #1da1f2;"></i>
+                </div>
+                <h3>تويتر</h3>
+                <p>تواصل معي على تويتر لآخر التحديثات</p>
+                <a href="https://twitter.com/yourprofile" class="btn" target="_blank">زيارة الصفحة</a>
+            </div>
+            
+            <!-- إنستغرام -->
+            <div class="social-card">
+                <div class="social-icon">
+                    <i class="fab fa-instagram" style="color: #e4405f;"></i>
+                </div>
+                <h3>إنستغرام</h3>
+                <p>شاهد صوري ومقاطع الفيديو على إنستغرام</p>
+                <a href="https://instagram.com/yourprofile" class="btn" target="_blank">زيارة الصفحة</a>
+            </div>
+            
+            <!-- لينكد إن -->
+            <div class="social-card">
+                <div class="social-icon">
+                    <i class="fab fa-linkedin" style="color: #0077b5;"></i>
+                </div>
+                <h3>لينكد إن</h3>
+                <p>تواصل معي مهنياً على لينكد إن</p>
+                <a href="https://linkedin.com/in/yourprofile" class="btn" target="_blank">زيارة الصفحة</a>
+            </div>
+            
+            <!-- يوتيوب -->
+            <div class="social-card">
+                <div class="social-icon">
+                    <i class="fab fa-youtube" style="color: #ff0000;"></i>
+                </div>
+                <h3>يوتيوب</h3>
+                <p>اشترك في قناتي على يوتيوب</p>
+                <a href="https://youtube.com/yourchannel" class="btn" target="_blank">زيارة القناة</a>
+            </div>
+            
+            <!-- تيك توك -->
+            <div class="social-card">
+                <div class="social-icon">
+                    <i class="fab fa-tiktok" style="color: #000000;"></i>
+                </div>
+                <h3>تيك توك</h3>
+                <p>تابعني على تيك توك للمحتوى الممتع</p>
+                <a href="https://tiktok.com/@yourprofile" class="btn" target="_blank">زيارة الصفحة</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 جميع الحقوق محفوظة | تصميم أنيق وعصري</p>
+        </footer>
+    </div>
+</body>
+</html>
