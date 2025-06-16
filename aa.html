@@ -1,95 +1,238 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>فيديوهاتي</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #111;
-      color: #fff;
-    }
-
-    header {
-      background-color: #202020;
-      padding: 15px 30px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      border-bottom: 2px solid #444;
-    }
-
-    .video-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 30px;
-    }
-
-    .video-card {
-      background-color: #181818;
-      border-radius: 10px;
-      overflow: hidden;
-      width: 320px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
-      transition: transform 0.3s;
-    }
-
-    .video-card:hover {
-      transform: scale(1.03);
-    }
-
-    video {
-      width: 100%;
-      height: auto;
-    }
-
-    .video-title {
-      padding: 10px;
-      font-size: 16px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      color: #777;
-      border-top: 1px solid #333;
-    }
-
-    @media (max-width: 600px) {
-      .video-card {
-        width: 90%;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع الفيديوهات الخاص بي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --accent: #ff4757;
+            --text: #e0e0e0;
+            --text-secondary: #a0a0a0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'El Messiri', sans-serif; /* الخط المميز */
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            color: var(--accent);
+            margin-bottom: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        
+        .videos-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .video-item {
+            background-color: var(--darker-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* نسبة 16:9 */
+            position: relative;
+            background-color: black;
+        }
+        
+        .video-player video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover; /* لضمان تغطية المساحة */
+        }
+        
+        /* ثيمنيل الفيديو */
+        .video-thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            cursor: pointer;
+            z-index: 2;
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .play-icon {
+            position: absolute;
+            color: white;
+            font-size: 3rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+        
+        .video-thumbnail:hover .play-icon {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        
+        .video-info {
+            padding: 18px;
+        }
+        
+        .video-info h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .video-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        /* تصميم متجاوب للجوال */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .video-info {
+                padding: 15px;
+            }
+            
+            .video-info h2 {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <header>📁 فيديوهاتي المحلية</header>
-
-  <div class="video-container">
-    <div class="video-card">
-      <video controls>
-        <source src="videos/video1.mp4" type="video/mp4">
-        متصفحك لا يدعم تشغيل الفيديو.
-      </video>
-      <div class="video-title">🎬 فيديو ١</div>
+    <div class="header">
+        <h1>احمد تيوب</h1>
+        <p>أفضل 3 فيديوهات مختارة بعناية</p>
+    </div>
+    
+    <div class="videos-container">
+        <!-- الفيديو الأول -->
+        <div class="video-item">
+            <div class="video-player">
+                <video controls style="display: none;">
+                    <source src="videos/video1.mp4" type="video/mp4">
+                    المتصفح لا يدعم تشغيل الفيديو
+                </video>
+                <div class="video-thumbnail">
+                    <img src="thumbnails/video1-thumb.jpg" alt="ثمبنيل الفيديو الأول">
+                    <div class="play-icon">▶</div>
+                </div>
+            </div>
+            <div class="video-info">
+                <h2>الفيديو الأول</h2>
+                <p>فيديو رايع.</p>
+            </div>
+        </div>
+        
+        <!-- الفيديو الثاني -->
+        <div class="video-item">
+            <div class="video-player">
+                <video controls style="display: none;">
+                    <source src="videos/video2.mp4" type="video/mp4">
+                    المتصفح لا يدعم تشغيل الفيديو
+                </video>
+                <div class="video-thumbnail">
+                    <img src="thumbnails/video2-thumb.jpg" alt="ثمبنيل الفيديو الثاني">
+                    <div class="play-icon">▶</div>
+                </div>
+            </div>
+            <div class="video-info">
+                <h2>الفيديو الثاني</h2>
+                <p>حميل.</p>
+            </div>
+        </div>
+        
+        <!-- الفيديو الثالث -->
+        <div class="video-item">
+            <div class="video-player">
+                <video controls style="display: none;">
+                    <source src="videos/video3.mp4" type="video/mp4">
+                    المتصفح لا يدعم تشغيل الفيديو
+                </video>
+                <div class="video-thumbnail">
+                    <img src="thumbnails/video3-thumb.jpg" alt="ثمبنيل الفيديو الثالث">
+                    <div class="play-icon">▶</div>
+                </div>
+            </div>
+            <div class="video-info">
+                <h2>الفيديو الثالث</h2>
+                <p>جميل.</p>
+            </div>
+        </div>
     </div>
 
-    <div class="video-card">
-      <video controls>
-        <source src="videos/video2.mp4" type="video/mp4">
-        متصفحك لا يدعم تشغيل الفيديو.
-      </video>
-      <div class="video-title">🎬 فيديو ٢</div>
-    </div>
-  </div>
-
-  <footer>© 2025 - جميع الحقوق محفوظة</footer>
-
+    <script>
+        // تفعيل تشغيل الفيديو عند النقر على الثمبنيل
+        document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                const videoContainer = this.parentElement;
+                const video = videoContainer.querySelector('video');
+                const thumbnail = videoContainer.querySelector('.video-thumbnail');
+                
+                video.style.display = 'block';
+                thumbnail.style.display = 'none';
+                video.play();
+            });
+        });
+    </script>
 </body>
 </html>
