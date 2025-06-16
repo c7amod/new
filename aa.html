@@ -42,10 +42,9 @@
       transform: scale(1.03);
     }
 
-    iframe {
+    video {
       width: 100%;
-      height: 180px;
-      border: none;
+      height: auto;
     }
 
     .video-title {
@@ -70,22 +69,23 @@
 </head>
 <body>
 
-  <header>📺 فيديوهاتي</header>
+  <header>📁 فيديوهاتي المحلية</header>
 
   <div class="video-container">
     <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-      <div class="video-title">🎬 فيديو رقم 1</div>
+      <video controls>
+        <source src="videos/video1.mp4" type="video/mp4">
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
+      <div class="video-title">🎬 فيديو ١</div>
     </div>
 
     <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" allowfullscreen></iframe>
-      <div class="video-title">🎵 فيديو رقم 2</div>
-    </div>
-
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" allowfullscreen></iframe>
-      <div class="video-title">🎤 فيديو رقم 3</div>
+      <video controls>
+        <source src="videos/video2.mp4" type="video/mp4">
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
+      <div class="video-title">🎬 فيديو ٢</div>
     </div>
   </div>
 
