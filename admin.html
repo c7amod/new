@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>منصة كلية الطب - لوحة الإدارة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="browse.html" class="hover:text-indigo-600 nav-anim">التصفح</a>
+        <a href="admin.html" class="text-indigo-600 font-semibold nav-anim">لوحة الإدارة</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <h1 class="text-2xl font-bold">لوحة الإدارة</h1>
+
+    <!-- Upload Form -->
+    <section class="rounded-lg border bg-white p-4 reveal-on-scroll">
+      <h2 class="text-lg font-semibold mb-4">رفع محتوى جديد</h2>
+      <form class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm mb-1">العنوان</label>
+          <input class="w-full rounded-lg border border-slate-300 px-3 py-2 transition focus:ring-2 focus:ring-indigo-500" placeholder="مثال: فسيولوجيا القلب - مدخل" />
+        </div>
+        <div>
+          <label class="block text-sm mb-1">نوع المحتوى</label>
+          <select class="w-full rounded-lg border border-slate-300 px-3 py-2 transition focus:ring-2 focus:ring-indigo-500">
+            <option>فيديو</option>
+            <option>PDF</option>
+            <option>شرائح عرض</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">الوصف</label>
+          <textarea class="w-full rounded-lg border border-slate-300 px-3 py-2 transition focus:ring-2 focus:ring-indigo-500" rows="3" placeholder="وصف مختصر للمحتوى"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">السنة</label>
+          <select class="w-full rounded-lg border border-slate-300 px-3 py-2 transition focus:ring-2 focus:ring-indigo-500">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">القسم</label>
+          <select class="w-full rounded-lg border border-slate-300 px-3 py-2 transition focus:ring-2 focus:ring-indigo-500">
+            <option>التشريح</option>
+            <option>الفسيولوجي</option>
+            <option>الكيمياء الحيوية</option>
+            <option>الباثولوجي</option>
+            <option>الأدوية</option>
+            <option>الجراحة</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">وسوم</label>
+          <input class="w-full rounded-lg border border-slate-300 px-3 py-2 transition focus:ring-2 focus:ring-indigo-500" placeholder="مثال: قلب، مناعة" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">رفع ملف</label>
+          <input type="file" class="w-full rounded-lg border border-slate-300 px-3 py-2 bg-white" />
+        </div>
+        <div class="md:col-span-2">
+          <button type="button" class="rounded-lg bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">رفع</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Recent Uploads -->
+    <section class="rounded-lg border bg-white p-4 reveal-on-scroll">
+      <h2 class="text-lg font-semibold mb-4">أحدث الرفع</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="text-left bg-slate-50">
+              <th class="p-2">العنوان</th>
+              <th class="p-2">النوع</th>
+              <th class="p-2">القسم</th>
+              <th class="p-2">السنة</th>
+              <th class="p-2">الحالة</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-2">Cardiac Physiology — Intro</td>
+              <td class="p-2">فيديو</td>
+              <td class="p-2">Physiology</td>
+              <td class="p-2">2</td>
+              <td class="p-2"><span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">قيد المعالجة</span></td>
+            </tr>
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-2">Lower Limb Anatomy — Muscles</td>
+              <td class="p-2">PDF</td>
+              <td class="p-2">Anatomy</td>
+              <td class="p-2">1</td>
+              <td class="p-2"><span class="px-2 py-1 rounded bg-green-100 text-green-800">تم</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 منصة كلية الطب</div>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+    });
+
+    const links = document.querySelectorAll('a[href$=".html"]');
+    links.forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        if (!href || href.startsWith('#') || a.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.add('page-enter');
+        document.body.classList.remove('page-enter-active');
+        setTimeout(() => { window.location.href = href; }, 180);
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
