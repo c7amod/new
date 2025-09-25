@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terminology Quiz — Prefix 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
+    .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
+    .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
+    .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
+    .badge { font-size: 12px; padding: 2px 6px; border-radius: 999px; }
+    .badge-correct { background: #ecfdf5; color: #065f46; border: 1px solid #34d399; }
+    .badge-incorrect { background: #fef2f2; color: #991b1b; border: 1px solid #f87171; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-enter { animation: fadeUp 420ms ease both; }
+    .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+      <div class="flex items-center gap-2">
+        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
+        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12"><img src="assets/logo.png" alt="شعار" class="h-8 w-8"/><span>كلية طب الاسكندرية</span></a>
+      </div>
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="terminology.html" class="hover:text-indigo-600 nav-anim">Terminology</a>
+        <a href="terminology-tests.html" class="text-indigo-600 font-semibold nav-anim">الاختبارات</a>
+      </nav>
+    </div>
+  </header>
+  
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold mb-2">اختبار <span class="ltr">Prefix 2</span></h1>
+      <p class="text-slate-700">اختر الإجابة الصحيحة لكل سؤال ثم اضغط "إنهاء الاختبار" لعرض الدرجة ومراجعة الإجابات.</p>
+    </div>
+
+    <div id="quizContainer" class="space-y-4"></div>
+
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+      <button id="submitBtn" class="rounded-lg bg-indigo-600 text-white px-5 py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">إنهاء الاختبار</button>
+      <button id="retryBtn" class="rounded-lg border px-5 py-2 hover:bg-slate-50 hidden">إعادة المحاولة</button>
+      <label class="inline-flex items-center gap-2 text-sm hidden" id="filterWrap">
+        <input type="checkbox" id="showOnlyIncorrect" class="rounded border-slate-300" />
+        <span>عرض الأسئلة الخاطئة فقط</span>
+      </label>
+      <div id="scoreBox" class="text-sm text-slate-700 hidden"></div>
+      <a href="terminology-tests.html" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">الرجوع إلى قائمة الاختبارات</a>
+    </div>
+  </main>
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+    });
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+    (function(){
+      const b = document.getElementById('backBtn');
+      if (!b) return; b.addEventListener('click', () => {
+        if (history.length > 1) history.back(); else window.location.href = 'terminology-tests.html';
+      });
+    })();
+
+    // Quiz data (Prefix 2)
+    const questions = [
+      { id: 'q1', text: '........ Means without:', choices: ['Contra', 'Homo', 'A', 'Anti'], answer: 2 },
+      { id: 'q2', text: 'Leukocytes means:', choices: ['Black cells', 'white cells', 'Red cells', 'Green cells'], answer: 1 },
+      { id: 'q3', text: 'The word that means "has one shape" is:', choices: ['Mononuclear', 'Monocyte', 'Monomorphic', 'Monocellular'], answer: 2 },
+      { id: 'q4', text: 'Having many pregnancies in medical terminology means:', choices: ['Multipara', 'Multigravida', 'Nullipara', 'Unigravida'], answer: 1 },
+      { id: 'q5', text: '"Microcephalus" means:', choices: ['Small tongue', 'Small neck', 'Small head', 'Small hand'], answer: 2 },
+      { id: 'q6', text: '"Anticoagulant" means:', choices: ['Against depression', 'Against blood clotting', 'Against convulsion', 'Against Aggression'], answer: 1 },
+      { id: 'q7', text: '........... in Latin means two.', choices: ['Di', 'Bi.', 'Tri', 'Tetra'], answer: 1 },
+      { id: 'q8', text: '(Chloro) refers to:', choices: ['Blue', 'Green', 'Red', 'White'], answer: 1 },
+      { id: 'q9', text: 'Brady cardia means:', choices: ['Fast heart rate', 'Slow heart rate', 'Medium heart rate', 'None of them'], answer: 1 },
+      { id: 'q10', text: 'The expression of primigravida means that the woman is pregnant for the first time:', choices: ['True', 'False'], answer: 0 },
+      { id: 'q11', text: 'The compound term multipara means of having many pregnancies:', choices: ['True', 'False'], answer: 1 },
+      { id: 'q12', text: 'The word hyperemesis means:', choices: ['Inc. In temperature', 'Inc. In vomiting', 'Inc. in heart rate', 'Inc. in breathing'], answer: 1 },
+      { id: 'q13', text: 'Female who never got pregnant is called:', choices: ['Nulligravida', 'Primigravida', 'Multigravida', 'Both A and B'], answer: 0 },
+      { id: 'q14', text: 'Patient has increased thyroid hormones; this may be due to:', choices: ['Hypothyroidism', 'Thyroidectomy', 'Hyperthyroidism', 'None of the above'], answer: 2 },
+      { id: 'q15', text: 'A Patient suffers from severe pain, he needs drugs that relieve it, these drugs are called:', choices: ['Antipyretics', 'Antidepressants', 'Anti-inflammatory', 'Analgesics'], answer: 3 },
+      { id: 'q16', text: 'Macroglossia is:', choices: ['Large tongue', 'Small longue', 'Small mouth', 'Large mouth'], answer: 0 },
+      { id: 'q17', text: 'Aphasia is inability to:', choices: ['Speak', 'Breath', 'Walk', 'Understand'], answer: 0 },
+      { id: 'q18', text: 'The same pressure is called:', choices: ['Isometric', 'Isotonic', 'Isomorphic', 'Isophobia'], answer: 0 },
+      { id: 'q19', text: 'Increase in heart rate is ……… while decrease is …….', choices: ['Tachycardia, Bradycardia', 'Bradycardia, tachycardia', 'Hypercardia, Hypocardia', 'Dextrocardia, Isocardia'], answer: 0 },
+      { id: 'q20', text: 'Bradycardia is a term describing:', choices: ['Abnormally fast heart rate', 'Inflammation of heart muscle', 'Enlarged heart', 'abnormally slow heart rate'], answer: 3 },
+      { id: 'q21', text: 'Which of the following cells gives the red color to the blood?', choices: ['Leucocytes', 'erythrocytes', 'Melanocytes', 'Phagocytes'], answer: 1 },
+      { id: 'q22', text: 'A faster than normal respiratory rate of breathing is termed:', choices: ['Dyspnea', 'Apnea', 'tachypnea', 'Pleurisy'], answer: 2 },
+      { id: 'q23', text: 'Having many live births', choices: ['Multipara', 'Multigravida', 'Nullipara', 'Unigravida'], answer: 0 },
+      { id: 'q24', text: 'A woman who has two children, but had four pregnancies would be noted on her chart as', choices: ['Gravida 2, para 4', 'gravida 4, para 2', 'Gravida 4, para 4', 'Gravida 4, para 0'], answer: 1 },
+      { id: 'q25', text: 'Analgesia is:', choices: ['Lack of sensation', 'Oversensitivity to pain', 'no pain', 'Sleeping induced by narcotics'], answer: 2 },
+      { id: 'q26', text: 'Which of the following indicates decreased pulmonary rate?', choices: ['Bradypnea', 'OrtHopnea', 'Hypoxia', 'Bradycardia'], answer: 0 },
+      { id: 'q27', text: 'What is the effect of antiemetic drug?', choices: ['it prevents vomiting', 'it induces vomiting', 'it prevents diarrhea', 'it induces diarrhea'], answer: 0 },
+      { id: 'q28', text: 'Anorexia is a medical term means', choices: ['Difficulty in swallowing', 'Lack of appetite', 'False pregnancy', 'Against fever'], answer: 1 },
+      { id: 'q29', text: 'Prefix which means against', choices: ['Contra', 'Anti', 'Dys', 'Both A & B'], answer: 3 },
+      { id: 'q30', text: 'Opposite side termed as', choices: ['Pseudoside', 'Contralateral', 'Autoside', 'Homolateral'], answer: 1 },
+      { id: 'q31', text: 'A in arrhythmia means', choices: ['Condition', 'Abnormal', 'No'], answer: 2 },
+      { id: 'q32', text: 'Choose the best prefix of negation for ; (……./hidrosis)', choices: ['An', 'Contra', 'A'], answer: 0 },
+      { id: 'q33', text: '……..means without', choices: ['Contra', 'Homo', 'A'], answer: 2 },
+      { id: 'q34', text: 'A patient has thrombocytosis must take', choices: ['Antipyretic', 'Antitoxin', 'Anticoagulant'], answer: 2 },
+      { id: 'q35', text: 'A 14- year- old girl, noticeable loss of appetite. what is the term of her condition?', choices: ['Anorexia', 'Anosmia', 'Anemia', 'Anhidrosi'], answer: 0 },
+      { id: 'q36', text: 'Contraceptive means……..', choices: ['Against indications', 'Against pregnancy', 'Against toxin', 'Against fever'], answer: 1 },
+      { id: 'q37', text: 'Not equal cells in size means ……', choices: ['Isocytosis', 'Anisocytosis', 'Microcyte', 'Macrocyte'], answer: 1 },
+    ];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quizContainer');
+      wrap.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      questions.forEach((q, qi) => {
+        const card = document.createElement('div');
+        card.className = 'rounded-lg border bg-white p-4 card-enter';
+        card.dataset.qid = q.id;
+        const head = document.createElement('div');
+        head.className = 'flex items-start justify-between gap-3 mb-3';
+        head.innerHTML = `<div class=\"font-semibold\">${qi + 1}</div><div class=\"hidden\" data-role=\"badge\"></div>`;
+        card.appendChild(head);
+        const text = document.createElement('div');
+        text.className = 'mb-3 ltr';
+        text.textContent = q.text;
+        card.appendChild(text);
+        const ul = document.createElement('ul');
+        ul.className = 'space-y-2';
+        q.choices.forEach((c, ci) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <label class=\"choice flex items-center gap-3 rounded border px-3 py-2 cursor-pointer\">\n              <input type=\"radio\" name=\"${q.id}\" value=\"${ci}\" class=\"peer\" />\n              <span class=\"opt-key\">${letters[ci] || ''}</span>\n              <span class=\"ltr grow\">${c}</span>\n            </label>`;
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+        wrap.appendChild(card);
+      });
+    }
+
+    function collectAnswers() {
+      const answers = {};
+      questions.forEach(q => {
+        const checked = document.querySelector(`input[name=\"${q.id}\"]:checked`);
+        answers[q.id] = checked ? parseInt(checked.value, 10) : null;
+      });
+      return answers;
+    }
+
+    function lockQuiz() { document.querySelectorAll('#quizContainer input[type=\"radio\"]').forEach(i=>i.disabled=true); }
+    function unlockQuiz() { document.querySelectorAll('#quizContainer input[type=\"radio\"]').forEach(i=>i.disabled=false); }
+
+    function showResults(answers) {
+      let correctCount = 0;
+      questions.forEach(q => {
+        const selected = answers[q.id];
+        const card = document.querySelector(`[data-qid=\"${q.id}\"]`);
+        const badge = card.querySelector('[data-role=\"badge\"]');
+        badge.classList.remove('hidden');
+        const options = card.querySelectorAll('label.choice');
+        options.forEach((lab, idx) => {
+          lab.classList.remove('correct','incorrect');
+          if (idx === q.answer) lab.classList.add('correct');
+          if (selected !== null && idx === selected && selected !== q.answer) lab.classList.add('incorrect');
+        });
+        if (selected === q.answer) { correctCount++; badge.className='badge badge-correct'; badge.textContent='إجابة صحيحة'; }
+        else { badge.className='badge badge-incorrect'; badge.textContent='إجابة خاطئة'; }
+      });
+      const total = questions.length;
+      const score = Math.round((correctCount/total)*100);
+      const box = document.getElementById('scoreBox');
+      box.classList.remove('hidden');
+      box.textContent = `درجتك: ${correctCount} / ${total} (${score}%)`;
+      document.getElementById('retryBtn').classList.remove('hidden');
+      document.getElementById('filterWrap').classList.remove('hidden');
+    }
+
+    function applyIncorrectFilter(onlyIncorrect) {
+      questions.forEach(q => {
+        const card = document.querySelector(`[data-qid=\"${q.id}\"]`);
+        const badge = card.querySelector('[data-role=\"badge\"]');
+        const isIncorrect = badge && badge.textContent.includes('خاطئة');
+        card.style.display = onlyIncorrect && !isIncorrect ? 'none' : '';
+      });
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      unlockQuiz();
+      const box = document.getElementById('scoreBox');
+      box.classList.add('hidden');
+      box.textContent = '';
+      document.getElementById('retryBtn').classList.add('hidden');
+      document.getElementById('filterWrap').classList.add('hidden');
+      document.getElementById('showOnlyIncorrect').checked = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderQuiz();
+
+    // Events
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const answers = collectAnswers();
+      lockQuiz();
+      showResults(answers);
+      const y = document.getElementById('scoreBox').getBoundingClientRect().top + window.pageYOffset - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+    document.getElementById('retryBtn').addEventListener('click', resetQuiz);
+    document.getElementById('showOnlyIncorrect').addEventListener('change', e => applyIncorrectFilter(e.target.checked));
+  </script>
+</body>
+</html>

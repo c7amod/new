@@ -14,6 +14,7 @@
     .nav-anim { position: relative; }
     .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
     .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
     .lecture-item.active .lecture-card { outline: 2px solid rgb(79 70 229); outline-offset: 0; box-shadow: 0 10px 20px rgba(79,70,229,0.12); }
     .lecture-card { transition: transform 220ms ease, box-shadow 220ms ease, outline-color 220ms ease; }
     .lecture-card:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.08); }
@@ -31,21 +32,23 @@
       #lectures.compact .lecture-card .thumb { width: 96px; }
       #lectures.compact .lecture-card .thumb .aspect-video { width: 96px; }
       #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
-      #lectures.compact .lecture-card .video-title { font-size: 0.85rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      #lectures.compact .lecture-card .video-title { font-size: 0.85rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       #lectures.compact .play-badge { display: none; }
     }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
       <div class="flex items-center gap-2">
-        <button id="backBtn" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50" title="رجوع">⬅︎ رجوع</button>
-        <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
+        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12">
+          <img src="assets/logo.png" alt="شعار" class="h-8 w-8"/>
+          <span>كلية طب الاسكندرية</span>
+        </a>
       </div>
       <nav class="hidden md:flex items-center gap-6">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="year1.html" class="hover:text-indigo-600 nav-anim">سنة أولى</a>
         <a href="orientation.html" class="hover:text-indigo-600 nav-anim">Orientation</a>
         <a href="english.html" class="text-indigo-600 font-semibold nav-anim">English</a>
       </nav>
@@ -54,8 +57,8 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-6 reveal-on-scroll">
-      <div class="text-sm text-slate-600 mb-2">Orientation • English</div>
-      <h1 class="text-2xl font-bold mb-2">Medical English - Intro Lectures</h1>
+      <div class="text-sm text-slate-600 mb-2 ltr">Orientation • English</div>
+      <h1 class="text-2xl font-bold mb-2 ltr">Medical English - Intro Lectures</h1>
       <p class="text-slate-700">محاضرات تمهيدية لتحسين مهارات اللغة الإنجليزية الطبية. يمكن إضافة روابط YouTube أو ملفات PDF لاحقًا.</p>
     </div>
     <div class="space-y-6">
@@ -86,7 +89,7 @@
                   <img src="https://i.ytimg.com/vi/-tt4NTZyu_E/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
                   <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
                 </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 1 — Basics of Medical English</span></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 1 — Basics of Medical English</span></div>
               </div>
             </li>
             <li class="lecture-item" data-video="b6QYbi77-u4">
@@ -95,7 +98,7 @@
                   <img src="https://i.ytimg.com/vi/b6QYbi77-u4/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
                   <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
                 </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 2 — Medical Abbreviations</span></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 2 — Medical Abbreviations</span></div>
               </div>
             </li>
             <li class="lecture-item" data-video="Oi-qLPdNeUs">
@@ -104,7 +107,7 @@
                   <img src="https://i.ytimg.com/vi/Oi-qLPdNeUs/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
                   <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
                 </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 3 — Pronunciation & Stress</span></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 3 — Pronunciation & Stress</span></div>
               </div>
             </li>
             <li class="lecture-item" data-video="RDtQNbUXziA">
@@ -113,7 +116,7 @@
                   <img src="https://i.ytimg.com/vi/RDtQNbUXziA/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
                   <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
                 </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 4 — Reading Case Notes</span></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 4 — Reading Case Notes</span></div>
               </div>
             </li>
           </ul>
@@ -123,7 +126,7 @@
   </main>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 منصة كلية الطب</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
   </footer>
 
   <script>

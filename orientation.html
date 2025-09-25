@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orientation - سنة أولى</title>
+  <title>Orientation</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { transition: opacity 600ms ease; }
@@ -14,39 +14,42 @@
     .nav-anim { position: relative; }
     .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
     .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
       <div class="flex items-center gap-2">
-        <button id="backBtn" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50" title="رجوع">⬅︎ رجوع</button>
-        <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
+        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12">
+          <img src="assets/logo.png" alt="شعار" class="h-8 w-8"/>
+          <span>كلية طب الاسكندرية</span>
+        </a>
       </div>
       <nav class="hidden md:flex items-center gap-6">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="year1.html" class="hover:text-indigo-600 nav-anim">سنة أولى</a>
         <a href="orientation.html" class="text-indigo-600 font-semibold nav-anim">Orientation</a>
       </nav>
     </div>
   </header>
 
+  
+
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-2xl font-bold mb-6">Orientation - سنة أولى</h1>
+    <h1 class="text-2xl font-bold mb-6 ltr">Orientation</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal-on-scroll">
       <a href="terminology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold">Terminology</div>
-        <div class="text-sm text-slate-600">5 محاضرات YouTube</div>
+        <div class="font-semibold ltr">Terminology</div>
       </a>
       <a href="english.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold">English</div>
-        <div class="text-sm text-slate-600">محاضرات تمهيدية</div>
+        <div class="font-semibold ltr">English</div>
       </a>
     </div>
   </main>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 منصة كلية الطب</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
   </footer>
 
   <script>

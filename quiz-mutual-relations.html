@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terminology Quiz — Mutual Relations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
+    .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
+    .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
+    .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
+    .badge { font-size: 12px; padding: 2px 6px; border-radius: 999px; }
+    .badge-correct { background: #ecfdf5; color: #065f46; border: 1px solid #34d399; }
+    .badge-incorrect { background: #fef2f2; color: #991b1b; border: 1px solid #f87171; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-enter { animation: fadeUp 420ms ease both; }
+    .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+      <div class="flex items-center gap-2">
+        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
+        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12"><img src="assets/logo.png" alt="شعار" class="h-8 w-8"/><span>كلية طب الاسكندرية</span></a>
+      </div>
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="terminology.html" class="hover:text-indigo-600 nav-anim">Terminology</a>
+        <a href="terminology-tests.html" class="text-indigo-600 font-semibold nav-anim">الاختبارات</a>
+      </nav>
+    </div>
+  </header>
+  
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold mb-2">اختبار <span class="ltr">Mutual Relation</span></h1>
+      <p class="text-slate-700">اختر الإجابة الصحيحة لكل سؤال ثم اضغط "إنهاء الاختبار" لعرض الدرجة ومراجعة الإجابات.</p>
+    </div>
+
+    <div id="quizContainer" class="space-y-4"></div>
+
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+      <button id="submitBtn" class="rounded-lg bg-indigo-600 text-white px-5 py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">إنهاء الاختبار</button>
+      <button id="retryBtn" class="rounded-lg border px-5 py-2 hover:bg-slate-50 hidden">إعادة المحاولة</button>
+      <label class="inline-flex items-center gap-2 text-sm hidden" id="filterWrap">
+        <input type="checkbox" id="showOnlyIncorrect" class="rounded border-slate-300" />
+        <span>عرض الأسئلة الخاطئة فقط</span>
+      </label>
+      <div id="scoreBox" class="text-sm text-slate-700 hidden"></div>
+      <a href="terminology-tests.html" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">الرجوع إلى قائمة الاختبارات</a>
+    </div>
+  </main>
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+    });
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+    (function(){
+      const b = document.getElementById('backBtn');
+      if (!b) return; b.addEventListener('click', () => {
+        if (history.length > 1) history.back(); else window.location.href = 'terminology-tests.html';
+      });
+    })();
+
+    // Quiz data (Mutual Relation)
+    const questions = [
+      { id: 'q1', text: 'Difficult digestion means:', choices: ['Dysphagia', 'Dysuria', 'Dyspepsia', 'Dyspnea'], answer: 2 },
+      { id: 'q2', text: 'Painful and faulty means……..', choices: ['Dys', 'Homo', 'Pseudo', 'Hetero'], answer: 0 },
+      { id: 'q3', text: 'The term describes difficulty in breathing is', choices: ['Apnea', 'Tachypnea', 'Dyspnea', 'Orthopnea'], answer: 2 },
+      { id: 'q4', text: 'A 45-year-old woman has difficulty swallowing and frequent choking episodes. What is the medical term?', choices: ['Dyspnea', 'Dysphagia', 'Dyspepsia', 'Dysphonia'], answer: 1 },
+      { id: 'q5', text: 'Tumor in pharynx is termed', choices: ['Pharyngitis', 'Pharyngoma', 'Pharyngectomy', 'Pharyngotomy'], answer: 1 },
+      { id: 'q6', text: 'The suffix oma in myoma means', choices: ['Muscle paralysis', 'Muscle pain', 'Muscle weakness', 'Muscle tumor'], answer: 3 },
+      { id: 'q7', text: 'The prefix which means immature cell is called:', choices: ['Algia', 'Blast', 'Astheno', 'Centaisis'], answer: 1 },
+      { id: 'q8', text: 'The term of hemanogioma means:', choices: ['Blood found in spinal cord fluid', 'Blood found between the heart and the pericardial sac', 'Cardiac muscle', 'A tumor of blood vessels'], answer: 3 },
+      { id: 'q9', text: 'An agent which induces sleep is called:', choices: ['Analgesic', 'Antibiotic', 'Hyponotic', 'Narcotic'], answer: 2 },
+      { id: 'q10', text: 'Pseudo is a medical term means:', choices: ['Difficulty', 'Lack of', 'False', 'Painful'], answer: 2 },
+      { id: 'q11', text: 'Means with or together', choices: ['Dys-', 'Homo-', 'Hetero', 'Syn-'], answer: 3 },
+      { id: 'q12', text: 'If we can’t sleep for a long time, we take:', choices: ['Hypnotic', 'Narcotic', 'Diabetic'], answer: 0 },
+      { id: 'q13', text: 'Dyspepsia means:', choices: ['Difficult swallowing', 'Indigestion', 'Difficult breathing'], answer: 1 },
+      { id: 'q14', text: 'Homo means:', choices: ['Different', 'Across', 'Same'], answer: 2 },
+      { id: 'q15', text: 'Onco refers to:', choices: ['Cancer', 'Tumor', 'Stone'], answer: 1 },
+      { id: 'q16', text: 'Pseudocyesis means:', choices: ['Difficult in swallowing', 'Difficult in digestion', 'False pregnancy', 'False cyst'], answer: 2 },
+      { id: 'q17', text: 'Lithiasis is best describe by which of the following:', choices: ['Constriction of tissue', 'Dissolving', 'Abnormal condition of stones'], answer: 2 },
+      { id: 'q18', text: 'Xerostomia is a medical condition in which:', choices: ['The tongue gets wet', 'The tongue gets dry', 'The mouth is dry'], answer: 2 },
+      { id: 'q19', text: 'Scleroderma a condition of having:', choices: ['Soft skin', 'Wet skin', 'Hard skin'], answer: 2 },
+      { id: 'q20', text: 'Pyloric stenosis means:', choices: ['Largening the opening of the pyloric sphincter', 'Narrowing the opening between intestine and stomach', 'Brain tumor'], answer: 1 },
+      { id: 'q21', text: 'Which of the following refers to swelling:', choices: ['Malacia', 'Edema', 'Hypn/o'], answer: 1 },
+      { id: 'q22', text: 'Which of the following refers to death of:', choices: ['Narc/o', 'Necrosis', 'Xerosis'], answer: 1 },
+      { id: 'q23', text: 'Athero scelerosis causes narrowing of arteries:', choices: ['True', 'False'], answer: 0 },
+      { id: 'q24', text: '(Malacia) means:', choices: ['Hardening', 'Softening', 'Narrowing'], answer: 1 },
+      { id: 'q25', text: 'The condition of softening the bone is called:', choices: ['Osteitis', 'Osteon', 'Osteomalacia'], answer: 2 },
+      { id: 'q26', text: 'Pain in the testes', choices: ['Orchidectomy', 'Orchiditis', 'Orchidalgia', 'Ochidostomy'], answer: 2 },
+      { id: 'q27', text: 'Which of the following doesn’t relate to tumor:', choices: ['Oma', 'Carcino', 'Onco', 'Oro'], answer: 3 },
+      { id: 'q28', text: 'The term of stone formation is:', choices: ['Lithiasis', 'Sclerosis', 'Hemolysis', 'Nephritis'], answer: 0 },
+      { id: 'q29', text: 'Accumulation of pus in thoracic cavity called:', choices: ['Pneumothorax', 'Hemothorax', 'Pyothorax', 'Hydropneumothorax'], answer: 2 },
+      { id: 'q30', text: 'Patient with difficult swallowing, his condition is called:', choices: ['Dyspepsia', 'Dysuria', 'Dysphagia', 'Dyspnea'], answer: 2 },
+      { id: 'q31', text: 'The substance that may cause cancer is called:', choices: ['Carcinogen', 'Sclerothen', 'Androgen', 'Dermatogen'], answer: 0 },
+      { id: 'q32', text: 'Homogenous means ……….. in structure', choices: ['Different', 'Uniform', 'Equal', 'Both B&C'], answer: 3 },
+      { id: 'q33', text: 'Sclerosis equal…….', choices: ['Bad', 'Hard', 'Dry', 'Thick'], answer: 1 },
+      { id: 'q34', text: 'Pseudocyesis means ……', choices: ['False labor', 'False pregnancy', 'False conception', 'Both B&C'], answer: 3 },
+      { id: 'q35', text: 'Hemostasis means ……. Of bleeding', choices: ['Stoppage', 'Continuous', 'Stimulation', 'Increasing'], answer: 0 },
+      { id: 'q36', text: 'Arteriostenosis means…….', choices: ['Widening of vein', 'Narrowing of vein', 'Narrowing of artery', 'Widening of artery'], answer: 2 },
+      { id: 'q37', text: 'Lymphedema means…………', choices: ['Swallowing of lymph', 'Swelling of lymph', 'Flow of lymph', 'Swelling of blood'], answer: 1 },
+      { id: 'q38', text: 'Xero means……..', choices: ['Wet', 'Thick', 'Poison', 'Dry'], answer: 3 },
+      { id: 'q39', text: 'Maldigestion means……..', choices: ['Difficult swallowing', 'Difficult digestion', 'Dyspepsia', 'Both B&C'], answer: 3 },
+      { id: 'q40', text: 'Pyro means……….', choices: ['Pus', 'Pyo', 'Fever', 'Digestion'], answer: 2 },
+      { id: 'q41', text: 'Malacia means……….', choices: ['Narrowing', 'Softness', 'Thickness', 'Stoppage'], answer: 1 },
+      { id: 'q42', text: 'Spasm means……….', choices: ['Contraction', 'Cramp', 'All of the above'], answer: 2 },
+      { id: 'q43', text: 'Prediction of diseases means…..', choices: ['Prognosis', 'Diagnosis', 'Hypnotic', 'Both A&B'], answer: 0 },
+      { id: 'q44', text: 'The term pyretic means:', choices: ['Disease', 'Dryness', 'feverish, pertaining to fever', 'Pertaining to pus'], answer: 2 },
+    ];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quizContainer');
+      wrap.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      questions.forEach((q, qi) => {
+        const card = document.createElement('div');
+        card.className = 'rounded-lg border bg-white p-4 card-enter';
+        card.dataset.qid = q.id;
+        const head = document.createElement('div');
+        head.className = 'flex items-start justify-between gap-3 mb-3';
+        head.innerHTML = `<div class=\"font-semibold\">${qi + 1}</div><div class=\"hidden\" data-role=\"badge\"></div>`;
+        card.appendChild(head);
+        const text = document.createElement('div');
+        text.className = 'mb-3 ltr';
+        text.textContent = q.text;
+        card.appendChild(text);
+        const ul = document.createElement('ul');
+        ul.className = 'space-y-2';
+        q.choices.forEach((c, ci) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <label class=\"choice flex items-center gap-3 rounded border px-3 py-2 cursor-pointer\">\n              <input type=\"radio\" name=\"${q.id}\" value=\"${ci}\" class=\"peer\" />\n              <span class=\"opt-key\">${letters[ci] || ''}</span>\n              <span class=\"ltr grow\">${c}</span>\n            </label>`;
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+        wrap.appendChild(card);
+      });
+    }
+
+    function collectAnswers() {
+      const answers = {};
+      questions.forEach(q => {
+        const checked = document.querySelector(`input[name=\"${q.id}\"]:checked`);
+        answers[q.id] = checked ? parseInt(checked.value, 10) : null;
+      });
+      return answers;
+    }
+
+    function lockQuiz() { document.querySelectorAll('#quizContainer input[type=\"radio\"]').forEach(i=>i.disabled=true); }
+    function unlockQuiz() { document.querySelectorAll('#quizContainer input[type=\"radio\"]').forEach(i=>i.disabled=false); }
+
+    function showResults(answers) {
+      let correctCount = 0;
+      questions.forEach(q => {
+        const selected = answers[q.id];
+        const card = document.querySelector(`[data-qid=\"${q.id}\"]`);
+        const badge = card.querySelector('[data-role=\"badge\"]');
+        badge.classList.remove('hidden');
+        const options = card.querySelectorAll('label.choice');
+        options.forEach((lab, idx) => {
+          lab.classList.remove('correct','incorrect');
+          if (idx === q.answer) lab.classList.add('correct');
+          if (selected !== null && idx === selected && selected !== q.answer) lab.classList.add('incorrect');
+        });
+        if (selected === q.answer) { correctCount++; badge.className='badge badge-correct'; badge.textContent='إجابة صحيحة'; }
+        else { badge.className='badge badge-incorrect'; badge.textContent='إجابة خاطئة'; }
+      });
+      const total = questions.length;
+      const score = Math.round((correctCount/total)*100);
+      const box = document.getElementById('scoreBox');
+      box.classList.remove('hidden');
+      box.textContent = `درجتك: ${correctCount} / ${total} (${score}%)`;
+      document.getElementById('retryBtn').classList.remove('hidden');
+      document.getElementById('filterWrap').classList.remove('hidden');
+    }
+
+    function applyIncorrectFilter(onlyIncorrect) {
+      questions.forEach(q => {
+        const card = document.querySelector(`[data-qid=\"${q.id}\"]`);
+        const badge = card.querySelector('[data-role=\"badge\"]');
+        const isIncorrect = badge && badge.textContent.includes('خاطئة');
+        card.style.display = onlyIncorrect && !isIncorrect ? 'none' : '';
+      });
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      unlockQuiz();
+      const box = document.getElementById('scoreBox');
+      box.classList.add('hidden');
+      box.textContent = '';
+      document.getElementById('retryBtn').classList.add('hidden');
+      document.getElementById('filterWrap').classList.add('hidden');
+      document.getElementById('showOnlyIncorrect').checked = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderQuiz();
+
+    // Events
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const answers = collectAnswers();
+      lockQuiz();
+      showResults(answers);
+      const y = document.getElementById('scoreBox').getBoundingClientRect().top + window.pageYOffset - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+    document.getElementById('retryBtn').addEventListener('click', resetQuiz);
+    document.getElementById('showOnlyIncorrect').addEventListener('change', e => applyIncorrectFilter(e.target.checked));
+  </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نتيجة اختبار Terminology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-enter { animation: fadeUp 420ms ease both; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="backBtn" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50" title="رجوع">⬅︎ رجوع</button>
+        <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">كلية طب الاسكندرية</a>
+      </div>
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="orientation.html" class="hover:text-indigo-600 nav-anim">Orientation</a>
+        <a href="terminology.html" class="hover:text-indigo-600 nav-anim">Terminology</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Logo top -->
+  <section class="reveal-on-scroll">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div class="flex justify-center">
+        <img src="assets/logo.png" alt="شعار كلية طب الاسكندرية" class="h-24 w-24 sm:h-28 sm:w-28 drop-shadow"/>
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="rounded-lg border bg-white p-6 card-enter">
+      <h1 class="text-2xl font-bold mb-2">نتيجة الاختبار</h1>
+      <p id="scoreText" class="text-slate-700 mb-6">—</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <a id="btnRetry" href="#" class="rounded-lg bg-indigo-600 text-white px-5 py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">إعادة الاختبار</a>
+        <a id="btnReviewIncorrect" href="#" class="rounded-lg border px-5 py-2 hover:bg-slate-50 transition-transform hover:-translate-y-0.5">استعراض الإجابات الخاطئة</a>
+        <a id="btnReviewAll" href="#" class="rounded-lg border px-5 py-2 hover:bg-slate-50 transition-transform hover:-translate-y-0.5">استعراض كل الإجابات</a>
+        <a href="terminology.html" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">العودة إلى Terminology</a>
+      </div>
+    </div>
+
+    <div id="summaryBox" class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="rounded-lg border bg-white p-4 text-center card-enter">
+        <div class="text-sm text-slate-600">الأسئلة الصحيحة</div>
+        <div id="correctCount" class="text-2xl font-bold">-</div>
+      </div>
+      <div class="rounded-lg border bg-white p-4 text-center card-enter">
+        <div class="text-sm text-slate-600">إجمالي الأسئلة</div>
+        <div id="totalCount" class="text-2xl font-bold">-</div>
+      </div>
+      <div class="rounded-lg border bg-white p-4 text-center card-enter">
+        <div class="text-sm text-slate-600">النسبة المئوية</div>
+        <div id="percentVal" class="text-2xl font-bold">-</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+  </footer>
+
+  <script>
+    // Page enter + bfcache
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+    });
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+
+    // Back button
+    (function(){
+      const b = document.getElementById('backBtn');
+      if (!b) return;
+      b.addEventListener('click', () => {
+        if (history.length > 1) { history.back(); } else { window.location.href = 'index.html'; }
+      });
+    })();
+
+    // Load payload
+    function loadPayload() {
+      try {
+        const raw = sessionStorage.getItem('terminology_quiz_payload');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+
+    const payload = loadPayload();
+    function formatMs(ms){
+      const n = Number(ms);
+      const safe = Number.isFinite(n) ? Math.max(0, Math.round(n/1000)) : 0;
+      const totalSec = safe;
+      const m = Math.floor(totalSec/60).toString().padStart(2,'0');
+      const s = (totalSec%60).toString().padStart(2,'0');
+      return `${m}:${s}`;
+    }
+
+    function resolveDurationMs(payload){
+      // 1) payload.durationMs
+      if (payload && payload.durationMs != null && Number.isFinite(Number(payload.durationMs))) {
+        return Number(payload.durationMs);
+      }
+      // 2) standalone last_duration
+      try {
+        const d = sessionStorage.getItem('terminology_last_duration');
+        if (d && Number.isFinite(Number(d))) return Number(d);
+      } catch(_) {}
+      // 3) compute from start/end
+      try {
+        const s = sessionStorage.getItem('terminology_quiz_start');
+        const e = sessionStorage.getItem('terminology_quiz_end');
+        if (s && e) {
+          const ms = Number(e) - Number(s);
+          if (Number.isFinite(ms)) return ms;
+        }
+      } catch(_) {}
+      return 0;
+    }
+
+    if (payload) {
+      let { correctCount, total, score } = payload;
+      const durationMs = resolveDurationMs(payload);
+      document.getElementById('correctCount').textContent = correctCount;
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('percentVal').textContent = score + '%';
+      document.getElementById('scoreText').textContent = `درجتك: ${correctCount} / ${total} (${score}%)`;
+      document.getElementById('timeText').textContent = `الوقت المستغرق: ${formatMs(durationMs)}`;
+    } else {
+      document.getElementById('scoreText').textContent = 'لم يتم العثور على نتيجة. برجاء إجراء الاختبار مرة أخرى.';
+    }
+
+    // Buttons
+    document.getElementById('btnRetry').addEventListener('click', (e) => {
+      e.preventDefault();
+      // Clear review + payload but keep questions in quiz file
+      sessionStorage.removeItem('terminology_quiz_review');
+      // We keep payload optional; quiz will reset UI anyway
+      window.location.href = 'quiz-terminology.html';
+    });
+
+    document.getElementById('btnReviewIncorrect').addEventListener('click', (e) => {
+      e.preventDefault();
+      sessionStorage.setItem('terminology_quiz_review', 'incorrect');
+      window.location.href = 'quiz-terminology.html';
+    });
+
+    document.getElementById('btnReviewAll').addEventListener('click', (e) => {
+      e.preventDefault();
+      sessionStorage.setItem('terminology_quiz_review', 'all');
+      window.location.href = 'quiz-terminology.html';
+    });
+
+    // Reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
