@@ -24,7 +24,6 @@
       <nav class="hidden md:flex items-center gap-6">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
         <a href="browse.html" class="hover:text-indigo-600 nav-anim">التصفح</a>
-        <a href="admin.html" class="hover:text-indigo-600 nav-anim">لوحة الإدارة</a>
       </nav>
     </div>
   </header>
@@ -57,7 +56,13 @@
           <div class="aspect-video bg-slate-100 rounded overflow-hidden">
             <iframe id="player" class="w-full h-full" src="https://www.youtube.com/embed/lO5lgPCKFNI" title="Histology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
-          <button id="openInYT" class="mt-4 w-full rounded-lg bg-indigo-600 text-white py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">فتح في YouTube</button>
+          <div class="mt-2 flex items-center gap-2">
+            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+              <option value="savefrom" selected>SaveFrom</option>
+              <option value="ssyoutube">ssYouTube</option>
+            </select>
+            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+          </div>
         </div>
       </aside>
     </div>
@@ -101,15 +106,29 @@
 
     // Lectures list interaction
     const player = document.getElementById('player');
-    const openBtn = document.getElementById('openInYT');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const providerSelect = document.getElementById('providerSelect');
+    let currentVideoId = null;
 
     function selectLecture(li) {
       document.querySelectorAll('#lectures li').forEach(x => x.classList.remove('active'));
       li.classList.add('active');
       const id = li.getAttribute('data-video');
+      currentVideoId = id;
       player.src = `https://www.youtube.com/embed/${id}`;
-      openBtn.onclick = () => {
-        window.open(`https://youtu.be/${id}`, '_blank');
+      downloadBtn.onclick = () => {
+        if (!currentVideoId) return;
+        const provider = providerSelect.value;
+        let url = `https://youtu.be/${currentVideoId}`;
+        switch (provider) {
+          case 'savefrom':
+            url = `https://en.savefrom.net/1-youtube-video-downloader/?url=https://youtu.be/${currentVideoId}`;
+            break;
+          case 'ssyoutube':
+            url = `https://ssyoutube.com/watch?v=${currentVideoId}`;
+            break;
+        }
+        window.open(url, '_blank');
       };
     }
 

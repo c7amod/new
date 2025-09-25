@@ -61,7 +61,13 @@
               اختر محاضرة من القائمة لعرضها هنا
             </div>
           </div>
-          <button id="openInYT" class="mt-4 w-full rounded-lg bg-slate-300 text-white py-2 cursor-not-allowed" disabled>فتح في YouTube</button>
+          <div class="mt-4 flex items-center gap-2">
+            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+              <option value="savefrom" selected>SaveFrom</option>
+              <option value="ssyoutube">ssYouTube</option>
+            </select>
+            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+          </div>
         </div>
       </aside>
     </div>
@@ -106,7 +112,9 @@
     // Lectures interaction
     const player = document.getElementById('player');
     const emptyState = document.getElementById('emptyState');
-    const openBtn = document.getElementById('openInYT');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const providerSelect = document.getElementById('providerSelect');
+    let currentVideoId = null;
 
     function selectLecture(li) {
       document.querySelectorAll('#lectures .lecture-item').forEach(x => x.classList.remove('active'));
@@ -114,23 +122,30 @@
       const id = li.getAttribute('data-video');
 
       if (id) {
+        currentVideoId = id;
         player.src = `https://www.youtube.com/embed/${id}`;
         player.classList.remove('hidden');
         emptyState.classList.add('hidden');
-        openBtn.textContent = 'فتح في YouTube';
-        openBtn.classList.remove('bg-slate-300', 'cursor-not-allowed');
-        openBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-        openBtn.disabled = false;
-        openBtn.onclick = () => window.open(`https://youtu.be/${id}`, '_blank');
+        downloadBtn.onclick = () => {
+          if (!currentVideoId) return;
+          const provider = providerSelect.value;
+          let url = `https://youtu.be/${currentVideoId}`;
+          switch (provider) {
+            case 'savefrom':
+              url = `https://en.savefrom.net/1-youtube-video-downloader/?url=https://youtu.be/${currentVideoId}`;
+              break;
+            case 'ssyoutube':
+              url = `https://ssyoutube.com/watch?v=${currentVideoId}`;
+              break;
+          }
+          window.open(url, '_blank');
+        };
       } else {
+        currentVideoId = null;
         player.src = '';
         player.classList.add('hidden');
         emptyState.classList.remove('hidden');
-        openBtn.textContent = 'لا يوجد رابط متاح';
-        openBtn.classList.add('bg-slate-300', 'cursor-not-allowed');
-        openBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-        openBtn.disabled = true;
-        openBtn.onclick = null;
+        downloadBtn.onclick = null;
       }
     }
 

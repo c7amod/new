@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visitors Analytics (Private)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="font-bold text-indigo-600 text-lg nav-anim">Analytics (Private)</div>
+      <div class="text-xs text-slate-500">للاستخدام الشخصي فقط</div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <section id="auth" class="max-w-md mx-auto bg-white border rounded-lg p-6">
+      <h1 class="text-xl font-bold mb-2">تسجيل الدخول</h1>
+      <p class="text-slate-600 mb-4 text-sm">هذه الصفحة خاصة بك فقط. أدخل كلمة السر لعرض البيانات.</p>
+      <div class="flex gap-2">
+        <input id="pwd" type="password" class="w-full rounded border px-3 py-2" placeholder="كلمة السر" />
+        <button id="loginBtn" class="rounded bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700">دخول</button>
+      </div>
+      <p id="authErr" class="mt-2 text-sm text-rose-600 hidden">كلمة السر غير صحيحة</p>
+    </section>
+
+    <section id="panel" class="hidden">
+      <div class="mb-4 flex flex-col sm:flex-row gap-2 sm:items-center">
+        <div class="text-sm text-slate-600">المصدر: <span id="endpointDisplay" class="mono"></span></div>
+        <div class="text-sm text-amber-600">تنبيه: يجب ضبط TRACKER_ENDPOINT في assets/tracker.js</div>
+      </div>
+      <div class="mb-4 flex gap-2 items-center">
+        <input id="q" class="rounded border px-3 py-2 text-sm w-full sm:w-80" placeholder="بحث (url, ip, ua, lang, platform, tz)" />
+        <button id="refreshBtn" class="rounded bg-slate-700 text-white px-4 py-2 hover:bg-slate-800">تحديث</button>
+      </div>
+      <div class="overflow-auto rounded border bg-white">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-100">
+            <tr>
+              <th class="px-3 py-2 text-right">الوقت</th>
+              <th class="px-3 py-2 text-right">الصفحة</th>
+              <th class="px-3 py-2 text-right">IP</th>
+              <th class="px-3 py-2 text-right">المتصفح</th>
+              <th class="px-3 py-2 text-right">اللغة</th>
+              <th class="px-3 py-2 text-right">النظام</th>
+              <th class="px-3 py-2 text-right">المنطقة الزمنية</th>
+              <th class="px-3 py-2 text-right">الشاشة</th>
+              <th class="px-3 py-2 text-right">النافذة</th>
+              <th class="px-3 py-2 text-right">Referrer</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 Analytics (Private)</div>
+  </footer>
+
+  <script>
+    // CONFIG: set your password here (temporary UI protection)
+    const ADMIN_PASSWORD = 'changeme'; // TODO: change this
+
+    // The tracker endpoint (read-only) from tracker.js global if available
+    // We can't import from tracker.js easily; allow manual override via query ?endpoint=...
+    const urlParams = new URLSearchParams(location.search);
+    let ENDPOINT = urlParams.get('endpoint') || '';
+
+    const endpointDisplay = document.getElementById('endpointDisplay');
+    endpointDisplay.textContent = ENDPOINT || '(غير مضبوط)';
+
+    const auth = document.getElementById('auth');
+    const panel = document.getElementById('panel');
+    const pwd = document.getElementById('pwd');
+    const loginBtn = document.getElementById('loginBtn');
+    const authErr = document.getElementById('authErr');
+
+    loginBtn.onclick = () => {
+      if (pwd.value === ADMIN_PASSWORD) {
+        auth.classList.add('hidden');
+        panel.classList.remove('hidden');
+        loadData();
+      } else {
+        authErr.classList.remove('hidden');
+        setTimeout(() => authErr.classList.add('hidden'), 1600);
+      }
+    };
+
+    // Data table
+    const rows = document.getElementById('rows');
+    const q = document.getElementById('q');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    async function loadData() {
+      try {
+        if (!ENDPOINT) {
+          console.warn('No endpoint configured. Provide ?endpoint=YOUR_URL temporarily.');
+          rows.innerHTML = '<tr><td class="px-3 py-2 text-rose-600" colspan="10">لم يتم ضبط عنوان التجميع (TRACKER_ENDPOINT). مرِّر مؤقتًا via ?endpoint=... أو حدّث tracker.js</td></tr>';
+          return;
+        }
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'list' })
+        });
+        if (!res.ok) throw new Error('request failed');
+        const data = await res.json();
+        // Expect array of entries in data.items
+        const items = Array.isArray(data.items) ? data.items : [];
+        render(items);
+      } catch (e) {
+        rows.innerHTML = `<tr><td class="px-3 py-2 text-rose-600" colspan="10">خطأ في جلب البيانات: ${e.message}</td></tr>`;
+      }
+    }
+
+    function render(items) {
+      const needle = (q.value || '').toLowerCase().trim();
+      const filtered = !needle ? items : items.filter(it => {
+        const hay = [it.url, it.ip, it.userAgent, it.language, it.platform, it.timeZone, it.referrer].join(' ').toLowerCase();
+        return hay.includes(needle);
+      });
+      rows.innerHTML = filtered.map(it => {
+        const scr = it.screen || {}; const vp = it.viewport || {};
+        return `<tr class="border-t">
+          <td class="px-3 py-2 whitespace-nowrap">${it.ts || ''}</td>
+          <td class="px-3 py-2">${escapeHtml(it.url || '')}</td>
+          <td class="px-3 py-2 mono">${it.ip || ''}</td>
+          <td class="px-3 py-2">${escapeHtml((it.userAgent||'').slice(0,120))}</td>
+          <td class="px-3 py-2">${it.language || ''}</td>
+          <td class="px-3 py-2">${it.platform || ''}</td>
+          <td class="px-3 py-2">${it.timeZone || ''}</td>
+          <td class="px-3 py-2">${scr.width||''}×${scr.height||''} (${it.screen?.pixelRatio||1}x)</td>
+          <td class="px-3 py-2">${vp.innerWidth||''}×${vp.innerHeight||''}</td>
+          <td class="px-3 py-2">${escapeHtml(it.referrer || '')}</td>
+        </tr>`;
+      }).join('') || '<tr><td class="px-3 py-2" colspan="10">لا توجد بيانات</td></tr>';
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[s]));
+    }
+
+    q.addEventListener('input', () => loadData());
+    refreshBtn.addEventListener('click', loadData);
+
+    // page fade-in
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+    });
+  </script>
+</body>
+</html>
