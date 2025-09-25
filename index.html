@@ -20,7 +20,6 @@
     .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
     .nav-anim:hover::after { width: 100%; }
   </style>
-  <script src="assets/tracker.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
   <!-- Navbar -->
@@ -85,6 +84,13 @@
         document.body.classList.add('page-enter-active');
         document.body.classList.remove('page-enter');
       });
+    });
+
+    // Ensure page re-appears when navigating back/forward via bfcache
+    // Some browsers restore the previous DOM state without firing DOMContentLoaded
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
     });
 
     // Smooth page transition on link click (same tab)

@@ -19,7 +19,10 @@
 <body class="bg-slate-50 text-slate-800 page-enter">
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+      <div class="flex items-center gap-2">
+        <button id="backBtn" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50" title="رجوع">⬅︎ رجوع</button>
+        <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+      </div>
       <nav class="hidden md:flex items-center gap-6">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
         <a href="year1.html" class="text-indigo-600 font-semibold nav-anim">سنة أولى</a>
@@ -64,6 +67,11 @@
         document.body.classList.remove('page-enter');
       });
     });
+    // Handle browser back/forward cache to avoid blank page
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
     document.querySelectorAll('a[href$=".html"]').forEach(a => {
       a.addEventListener('click', (e) => {
         const href = a.getAttribute('href');
@@ -83,6 +91,18 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+    // Back button logic
+    (function(){
+      const b = document.getElementById('backBtn');
+      if (!b) return;
+      b.addEventListener('click', () => {
+        if (history.length > 1) {
+          history.back();
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+    })();
   </script>
 </body>
 </html>

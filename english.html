@@ -14,13 +14,35 @@
     .nav-anim { position: relative; }
     .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
     .nav-anim:hover::after { width: 100%; }
-    .lecture-item.active { background: #eef2ff; }
+    .lecture-item.active .lecture-card { outline: 2px solid rgb(79 70 229); outline-offset: 0; box-shadow: 0 10px 20px rgba(79,70,229,0.12); }
+    .lecture-card { transition: transform 220ms ease, box-shadow 220ms ease, outline-color 220ms ease; }
+    .lecture-card:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.08); }
+    .thumb { position: relative; }
+    .play-badge { position: absolute; inset-inline-end: 8px; inset-block-end: 8px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 2px 6px; border-radius: 999px; display: flex; align-items: center; gap: 6px; }
+    .play-badge svg { width: 12px; height: 12px; }
+    /* Compact mode when player is visible */
+    #lectures.compact .lecture-card .video-title { font-size: 0.8rem; }
+    #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
+    #lectures.compact .lecture-card { box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+    /* Mobile layout: small thumbnail (right), title left */
+    @media (max-width: 640px) {
+      #lectures.compact { gap: 0.5rem; }
+      #lectures.compact .lecture-card { display: grid; grid-template-columns: 96px 1fr; align-items: center; }
+      #lectures.compact .lecture-card .thumb { width: 96px; }
+      #lectures.compact .lecture-card .thumb .aspect-video { width: 96px; }
+      #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
+      #lectures.compact .lecture-card .video-title { font-size: 0.85rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      #lectures.compact .play-badge { display: none; }
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+      <div class="flex items-center gap-2">
+        <button id="backBtn" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50" title="رجوع">⬅︎ رجوع</button>
+        <a href="index.html" class="font-bold text-indigo-600 text-lg nav-anim">منصة كلية الطب</a>
+      </div>
       <nav class="hidden md:flex items-center gap-6">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
         <a href="year1.html" class="hover:text-indigo-600 nav-anim">سنة أولى</a>
@@ -36,29 +58,14 @@
       <h1 class="text-2xl font-bold mb-2">Medical English - Intro Lectures</h1>
       <p class="text-slate-700">محاضرات تمهيدية لتحسين مهارات اللغة الإنجليزية الطبية. يمكن إضافة روابط YouTube أو ملفات PDF لاحقًا.</p>
     </div>
-
-    <div class="grid lg:grid-cols-3 gap-6">
-      <!-- Lectures List -->
-      <section class="lg:col-span-2 space-y-4 reveal-on-scroll">
-        <div class="rounded-lg border bg-white">
-          <div class="px-4 py-3 border-b font-semibold">المحاضرات</div>
-          <ul id="lectures" class="p-2 divide-y">
-            <li class="lecture-item p-3 hover:bg-slate-50 cursor-pointer transition" data-video="-tt4NTZyu_E" title="Basics of Medical English">Lecture 1 — Basics of Medical English</li>
-            <li class="lecture-item p-3 hover:bg-slate-50 cursor-pointer transition" data-video="b6QYbi77-u4" title="Medical Abbreviations">Lecture 2 — Medical Abbreviations</li>
-            <li class="lecture-item p-3 hover:bg-slate-50 cursor-pointer transition" data-video="Oi-qLPdNeUs" title="Pronunciation & Stress">Lecture 3 — Pronunciation & Stress</li>
-            <li class="lecture-item p-3 hover:bg-slate-50 cursor-pointer transition" data-video="RDtQNbUXziA" title="Reading Case Notes">Lecture 4 — Reading Case Notes</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Player -->
-      <aside class="lg:col-span-1 reveal-on-scroll">
+    <div class="space-y-6">
+      <!-- Player (top) -->
+      <section id="playerWrap" class="hidden reveal-on-scroll">
         <div class="rounded-lg border bg-white p-4">
-          <div class="aspect-video bg-slate-100 rounded overflow-hidden flex items-center justify-center text-slate-500">
-            <iframe id="player" class="w-full h-full hidden" src="" title="English Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            <div id="emptyState" class="px-4 text-center">اختر محاضرة من القائمة لعرضها هنا</div>
+          <div class="aspect-video bg-slate-100 rounded overflow-hidden">
+            <iframe id="player" class="w-full h-full" src="" title="English Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
-          <div class="mt-4 flex items-center gap-2">
+          <div class="mt-2 flex items-center gap-2">
             <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
               <option value="savefrom" selected>SaveFrom</option>
               <option value="ssyoutube">ssYouTube</option>
@@ -66,7 +73,52 @@
             <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
           </div>
         </div>
-      </aside>
+      </section>
+
+      <!-- Lectures List (below) -->
+      <section class="space-y-4 reveal-on-scroll">
+        <div class="rounded-lg border bg-white">
+          <div class="px-4 py-3 border-b font-semibold">المحاضرات</div>
+          <ul id="lectures" class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <li class="lecture-item" data-video="-tt4NTZyu_E">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100">
+                  <img src="https://i.ytimg.com/vi/-tt4NTZyu_E/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                </div>
+                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 1 — Basics of Medical English</span></div>
+              </div>
+            </li>
+            <li class="lecture-item" data-video="b6QYbi77-u4">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100">
+                  <img src="https://i.ytimg.com/vi/b6QYbi77-u4/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                </div>
+                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 2 — Medical Abbreviations</span></div>
+              </div>
+            </li>
+            <li class="lecture-item" data-video="Oi-qLPdNeUs">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100">
+                  <img src="https://i.ytimg.com/vi/Oi-qLPdNeUs/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                </div>
+                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 3 — Pronunciation & Stress</span></div>
+              </div>
+            </li>
+            <li class="lecture-item" data-video="RDtQNbUXziA">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100">
+                  <img src="https://i.ytimg.com/vi/RDtQNbUXziA/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                </div>
+                <div class="p-3 text-sm font-medium"><span class="video-title">Lecture 4 — Reading Case Notes</span></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -82,6 +134,25 @@
         document.body.classList.remove('page-enter');
       });
     });
+
+    // Handle browser back/forward cache to avoid blank page
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+
+    // Back button logic
+    (function(){
+      const b = document.getElementById('backBtn');
+      if (!b) return;
+      b.addEventListener('click', () => {
+        if (history.length > 1) {
+          history.back();
+        } else {
+          window.location.href = 'index.html';
+        }
+      });
+    })();
 
     // Smooth transition on nav links
     document.querySelectorAll('a[href$=".html"]').forEach(a => {
@@ -106,47 +177,51 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
 
-    // Lectures interaction
+    // Lectures interaction (histology-like)
     const player = document.getElementById('player');
-    const emptyState = document.getElementById('emptyState');
+    const playerWrap = document.getElementById('playerWrap');
     const downloadBtn = document.getElementById('downloadBtn');
     const providerSelect = document.getElementById('providerSelect');
     let currentVideoId = null;
+    const lecturesUl = document.getElementById('lectures');
 
     function selectLecture(li) {
-      document.querySelectorAll('#lectures .lecture-item').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('#lectures li').forEach(x => x.classList.remove('active'));
       li.classList.add('active');
       const id = li.getAttribute('data-video');
-
-      if (id) {
-        currentVideoId = id;
-        player.src = `https://www.youtube.com/embed/${id}`;
-        player.classList.remove('hidden');
-        emptyState.classList.add('hidden');
-        downloadBtn.onclick = () => {
-          if (!currentVideoId) return;
-          const provider = providerSelect.value;
-          let url = `https://youtu.be/${currentVideoId}`;
-          switch (provider) {
-            case 'savefrom':
-              url = `https://en.savefrom.net/1-youtube-video-downloader/?url=https://youtu.be/${currentVideoId}`;
-              break;
-            case 'ssyoutube':
-              url = `https://ssyoutube.com/watch?v=${currentVideoId}`;
-              break;
-          }
-          window.open(url, '_blank');
-        };
-      } else {
-        currentVideoId = null;
-        player.src = '';
-        player.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-        downloadBtn.onclick = null;
+      currentVideoId = id;
+      if (playerWrap.classList.contains('hidden')) {
+        playerWrap.classList.remove('hidden');
       }
+      lecturesUl.classList.add('compact');
+      lecturesUl.classList.add('sm:grid-cols-3', 'lg:grid-cols-4');
+      // Smooth scroll to player (account for sticky header)
+      try {
+        const header = document.querySelector('header');
+        const offset = (header && header.offsetHeight) ? header.offsetHeight + 12 : 76;
+        const rect = playerWrap.getBoundingClientRect();
+        const y = rect.top + window.pageYOffset - offset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      } catch (_) {}
+      player.src = `https://www.youtube.com/embed/${id}`;
+      downloadBtn.onclick = () => {
+        if (!currentVideoId) return;
+        const provider = providerSelect.value;
+        let url = `https://youtu.be/${currentVideoId}`;
+        switch (provider) {
+          case 'savefrom':
+            url = `https://en.savefrom.net/1-youtube-video-downloader/?url=https://youtu.be/${currentVideoId}`;
+            break;
+          case 'ssyoutube':
+            url = `https://ssyoutube.com/watch?v=${currentVideoId}`;
+            break;
+        }
+        window.open(url, '_blank');
+      };
     }
 
-    document.querySelectorAll('#lectures .lecture-item').forEach(li => {
+    // Bind clicks for static list
+    lecturesUl.querySelectorAll('li').forEach(li => {
       li.addEventListener('click', () => selectLecture(li));
     });
   </script>
