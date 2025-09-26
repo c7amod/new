@@ -22,6 +22,9 @@
     .thumb { position: relative; }
     .play-badge { position: absolute; inset-inline-end: 8px; inset-block-end: 8px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 2px 6px; border-radius: 999px; display: flex; align-items: center; gap: 6px; }
     .play-badge svg { width: 12px; height: 12px; }
+    /* Slightly smaller lecture cards by default */
+    #lectures .lecture-card .p-3 { padding: 0.75rem; }
+    #lectures .lecture-card .video-title { font-size: 0.9rem; line-height: 1.3; }
     /* Mobile-friendly tap targets */
     #lectures li { border-radius: 0.5rem; }
     #lectures li + li { margin-top: 0.5rem; }
@@ -46,17 +49,13 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
       <div class="flex items-center gap-2">
-        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
-        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12">
-          <img src="assets/logo.png" alt="شعار" class="h-8 w-8"/>
-          <span>كلية طب الاسكندرية</span>
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
         </a>
       </div>
-      <nav class="hidden md:flex items-center gap-6">
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="year1.html" class="hover:text-indigo-600 nav-anim">سنة أولى</a>
         <a href="orientation.html" class="hover:text-indigo-600 nav-anim">Orientation</a>
-        <a href="terminology.html" class="text-indigo-600 font-semibold nav-anim">Terminology</a>
       </nav>
     </div>
   </header>
@@ -65,9 +64,8 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ltr">
     <div class="mb-6 reveal-on-scroll">
-      <div class="text-sm text-slate-600 mb-2 ltr">Orientation • Terminology</div>
       <h1 class="text-2xl font-bold mb-2 ltr">Terminology</h1>
-      <p class="text-slate-700"> .</p>
+      
       <div class="mt-6 flex flex-wrap justify-center">
         <a href="#tests" id="gotoTests" aria-label="الانتقال إلى قائمة الاختبارات" class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3.5 text-lg font-semibold shadow-lg ring-4 ring-indigo-300/40 hover:ring-indigo-400/60 hover:shadow-xl hover:from-indigo-700 hover:to-purple-700 transition-transform hover:-translate-y-0.5 animate-pulse hover:animate-none">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M9 2a1 1 0 0 0-1 1v1H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V3a1 1 0 1 0-2 0v1h-4V3a1 1 0 0 0-1-1ZM6 8h12v10H6V8Zm3 2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z"/></svg>
@@ -76,22 +74,6 @@
       </div>
     </div>
     <div class="space-y-6">
-      <!-- Player (top) -->
-      <section id="playerWrap" class="hidden reveal-on-scroll">
-        <div class="rounded-lg border bg-white p-4">
-          <div class="aspect-video bg-slate-100 rounded overflow-hidden">
-            <iframe id="player" class="w-full h-full" src="" title="Terminology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-          </div>
-          <div class="mt-2 flex items-center gap-2">
-            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
-              <option value="savefrom" selected>SaveFrom</option>
-              <option value="ssyoutube">ssYouTube</option>
-            </select>
-            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
-          </div>
-        </div>
-      </section>
-
       <!-- PDF Material (above lectures) -->
       <section class="reveal-on-scroll">
         <div class="rounded-lg border bg-white p-4">
@@ -112,11 +94,27 @@
         </div>
       </section>
 
+      <!-- Player (below PDF) -->
+      <section id="playerWrap" class="hidden reveal-on-scroll">
+        <div class="rounded-lg border bg-white p-4">
+          <div class="aspect-video bg-slate-100 rounded overflow-hidden">
+            <iframe id="player" class="w-full h-full" src="" title="Terminology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <div class="mt-2 flex items-center gap-2">
+            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+              <option value="savefrom" selected>SaveFrom</option>
+              <option value="ssyoutube">ssYouTube</option>
+            </select>
+            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Lectures List (below) -->
       <section class="space-y-4 reveal-on-scroll">
         <div class="rounded-lg border bg-white">
-          <div class="px-4 py-3 border-b font-semibold text-right" dir="rtl">المحاضرات</div>
-          <ul id="lectures" class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
+          <ul id="lectures" class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact">
             <li class="lecture-item" data-video="5hmT5nEDpPw">
               <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
                 <div class="thumb aspect-video bg-slate-100">
@@ -162,13 +160,58 @@
                 <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 5 — Practice & Review</span></div>
               </div>
             </li>
+          <li class="lecture-item" data-video="JhqGZKcxJAY">
+            <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+              <div class="thumb aspect-video bg-slate-100">
+                <img src="https://i.ytimg.com/vi/JhqGZKcxJAY/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+              </div>
+              <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 6 — Additional Topic</span></div>
+            </div>
+          </li>
+          <li class="lecture-item" data-video="SIPSgPbmwu4">
+            <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+              <div class="thumb aspect-video bg-slate-100">
+                <img src="https://i.ytimg.com/vi/SIPSgPbmwu4/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+              </div>
+              <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 7 — Additional Topic</span></div>
+            </div>
+          </li>
+          <li class="lecture-item" data-video="5Ok-13uf8L0">
+            <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+              <div class="thumb aspect-video bg-slate-100">
+                <img src="https://i.ytimg.com/vi/5Ok-13uf8L0/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+              </div>
+              <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 8 — Additional Topic</span></div>
+            </div>
+          </li>
+          <li class="lecture-item" data-video="C9c8M9b7tG0">
+            <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+              <div class="thumb aspect-video bg-slate-100">
+                <img src="https://i.ytimg.com/vi/C9c8M9b7tG0/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+              </div>
+              <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 9 — Additional Topic</span></div>
+            </div>
+          </li>
+          <li class="lecture-item" data-video="V8ZaRaisPS4">
+            <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+              <div class="thumb aspect-video bg-slate-100">
+                <img src="https://i.ytimg.com/vi/V8ZaRaisPS4/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+              </div>
+              <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 10 — Additional Topic</span></div>
+            </div>
+          </li>
           </ul>
         </div>
       </section>
 
       <!-- Tests Inline Section -->
       <section id="tests" class="mt-10 reveal-on-scroll">
-        <h2 class="text-xl font-semibold mb-4 text-right" dir="rtl">قائمة الاختبارات</h2>
+        <h2 class="px-4 py-4 text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">الاختبارات</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <a href="quiz-terminology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
             <span class="num-badge">1</span>
@@ -212,13 +255,45 @@
             <span class="num-badge">10</span>
             <div><div class="font-semibold ltr">Cardiovascular System</div></div>
           </a>
+          <a href="quiz-blood.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">11</span>
+            <div><div class="font-semibold ltr">Blood</div></div>
+          </a>
+          <a href="quiz-urinary.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">12</span>
+            <div><div class="font-semibold ltr">Urinary System</div></div>
+          </a>
+          <a href="quiz-female-genital.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">13</span>
+            <div><div class="font-semibold ltr">Female Genital System</div></div>
+          </a>
+          <a href="quiz-male-genital.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">14</span>
+            <div><div class="font-semibold ltr">Male Genital System</div></div>
+          </a>
+          <a href="quiz-neurology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">15</span>
+            <div><div class="font-semibold ltr">Neurology & Psychology</div></div>
+          </a>
+          <a href="quiz-accessory-gland.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">16</span>
+            <div><div class="font-semibold ltr">Accessory Gland</div></div>
+          </a>
+          <a href="quiz-endocrine.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">17</span>
+            <div><div class="font-semibold ltr">Endocrine System</div></div>
+          </a>
+          <a href="quiz-anesthesiology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg flex items-start gap-3">
+            <span class="num-badge">18</span>
+            <div><div class="font-semibold ltr">Anesthesiology</div></div>
+          </a>
         </div>
       </section>
     </div>
   </main>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
   </footer>
 
   

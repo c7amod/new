@@ -18,30 +18,33 @@
     .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
     .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
     .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
-    .badge { font-size: 12px; padding: 2px 6px; border-radius: 999px; }
-    .badge-correct { background: #ecfdf5; color: #065f46; border: 1px solid #34d399; }
-    .badge-incorrect { background: #fef2f2; color: #991b1b; border: 1px solid #f87171; }
+    /* Top-centered result icon with fixed size */
+    #quizContainer [data-qid] { position: relative; }
+    .badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 40px; font-size: 22px; line-height: 1; padding: 0; border-radius: 9999px;
+      background: transparent; border: none; display: flex; align-items: center; justify-content: center; }
+    .badge-correct { color: #059669; }
+    .badge-incorrect { color: #dc2626; }
     /* Animations */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .card-enter { animation: fadeUp 420ms ease both; }
     .fade-out { opacity: 0; transition: opacity 220ms ease; }
     .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
+    /* Left position for question number */
+    #quizContainer [data-role="num"] { position: absolute; left: 12px; top: 12px; font-weight: 700; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
       <div class="flex items-center gap-2">
-        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
-        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12">
-          <img src="assets/logo.png" alt="شعار" class="h-8 w-8"/>
-          <span>كلية طب الاسكندرية</span>
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
         </a>
       </div>
-      <nav class="hidden md:flex items-center gap-6">
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="orientation.html" class="hover:text-indigo-600 nav-anim">Orientation</a>
-        <a href="terminology.html" class="text-indigo-600 font-semibold nav-anim">Terminology</a>
+        <a href="terminology.html#tests" class="hover:text-indigo-600 nav-anim">الاختبارات</a>
       </nav>
     </div>
   </header>
@@ -69,7 +72,7 @@
   </main>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
   </footer>
 
   <script>
@@ -96,14 +99,7 @@
         setTimeout(() => { window.location.href = href; }, 180);
       });
     });
-    // Back button
-    (function(){
-      const b = document.getElementById('backBtn');
-      if (!b) return;
-      b.addEventListener('click', () => {
-        if (history.length > 1) { history.back(); } else { window.location.href = 'index.html'; }
-      });
-    })();
+    // Back button logic removed: using logo link instead
     // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -322,12 +318,12 @@
 
         const head = document.createElement('div');
         head.className = 'flex items-start justify-between gap-3 mb-3';
-        head.innerHTML = `<div class=\"font-semibold\">${qi + 1}</div><div class=\"hidden\" data-role=\"badge\"></div>`;
+        head.innerHTML = `<div class=\"font-semibold\"></div><div class=\"hidden\" data-role=\"badge\"></div>`;
         card.appendChild(head);
 
         const text = document.createElement('div');
         text.className = 'mb-3 ltr';
-        text.textContent = q.text;
+        text.textContent = `${qi + 1}- ${q.text}`;
         card.appendChild(text);
 
         const ul = document.createElement('ul');
@@ -387,45 +383,47 @@
 
         if (selected === q.answer) {
           correctCount++;
-          badge.className = 'badge badge-correct';
-          badge.textContent = 'إجابة صحيحة';
+          badge.className='badge badge-correct';
+          badge.textContent = '✓';
         } else {
-          badge.className = 'badge badge-incorrect';
-          badge.textContent = 'إجابة خاطئة';
+          badge.className='badge badge-incorrect';
+          badge.textContent = '✗';
         }
       });
 
       const total = questions.length;
       const score = Math.round((correctCount / total) * 100);
-      const scoreBox = document.getElementById('scoreBox');
-      scoreBox.classList.remove('hidden');
-      scoreBox.textContent = `درجتك (مبدئيًا): ${correctCount} / ${total} (${score}%)`;
+      const box = document.getElementById('scoreBox');
+      if (box) {
+        box.classList.remove('hidden');
+        box.textContent = `درجتك: ${correctCount} / ${total} (${score}%)`;
+      }
+      const retry = document.getElementById('retryBtn');
+      if (retry) retry.classList.remove('hidden');
+      const filterWrap = document.getElementById('filterWrap');
+      if (filterWrap) filterWrap.classList.remove('hidden');
 
-      document.getElementById('retryBtn').classList.remove('hidden');
-      document.getElementById('filterWrap').classList.remove('hidden');
-
-      // Persist to results page payload
-      const payload = { correctCount, total, score, answers };
-      sessionStorage.setItem('terminology_quiz_payload', JSON.stringify(payload));
     }
 
     function applyIncorrectFilter(onlyIncorrect) {
       questions.forEach(q => {
         const card = document.querySelector(`[data-qid="${q.id}"]`);
         const badge = card.querySelector('[data-role="badge"]');
-        const isIncorrect = badge && badge.textContent.includes('خاطئة');
-        card.style.display = onlyIncorrect && !isIncorrect ? 'none' : '';
+        const isIncorrect = badge && badge.classList.contains('badge-incorrect');
+        card.classList.toggle('hidden', onlyIncorrect && !isIncorrect);
       });
     }
 
     function resetQuiz() {
       renderQuiz();
-      unlockQuiz();
-      document.getElementById('scoreBox').classList.add('hidden');
-      document.getElementById('scoreBox').textContent = '';
-      document.getElementById('retryBtn').classList.add('hidden');
-      document.getElementById('filterWrap').classList.add('hidden');
-      document.getElementById('showOnlyIncorrect').checked = false;
+      const box = document.getElementById('scoreBox');
+      if (box) { box.classList.add('hidden'); box.textContent = ''; }
+      const retry = document.getElementById('retryBtn');
+      if (retry) retry.classList.add('hidden');
+      const filterWrap = document.getElementById('filterWrap');
+      if (filterWrap) filterWrap.classList.add('hidden');
+      const chk = document.getElementById('showOnlyIncorrect');
+      if (chk) chk.checked = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -492,8 +490,6 @@
     document.getElementById('submitBtn').addEventListener('click', () => {
       const answers = collectAnswers();
       lockQuiz();
-      showResults(answers);
-      // Brief fade and route to results page
       // Calculate elapsed time (fallback to localStartAt if session is missing)
       stopLiveTimer();
       let durationMs = null;
@@ -502,20 +498,25 @@
         const started = startStr ? parseInt(startStr, 10) : localStartAt;
         durationMs = Date.now() - started;
       } catch (_) { durationMs = Date.now() - localStartAt; }
-      // Merge duration into payload if available
+      // Compute score summary for results page
+      let correctCount = 0;
+      const total = questions.length;
+      questions.forEach(q => {
+        const sel = answers[q.id];
+        if (sel != null && sel === q.answer) correctCount++;
+      });
+      const score = Math.round((correctCount / total) * 100);
+      // Persist complete payload (answers + score + duration)
       try {
-        const raw = sessionStorage.getItem('terminology_quiz_payload');
-        if (raw) {
-          const p = JSON.parse(raw);
-          p.durationMs = durationMs;
-          sessionStorage.setItem('terminology_quiz_payload', JSON.stringify(p));
-        }
+        const payload = { correctCount, total, score, durationMs, answers };
+        sessionStorage.setItem('terminology_quiz_payload', JSON.stringify(payload));
       } catch (_) {}
       // Also store a standalone key for fallback on results page
       try {
         sessionStorage.setItem('terminology_last_duration', String(durationMs));
         sessionStorage.setItem('terminology_quiz_end', String(Date.now()));
       } catch(_) {}
+      // Navigate to results page
       document.body.classList.add('fade-out');
       setTimeout(() => { window.location.href = 'quiz-terminology-result.html'; }, 240);
     });

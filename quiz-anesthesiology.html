@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Terminology Quiz — Respiratory System</title>
+  <title>Terminology Quiz — Anesthesiology</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { transition: opacity 600ms ease; }
@@ -15,6 +15,18 @@
     .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
     .nav-anim:hover::after { width: 100%; }
     .ltr { direction: ltr; text-align: left; }
+    .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
+    .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
+    .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
+    #quizContainer [data-qid] { position: relative; }
+    .badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 40px; font-size: 22px; line-height: 1; padding: 0; border-radius: 9999px;
+      background: transparent; border: none; display: flex; align-items: center; justify-content: center; }
+    .badge-correct { color: #059669; }
+    .badge-incorrect { color: #dc2626; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-enter { animation: fadeUp 420ms ease both; }
+    .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
@@ -34,7 +46,7 @@
   
   <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="mb-6">
-      <h1 class="text-2xl font-bold mb-2 ltr">Respiratory System</h1>
+      <h1 class="text-2xl font-bold mb-2 ltr">Anesthesiology</h1>
       <p class="text-slate-700">اختر الإجابة الصحيحة لكل سؤال ثم اضغط "إنهاء الاختبار" لعرض الدرجة ومراجعة الإجابات.</p>
       <div class="mt-2 text-sm text-slate-600">الوقت: <span id="liveTimer">00:00</span></div>
     </div>
@@ -65,7 +77,7 @@
       try {
         const t = Date.now();
         sessionStorage.setItem('quiz_start', String(t));
-        sessionStorage.setItem('quiz_last_source', 'quiz-respiratory.html');
+        sessionStorage.setItem('quiz_last_source', 'quiz-anesthesiology.html');
       } catch(_) {}
       try { startLiveTimer(Date.now()); } catch(_) {}
     });
@@ -74,34 +86,17 @@
       document.body.classList.remove('page-enter');
     });
 
-    // Quiz data (Respiratory)
+    // Quiz data (Anesthesiology)
     const questions = [
-      { id: 'q1', text: 'Pneumonectomy is:', choices: ['Removal of the lung', 'Inflammation of the lung', 'Removal of the pleura', 'None of the above'], answer: 0 },
-      { id: 'q2', text: 'Thoracoscope is a device used to visualise:', choices: ['Thorax', 'Bronchi', 'Mediastinum', 'Rectum', 'None of the above'], answer: 0 },
-      { id: 'q3', text: 'Accumulation of pus in the thoracic cavity is called:', choices: ['Pneumothorax', 'Hemothorax', 'Pyothorax', 'Hydropneumothorax'], answer: 2 },
-      { id: 'q4', text: 'Phrenic nerves are nerves that supply:', choices: ['Eye', 'Kidney', 'Diaphragm', 'Penis', 'Skin'], answer: 2 },
-      { id: 'q5', text: 'Coughing of blood is called:', choices: ['Rhinorrhea', 'Epistaxis', 'Hemoptysis', 'Hematemesis'], answer: 2 },
-      { id: 'q6', text: 'Discharge from the nose is:', choices: ['Rhinitis', 'Epistaxis', 'Rhinorrhea', 'Hemoptysis'], answer: 2 },
-      { id: 'q7', text: 'Pulmonology is…… System', choices: ['Digestive', 'Respiratory', 'Endocrine', 'Musculoskeletal'], answer: 1 },
-      { id: 'q8', text: 'Nasopharyngitis is inflammation of', choices: ['Nose', 'Pharynx', 'Larynx', 'Both A and B'], answer: 3 },
-      { id: 'q9', text: 'Impairment of voice is:', choices: ['Dysphagia', 'Dyspepsia', 'Dysphonia', 'Dyspnea'], answer: 2 },
-      { id: 'q10', text: 'Bronchitis means….. Of the bronchi', choices: ['Inflammation', 'Swelling', 'Hemorrhage', 'None of them'], answer: 0 },
-      { id: 'q11', text: '……means air', choices: ['Pneumono', 'Pneumo', 'Pnea', 'Options A and B'], answer: 1 },
-      { id: 'q12', text: 'The term for difficult or painful breathing', choices: ['Tachypnea', 'Dyspnea', 'Apnea', 'Atelectasis'], answer: 1 },
-      { id: 'q13', text: 'Which term describe faster than normal respiratory rate?', choices: ['Dyspnea', 'Apnea', 'Tachypnea', 'Bradypnea'], answer: 2 },
-      { id: 'q14', text: 'In dangerous car accident, collection of air in chest is termed:', choices: ['Pyothorax', 'Pneumothorax', 'Pneumonia', 'Hemothorax'], answer: 1 },
-      { id: 'q15', text: 'A tracheostomy is a procedure involving', choices: ['Visual examination of the interior of the trachea', 'A temporary opening cut into the trachea', 'A permanent opening cut into the trachea', 'Visual examination of the lung passageways', 'Surgical reconstruction of a crushed trachea'], answer: 2 },
-      { id: 'q16', text: 'Inflammation of pleural cavity is:', choices: ['Pleuritis', 'Pleurisy', 'Pleuroma', 'both (a) and (b)'], answer: 3 },
-      { id: 'q17', text: 'Best process to relieve excess air and fluid in pleural cavity:', choices: ['Thoracocentesis', 'Pneumonectomy', 'Venipuncture', 'Pericardiocentesis'], answer: 0 },
-      { id: 'q18', text: 'Repeated bacterial tonsillitis; recommended surgery:', choices: ['Pharyngotomy', 'Tracheostomy', 'Tonsillectomy', 'Laryngoscopy'], answer: 2 },
-      { id: 'q19', text: 'A supraphrenic abscess refers to collection of pus', choices: ['Above the stomach', 'Below the stomach', 'Above the diaphragm', 'Below the diaphragm'], answer: 2 },
-      { id: 'q20', text: 'Atelectasis is:', choices: ['Absence of breathing', 'Slow breathing', 'Difficult breathing', 'Collapsed lung'], answer: 3 },
+      { id: 'q1', text: 'Patient suffers from severe pain, he needs drugs that relieve it, these drugs are called:', choices: ['Antipyretics', 'Antidepressants', 'Anti-inflammatory', 'Analgesics'], answer: 3 },
+      { id: 'q2', text: 'Hyperesthesia is:', choices: ['Sleeping induced by narcotics', 'No pain', 'oversensitivity to pain', 'Lack of sensation'], answer: 2 },
+      { id: 'q3', text: 'Anesthesia is:', choices: ['Sleeping induced by narcotics', 'lack of sensation', 'Oversensitivity to pain', 'No pain'], answer: 1 },
     ];
 
     function renderQuiz() {
       const wrap = document.getElementById('quizContainer');
       wrap.innerHTML = '';
-      const letters = ['A', 'B', 'C', 'D', 'E'];
+      const letters = ['A', 'B', 'C', 'D'];
       questions.forEach((q, qi) => {
         const card = document.createElement('div');
         card.className = 'rounded-lg border bg-white p-4 card-enter';
@@ -244,7 +239,7 @@
       try {
         const mode = sessionStorage.getItem('quiz_review');
         const src = sessionStorage.getItem('quiz_last_source');
-        if (!mode || src !== 'quiz-respiratory.html') return;
+        if (!mode || src !== 'quiz-anesthesiology.html') return;
         const raw = sessionStorage.getItem('quiz_answers');
         const answers = raw ? JSON.parse(raw) : null;
         if (!answers) return;

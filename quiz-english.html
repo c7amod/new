@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>English Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
+    .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
+    .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
+    .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
+    /* Top-centered result icon with fixed size */
+    #quizContainer [data-qid] { position: relative; }
+    .badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 40px; font-size: 22px; line-height: 1; padding: 0; border-radius: 9999px;
+      background: transparent; border: none; display: flex; align-items: center; justify-content: center; }
+    .badge-correct { color: #059669; }
+    .badge-incorrect { color: #dc2626; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-enter { animation: fadeUp 420ms ease both; }
+    .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
+    /* Left position for question number */
+    #quizContainer [data-role="num"] { position: absolute; left: 12px; top: 12px; font-weight: 700; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+      <div class="flex items-center gap-2">
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
+        </a>
+      </div>
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="english.html" class="hover:text-indigo-600 nav-anim">English</a>
+      </nav>
+    </div>
+  </header>
+  
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold mb-2 ltr">English Quiz</h1>
+      <p class="text-slate-700">اختر الإجابة الصحيحة لكل سؤال ثم اضغط "إنهاء الاختبار" لعرض الدرجة.</p>
+      <div class="mt-2 text-sm text-slate-600">الوقت: <span id="liveTimer">00:00</span></div>
+    </div>
+
+    <div id="quizContainer" class="space-y-4"></div>
+
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+      <button id="submitBtn" class="rounded-lg bg-indigo-600 text-white px-5 py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">إنهاء الاختبار</button>
+      <button id="retryBtn" class="rounded-lg border px-5 py-2 hover:bg-slate-50 hidden">إعادة المحاولة</button>
+      <label class="inline-flex items-center gap-2 text-sm hidden" id="filterWrap">
+        <input type="checkbox" id="showOnlyIncorrect" class="rounded border-slate-300" />
+        <span>عرض الأسئلة الخاطئة فقط</span>
+      </label>
+      <div id="scoreBox" class="text-sm text-slate-700 hidden"></div>
+      <a href="english.html" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">الرجوع إلى English</a>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
+  </footer>
+
+  <script>
+    // Page enter
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+      // Start time + remember source
+      try {
+        const t = Date.now();
+        sessionStorage.setItem('quiz_start', String(t));
+        sessionStorage.setItem('quiz_last_source', 'quiz-english.html');
+      } catch(_) {}
+      // start live timer UI
+      try { startLiveTimer(Date.now()); } catch(_) {}
+    });
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+
+    // Quiz data (English)
+    const questions = [
+      // 1 passage
+      { id: 'info1', type: 'info', text: 'Blood is a connective tissue fluid that circulates through the body to maintain a constant environment around the body cells. Blood is the main transportation vehicle of the body; it carries O2 and nutrients to the tissues and returns CO2 to the lung and other products of metabolism to the kidneys. It carries and distributes hormones and other agents that regulate cell functions.', choices: [] },
+      // 1
+      { id: 'q1', text: 'What does the previous paragraph explain?', choices: ['The function of the cell.', 'The function of the blood.', 'Introduction to the blood.'], answer: 1 },
+      // 2 passage
+      { id: 'info2', type: 'info', text: 'The digestive system consists of the digestive tract, oral cavity, esophagus, stomach, small and large intestines, rectum and anus and its associated glands salivary gland, liver, and pancreas.', choices: [] },
+      // 2
+      { id: 'q2', text: 'What is the main idea of the paragraph?', choices: ['Mechanism of the digestive system', 'Structure of the digestive system', 'Function of the digestive system'], answer: 1 },
+      // 3 passage
+      { id: 'info3', type: 'info', text: 'Hormones are molecules that function as chemical signals. They are liberated by specialized cells that are called endocrine cells because they secrete inward as opposed to exocrine cells, which secrete into a body cavity or toward the body surface.', choices: [] },
+      // 3
+      { id: 'q3', text: 'Paraphrase the paragraph.', choices: [
+        'Molecules that function as chemical signals are called hormones. They are liberated by specialized cells that are called exocrine cells because they secrete inward as opposed to endocrine cells, which secrete into a body cavity or toward the body surface.',
+        'Chemical signals are called hormones. They are liberated by specialized cells that are called exocrine cells because they secrete inward as opposed to endocrine cells, which secrete into a body cavity or toward the body surface.',
+        'Molecules that function as chemical signals are called hormones. They are liberated by specialized cells that are called endocrine cells because they secrete inward as opposed to exocrine cells which secrete into a body cavity or toward the body surface.'
+      ], answer: 2 },
+      // 4 passage
+      { id: 'info4', type: 'info', text: 'A healthy liver is essential for normal red blood cell formation. It manufactures globin, stores iron, copper, vitamin B12 and folic acid, and a small fraction of erythropoietin.', choices: [] },
+      // 4
+      { id: 'q4', text: 'Choose the best paraphrase.', choices: [
+        'Liver is necessary for normal red blood cell formation. Red blood cell manufactures globin, stores iron, copper, vitamin B12 and folic acid, and a small fraction of erythropoietin.',
+        'Liver is necessary for normal red blood cell formation. The liver manufactures globin, stores iron, copper, vitamin B12 and folic acid, and a small fraction of erythropoietin.',
+        'It is necessary for the liver to have normal red blood cell. The liver manufactures globin, stores iron, copper, vitamin B12 and folic acid, and a small fraction of erythropoietin.'
+      ], answer: 1 },
+      // 5 passage (dialogue)
+      { id: 'info5', type: 'info', text: 'Doctor: How can I help you?\nPatient: I just came to see if I can get some, I don\'t know, vitamins or something like that just to get my energy levels up.', choices: [] },
+      // 5
+      { id: 'q5', text: 'Choose the option that best paraphrases what the patient says.', choices: [
+        'I really want to feel like I have more energy',
+        'I really want some vitamins.',
+        'I really want something other than vitamins (e.g. prescription drugs).',
+        'I really want vitamin C. I know what I want.'
+      ], answer: 0 },
+      // 6 passage (dialogue)
+      { id: 'info6', type: 'info', text: 'Doctor: Look, when people feel like that for a little while, sometimes they have thoughts about \'I don\'t want to live any more\' or \'Is it worth living anymore?\' Have you been having thoughts like that (again)?\nPatient: Yeah, sometimes I guess I have thoughts yeah.', choices: [] },
+      // 6
+      { id: 'q6', text: 'Best interpretation of the patient answer:', choices: [
+        'I do think about stuff, but not suicide.',
+        'I have thought about suicide more than once.',
+        'I might have suicidal thoughts, I\'m not sure.',
+        'I think everybody thinks about suicide sometimes.'
+      ], answer: 1 },
+      // 7 passage (dialogue)
+      { id: 'info7', type: 'info', text: 'Doctor: Is your friend somebody whom you can talk to?\nPatient: Yeah, I could probably talk to her if I tried.', choices: [] },
+      // 7
+      { id: 'q7', text: 'What does the patient mean?', choices: [
+        'It is likely that I could tell my friend about this if I decided to.',
+        'I\'m planning to tell my friend about this.',
+        'I\'m not sure my friend would listen to me.',
+        'It is unlikely that I will talk to my friend about this.'
+      ], answer: 0 },
+      // 8 passage (dialogue)
+      { id: 'info8', type: 'info', text: 'Doctor: Anybody in your family had any emotional or psychological problems?\nPatient: Um, no, not really, my mum was going on the other day about my grandfather, but I don\'t know, it\'s really, not really many people in the family talk about it so...', choices: [] },
+      // 8
+      { id: 'q8', text: 'Best interpretation:', choices: [
+        'I think my grandfather might have had some emotional or psychological problems.',
+        'No-one in my family has any emotional or psychological problems.',
+        'My family members refuse to talk about those sorts of things.',
+        'My mother seems to have some emotional or psychological problems.'
+      ], answer: 2 },
+      // 9 passage (dialogue)
+      { id: 'info9', type: 'info', text: 'Doctor: Do you go out with your friends?\nPatient: I guess I haven\'t been going out as much and I usually go out with my friends a bit.', choices: [] },
+      // 9
+      { id: 'q9', text: 'What does the patient mean?', choices: [
+        'I only go out with my friends.',
+        'I can\'t remember how much I go out.',
+        'I don\'t go out as frequently as I used to.',
+        'I want to start going out more.'
+      ], answer: 2 },
+      // 10 passage
+      { id: 'info10', type: 'info', text: 'Water, vitamins and minerals are also absorbed from ingested food. (1) _____ the inner layer of the digestive tract (2) _____ a protective barrier between the content of the (3) _____ and the internal milieu (4) _____.', choices: [] },
+      // 10 split (1)-(4)
+      { id: 'q10_1', text: 'Fill: Water, vitamins and minerals are also absorbed... (1) ____', choices: ['In addition,', 'In addition', 'In adition'], answer: 0 },
+      { id: 'q10_2', text: 'Fill: the inner layer of the digestive tract (2) ____ a protective barrier ...', choices: ['is', 'are', 'has'], answer: 2 },
+      { id: 'q10_3', text: 'Fill: ... between the content of the (3) ____ and the internal milieu ...', choices: ['tracts lumen', 'tract’s lumen', 'tracts’ lumen'], answer: 1 },
+      { id: 'q10_4', text: 'Fill: ... and the internal milieu (4) ____', choices: ['for the body', 'of the body', 'about the body'], answer: 1 },
+      // 11 passage
+      { id: 'info11', type: 'info', text: 'Large molecules such as proteins, fats, complex carbohydrates, and nucleic acids (1) _____ into small molecules that (2) _____ through the lining of the digestive tract, mostly (3) _____ the small intestine.', choices: [] },
+      // 11 split (1)-(3)
+      { id: 'q11_1', text: 'Large molecules ... (1) ____ into small molecules ...', choices: ['have broken down', 'has broken down', 'are broken down'], answer: 2 },
+      { id: 'q11_2', text: '... small molecules that (2) ____ through the lining ...', choices: ['have easily absorbed', 'are easily absorbed', 'is easily absorbed'], answer: 1 },
+      { id: 'q11_3', text: '... mostly (3) ____ the small intestine.', choices: ['in', 'on', 'under'], answer: 0 },
+      // 12 passage
+      { id: 'info12', type: 'info', text: 'The clinical signs and symptoms of porphyria result from either deficiency of (1) _____ products beyond the enzymatic block of Hb biosynthesis or from an (2) _____ of metabolites before the block. Where the enzyme lesion (3) _____ early in the pathway prior to the formation of porphyrinogens, ALA and PBG will accumulate in the body (4) _____ toxic effects in abdominal nerves and in CNS, resulting (5) _____ abdominal pain and neuropsychiatric symptoms. (6) _____ enzyme blocks later in the pathway result in the accumulation of porphyrinogens (colorless), which upon oxidation (7) _____ the corresponding porphyrins (colored) that cause photosensitivity.', choices: [] },
+      // 12 split (1)-(7)
+      { id: 'q12_1', text: 'The clinical signs... deficiency of (1) ____ products beyond ...', choices: ['metaboic', 'metabolic', 'mitabolic'], answer: 1 },
+      { id: 'q12_2', text: '... or from an (2) ____ of metabolites before the block', choices: ['acumulation', 'accumlation', 'accumulation'], answer: 2 },
+      { id: 'q12_3', text: 'Where the enzyme lesion (3) ____ early in the pathway ...', choices: ['occured', 'occur', 'occurs'], answer: 2 },
+      { id: 'q12_4', text: '... ALA and PBG will accumulate in the body (4) ____ toxic effects ...', choices: ['caused', 'causing', 'casue'], answer: 1 },
+      { id: 'q12_5', text: '... resulting (5) ____ abdominal pain and neuropsychiatric symptoms.', choices: ['in', 'on', 'above'], answer: 0 },
+      { id: 'q12_6', text: '(6) ____ enzyme blocks later in the pathway result in ...', choices: ['On the other hand,', 'On hand', 'On the other hand'], answer: 0 },
+      { id: 'q12_7', text: '... which upon oxidation (7) ____ the corresponding porphyrins ...', choices: ['produce', 'produced', 'produces'], answer: 2 },
+      // 13 passage
+      { id: 'info13', type: 'info', text: 'Scientists in Australia say they have developed the (1) _____ first blood test to find a deadly skin cancer in (2) _____ early stages. They say the test could save thousands (3) _____ each year.', choices: [] },
+      // 13 split (1)-(3)
+      { id: 'q13_1', text: 'Scientists ... developed the (1) ____ first blood test ...', choices: ['world’s', 'worlds’', 'worlds'], answer: 0 },
+      { id: 'q13_2', text: '... find a deadly skin cancer in (2) ____ early stages.', choices: ['it’s', 'its’', 'its'], answer: 2 },
+      { id: 'q13_3', text: 'They say the test could save thousands (3) ____ each year.', choices: ['lifes', 'lives', 'livs'], answer: 1 },
+      // 14 passage
+      { id: 'info14', type: 'info', text: 'The World Health Organization (WHO) (1) _____ that nearly 15 million people (2) _____ killed either by the coronavirus (3) _____ by its effects (4) _____ health care systems in the past two years. The number is much (5) _____ than the official death count of 6 million. A specialist said the number should lead countries to invest more in their abilities to deal with future health (6) _____.', choices: [] },
+      // 14 split (1)-(6)
+      { id: 'q14_1', text: 'WHO (1) ____ that nearly 15 million people ...', choices: ['estimates', 'estimate', 'estimating'], answer: 0 },
+      { id: 'q14_2', text: '... people (2) ____ killed either by the coronavirus ...', choices: ['was', 'were', 'has'], answer: 1 },
+      { id: 'q14_3', text: '... killed either by the coronavirus (3) ____ by its effects ...', choices: ['for', 'or', 'nor'], answer: 1 },
+      { id: 'q14_4', text: '... effects (4) ____ health care systems ...', choices: ['on', 'at', 'in'], answer: 0 },
+      { id: 'q14_5', text: 'The number is much (5) ____ than the official death count ...', choices: ['high', 'higher', 'highest'], answer: 1 },
+      { id: 'q14_6', text: '... invest more in their abilities to deal with future health (6) ____', choices: ['emergences', 'emergenceis', 'emergencies'], answer: 2 },
+      // 15 passage
+      { id: 'info15', type: 'info', text: 'The exact numbers of COVID-19 deaths (1) _____ been difficult to come by because of limited testing and differences in how countries count COVID-19 deaths. In a recent study published in Lancet, scientists at the Institute of Health Metrics and Evaluation at (2) _____ University of Washington estimated (3) _____ were more than 18 (4) _____ COVID deaths from January 2020 to December 2021.', choices: [] },
+      // 15 split (1)-(4)
+      { id: 'q15_1', text: 'The exact numbers of COVID-19 deaths (1) ____ been difficult to come by ...', choices: ['were', 'have', 'has'], answer: 1 },
+      { id: 'q15_2', text: '... scientists at the Institute ... at (2) ____ University of Washington ...', choices: ['a', 'the', 'an'], answer: 1 },
+      { id: 'q15_3', text: '... estimated (3) ____ were more than 18 (4) ____ COVID deaths ... (1)', choices: ['these', 'there', 'those'], answer: 1 },
+      { id: 'q15_4', text: '... estimated there were more than 18 (4) ____ COVID deaths ... (2)', choices: ['milion', 'million', 'millions'], answer: 1 },
+      // 16 passage
+      { id: 'info16', type: 'info', text: 'A specialist said the new WHO estimate might also explain some open questions about the pandemic, like why Africa (1) _____ to have been one of the least affected by the virus, despite (2) _____ low vaccination rates. He also warned the cost of COVID-19 could be far more damaging in the long term to care (3) _____ people with long COVID. Although the number of COVID deaths is still much lower than the 100 million deaths during the 1918 Spanish (4) _____ pandemic, Pankhania said it is shameful that so many people died (5) _____ the advances in modern medicine and vaccines.', choices: [] },
+      // 16 split (1)-(5)
+      { id: 'q16_1', text: 'Africa (1) ____ to have been one of the least affected ...', choices: ['appeard', 'appears', 'appear'], answer: 1 },
+      { id: 'q16_2', text: '... despite (2) ____ low vaccination rates.', choices: ['their', 'it’s', 'its'], answer: 0 },
+      { id: 'q16_3', text: '... could be far more damaging in the long term to care (3) ____ people with long COVID.', choices: ['of', 'by', 'for'], answer: 2 },
+      { id: 'q16_4', text: '... during the 1918 Spanish (4) ____ pandemic ...', choices: ['flu', 'flow', 'flew'], answer: 0 },
+      { id: 'q16_5', text: '... shameful that so many people died (5) ____ the advances in modern medicine ...', choices: ['bite', 'insbite', 'despite'], answer: 2 }
+    ];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quizContainer');
+      wrap.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      let qNum = 0; // count only real questions, skip info items
+      questions.forEach((q) => {
+        const card = document.createElement('div');
+        card.className = 'rounded-lg border bg-white p-4 card-enter';
+        card.dataset.qid = q.id;
+        const head = document.createElement('div');
+        head.className = 'flex items-start justify-between gap-3 mb-3';
+        if (q.type === 'info') {
+          head.innerHTML = `<div class="font-semibold"></div><div class="hidden" data-role="badge"></div>`;
+        } else {
+          qNum += 1;
+          head.innerHTML = `<div class="font-semibold"></div><div class="hidden" data-role="badge"></div>`;
+        }
+        card.appendChild(head);
+        if (q.type === 'info') {
+          // Add Article label inside content (LTR), then the article text
+          const label = document.createElement('div');
+          label.className = 'text-sm font-semibold text-indigo-700 ltr mb-1';
+          label.textContent = 'Article';
+          card.appendChild(label);
+          const text = document.createElement('div');
+          text.className = 'mb-3 ltr';
+          text.textContent = q.text;
+          card.appendChild(text);
+        } else {
+          const text = document.createElement('div');
+          text.className = 'mb-3 ltr';
+          text.textContent = `${qNum}- ${q.text}`;
+          card.appendChild(text);
+        }
+        if (!q.type || q.type !== 'info') {
+          const ul = document.createElement('ul');
+          ul.className = 'space-y-2';
+          q.choices.forEach((c, ci) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <label class="choice flex items-center gap-3 rounded border px-3 py-2 cursor-pointer">
+                <input type="radio" name="${q.id}" value="${ci}" class="peer" />
+                <span class="opt-key">${letters[ci] || ''}</span>
+                <span class="ltr grow">${c}</span>
+              </label>`;
+            ul.appendChild(li);
+          });
+          card.appendChild(ul);
+        }
+        wrap.appendChild(card);
+      });
+    }
+
+    function collectAnswers() {
+      const answers = {};
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+        answers[q.id] = checked ? parseInt(checked.value, 10) : null;
+      });
+      return answers;
+    }
+
+    function lockQuiz() { document.querySelectorAll('#quizContainer input[type="radio"]').forEach(i=>i.disabled=true); }
+    function unlockQuiz() { document.querySelectorAll('#quizContainer input[type="radio"]').forEach(i=>i.disabled=false); }
+
+    // Live timer UI
+    let timerInterval = null;
+    function startLiveTimer(startTs){
+      const el = document.getElementById('liveTimer');
+      if (!el) return;
+      function render(now){
+        const diff = Math.max(0, Math.floor((now - startTs)/1000));
+        const m = String(Math.floor(diff/60)).padStart(2,'0');
+        const s = String(diff%60).padStart(2,'0');
+        el.textContent = `${m}:${s}`;
+      }
+      render(Date.now());
+      timerInterval = setInterval(()=>render(Date.now()), 1000);
+    }
+    function stopLiveTimer(){ if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+
+    function showResults(answers) {
+      let correctCount = 0;
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const selected = answers[q.id];
+        const card = document.querySelector(`[data-qid="${q.id}"]`);
+        const badge = card.querySelector('[data-role="badge"]');
+        badge.classList.remove('hidden');
+        const options = card.querySelectorAll('label.choice');
+        options.forEach((lab, idx) => {
+          lab.classList.remove('correct','incorrect');
+          if (idx === q.answer) lab.classList.add('correct');
+          if (selected !== null && idx === selected && selected !== q.answer) lab.classList.add('incorrect');
+        });
+        if (selected === q.answer) {
+          correctCount++;
+          badge.className='badge badge-correct';
+          badge.textContent='✓';
+        } else {
+          badge.className='badge badge-incorrect';
+          badge.textContent='✗';
+        }
+      });
+      const total = questions.filter(q => q.type !== 'info').length;
+      const score = Math.round((correctCount/total)*100);
+      const box = document.getElementById('scoreBox');
+      box.classList.remove('hidden');
+      box.textContent = `درجتك: ${correctCount} / ${total} (${score}%)`;
+      document.getElementById('retryBtn').classList.remove('hidden');
+      document.getElementById('filterWrap').classList.remove('hidden');
+    }
+
+    function applyIncorrectFilter(onlyIncorrect) {
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const card = document.querySelector(`[data-qid="${q.id}"]`);
+        const badge = card.querySelector('[data-role="badge"]');
+        const isIncorrect = badge && badge.classList.contains('badge-incorrect');
+        card.style.display = onlyIncorrect && !isIncorrect ? 'none' : '';
+      });
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      unlockQuiz();
+      const box = document.getElementById('scoreBox');
+      box.classList.add('hidden');
+      box.textContent = '';
+      document.getElementById('retryBtn').classList.add('hidden');
+      document.getElementById('filterWrap').classList.add('hidden');
+      document.getElementById('showOnlyIncorrect').checked = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Init
+    renderQuiz();
+
+    // Events
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const answers = collectAnswers();
+      lockQuiz();
+      stopLiveTimer();
+      // Compute score summary (inline results disabled for redirect)
+      let correctCount = 0;
+      const total = questions.filter(q => q.type !== 'info').length;
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+        if (checked && parseInt(checked.value,10) === q.answer) correctCount++;
+      });
+      const score = Math.round((correctCount/total)*100);
+      // Duration
+      let durationMs = null;
+      try {
+        const s = sessionStorage.getItem('quiz_start');
+        const started = s ? Number(s) : Date.now();
+        durationMs = Date.now() - started;
+        sessionStorage.setItem('quiz_end', String(Date.now()));
+        sessionStorage.setItem('quiz_last_duration', String(durationMs));
+      } catch(_) {}
+      // Title
+      let title = document.querySelector('h1') ? document.querySelector('h1').innerText.trim() : 'English Quiz';
+      // Persist payload and redirect
+      try {
+        const answers = collectAnswers();
+        const payload = { correctCount, total, score, durationMs, title };
+        sessionStorage.setItem('quiz_answers', JSON.stringify(answers));
+        sessionStorage.setItem('quiz_payload', JSON.stringify(payload));
+      } catch(_) {}
+      setTimeout(() => { window.location.href = 'quiz-result.html'; }, 240);
+    });
+    document.getElementById('retryBtn').addEventListener('click', resetQuiz);
+    document.getElementById('showOnlyIncorrect').addEventListener('change', e => applyIncorrectFilter(e.target.checked));
+
+    // Review mode: if user returned from results wanting to review answers
+    (function maybeReview(){
+      try {
+        const mode = sessionStorage.getItem('quiz_review');
+        const src = sessionStorage.getItem('quiz_last_source');
+        // Apply review ONLY if coming back to this exact quiz
+        if (!mode || src !== 'quiz-english.html') return;
+        const raw = sessionStorage.getItem('quiz_answers');
+        const answers = raw ? JSON.parse(raw) : null;
+        if (!answers) return;
+        showResults(answers);
+        lockQuiz();
+        // Show filter controls; default to incorrect-only if requested
+        document.getElementById('filterWrap').classList.remove('hidden');
+        if (mode === 'incorrect') {
+          document.getElementById('showOnlyIncorrect').checked = true;
+          applyIncorrectFilter(true);
+        }
+        // Clear review flag so it doesn't stick for future visits
+        sessionStorage.removeItem('quiz_review');
+      } catch(_) {}
+    })();
+  </script>
+</body>
+</html>

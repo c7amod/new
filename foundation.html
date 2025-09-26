@@ -21,47 +21,44 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
       <div class="flex items-center gap-2">
-        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
-        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12">
-          <img src="assets/logo.png" alt="شعار" class="h-8 w-8"/>
-          <span>كلية طب الاسكندرية</span>
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
         </a>
       </div>
-      <nav class="hidden md:flex items-center gap-6">
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="foundation.html" class="text-indigo-600 font-semibold nav-anim">Foundation</a>
       </nav>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-2xl font-bold mb-6">Foundation</h1>
+    <h1 class="text-2xl font-bold mb-6 ltr">Foundation</h1>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal-on-scroll">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal-on-scroll ltr">
       <a href="histology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">Histology</div>
+        <div class="font-semibold ltr">1. Histology</div>
       </a>
       <a href="biochemistry.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">Biochemistry</div>
+        <div class="font-semibold ltr">2. Biochemistry</div>
         <div class="text-sm text-slate-600">قريبًا</div>
       </a>
       <a href="anatomy.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">Anatomy</div>
+        <div class="font-semibold ltr">3. Anatomy</div>
         <div class="text-sm text-slate-600">قريبًا</div>
       </a>
       <a href="embryology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">Embryology</div>
+        <div class="font-semibold ltr">4. Embryology</div>
         <div class="text-sm text-slate-600">قريبًا</div>
       </a>
       <a href="physiology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">Physiology</div>
+        <div class="font-semibold ltr">5. Physiology</div>
         <div class="text-sm text-slate-600">قريبًا</div>
       </a>
     </div>
   </main>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
   </footer>
 
   <script>
@@ -86,18 +83,7 @@
         setTimeout(() => { window.location.href = href; }, 180);
       });
     });
-    // Back button logic
-    (function(){
-      const b = document.getElementById('backBtn');
-      if (!b) return;
-      b.addEventListener('click', () => {
-        if (history.length > 1) {
-          history.back();
-        } else {
-          window.location.href = 'index.html';
-        }
-      });
-    })();
+    // Back button logic removed: using logo link instead
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {

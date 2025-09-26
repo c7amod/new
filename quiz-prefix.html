@@ -18,28 +18,31 @@
     .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
     .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
     .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
-    .badge { font-size: 12px; padding: 2px 6px; border-radius: 999px; }
-    .badge-correct { background: #ecfdf5; color: #065f46; border: 1px solid #34d399; }
-    .badge-incorrect { background: #fef2f2; color: #991b1b; border: 1px solid #f87171; }
+    /* Top-centered result icon with fixed size */
+    #quizContainer [data-qid] { position: relative; }
+    .badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 40px; font-size: 22px; line-height: 1; padding: 0; border-radius: 9999px;
+      background: transparent; border: none; display: flex; align-items: center; justify-content: center; }
+    .badge-correct { color: #059669; }
+    .badge-incorrect { color: #dc2626; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .card-enter { animation: fadeUp 420ms ease both; }
     .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
+    /* Left position for question number */
+    #quizContainer [data-role="num"] { position: absolute; left: 12px; top: 12px; font-weight: 700; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
   <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
       <div class="flex items-center gap-2">
-        <button id="backBtn" aria-label="رجوع" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-lg border w-9 h-9 flex items-center justify-center text-slate-700 hover:bg-slate-50" title="رجوع">←</button>
-        <a href="index.html" class="flex items-center gap-2 font-bold text-indigo-600 text-lg nav-anim pl-12">
-          <img src="assets/logo.png" alt="شعار" class="h-8 w-8"/>
-          <span>كلية طب الاسكندرية</span>
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
         </a>
       </div>
-      <nav class="hidden md:flex items-center gap-6">
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="terminology.html" class="hover:text-indigo-600 nav-anim">Terminology</a>
-        <a href="terminology-tests.html" class="text-indigo-600 font-semibold nav-anim">الاختبارات</a>
+        <a href="terminology.html#tests" class="hover:text-indigo-600 nav-anim">الاختبارات</a>
       </nav>
     </div>
   </header>
@@ -48,8 +51,9 @@
 
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-6">
-      <h1 class="text-2xl font-bold mb-2">اختبار <span class="ltr">Prefix</span></h1>
+      <h1 class="text-2xl font-bold mb-2 ltr">Prefix</h1>
       <p class="text-slate-700">اختر الإجابة الصحيحة لكل سؤال ثم اضغط "إنهاء الاختبار" لعرض الدرجة ومراجعة الإجابات.</p>
+      <div class="mt-2 text-sm text-slate-600">الوقت: <span id="liveTimer">00:00</span></div>
     </div>
 
     <div id="quizContainer" class="space-y-4"></div>
@@ -62,12 +66,12 @@
         <span>عرض الأسئلة الخاطئة فقط</span>
       </label>
       <div id="scoreBox" class="text-sm text-slate-700 hidden"></div>
-      <a href="terminology-tests.html" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">الرجوع إلى قائمة الاختبارات</a>
+      <a href="terminology.html#tests" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">الرجوع إلى قائمة الاختبارات</a>
     </div>
   </main>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600">© 2025 كلية طب الاسكندرية</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
   </footer>
 
   <script>
@@ -76,17 +80,20 @@
         document.body.classList.add('page-enter-active');
         document.body.classList.remove('page-enter');
       });
+      // Generic quiz start timestamp + remember source page
+      try {
+        const t = Date.now();
+        sessionStorage.setItem('quiz_start', String(t));
+        sessionStorage.setItem('quiz_last_source', 'quiz-prefix.html');
+      } catch(_) {}
+      // Start live timer UI
+      try { startLiveTimer(Date.now()); } catch(_) {}
     });
     window.addEventListener('pageshow', () => {
       document.body.classList.add('page-enter-active');
       document.body.classList.remove('page-enter');
     });
-    (function(){
-      const b = document.getElementById('backBtn');
-      if (!b) return; b.addEventListener('click', () => {
-        if (history.length > 1) history.back(); else window.location.href = 'terminology-tests.html';
-      });
-    })();
+    // Back button logic removed: using logo link instead
 
     // Quiz data (Prefix)
     const questions = [
@@ -135,11 +142,11 @@
         card.dataset.qid = q.id;
         const head = document.createElement('div');
         head.className = 'flex items-start justify-between gap-3 mb-3';
-        head.innerHTML = `<div class="font-semibold">${qi + 1}</div><div class="hidden" data-role="badge"></div>`;
+        head.innerHTML = `<div class="font-semibold"></div><div class="hidden" data-role="badge"></div>`;
         card.appendChild(head);
         const text = document.createElement('div');
         text.className = 'mb-3 ltr';
-        text.textContent = q.text;
+        text.textContent = `${qi + 1}- ${q.text}`;
         card.appendChild(text);
         const ul = document.createElement('ul');
         ul.className = 'space-y-2';
@@ -170,6 +177,22 @@
     function lockQuiz() { document.querySelectorAll('#quizContainer input[type="radio"]').forEach(i=>i.disabled=true); }
     function unlockQuiz() { document.querySelectorAll('#quizContainer input[type="radio"]').forEach(i=>i.disabled=false); }
 
+    // Live timer UI
+    let timerInterval = null;
+    function startLiveTimer(startTs){
+      const el = document.getElementById('liveTimer');
+      if (!el) return;
+      function render(now){
+        const diff = Math.max(0, Math.floor((now - startTs)/1000));
+        const m = String(Math.floor(diff/60)).padStart(2,'0');
+        const s = String(diff%60).padStart(2,'0');
+        el.textContent = `${m}:${s}`;
+      }
+      render(Date.now());
+      timerInterval = setInterval(()=>render(Date.now()), 1000);
+    }
+    function stopLiveTimer(){ if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+
     function showResults(answers) {
       let correctCount = 0;
       questions.forEach(q => {
@@ -183,8 +206,8 @@
           if (idx === q.answer) lab.classList.add('correct');
           if (selected !== null && idx === selected && selected !== q.answer) lab.classList.add('incorrect');
         });
-        if (selected === q.answer) { correctCount++; badge.className='badge badge-correct'; badge.textContent='إجابة صحيحة'; }
-        else { badge.className='badge badge-incorrect'; badge.textContent='إجابة خاطئة'; }
+        if (selected === q.answer) { correctCount++; badge.className='badge badge-correct'; badge.textContent='✓'; }
+        else { badge.className='badge badge-incorrect'; badge.textContent='✗'; }
       });
       const total = questions.length;
       const score = Math.round((correctCount/total)*100);
@@ -199,7 +222,7 @@
       questions.forEach(q => {
         const card = document.querySelector(`[data-qid="${q.id}"]`);
         const badge = card.querySelector('[data-role="badge"]');
-        const isIncorrect = badge && badge.textContent.includes('خاطئة');
+        const isIncorrect = badge && badge.classList.contains('badge-incorrect');
         card.style.display = onlyIncorrect && !isIncorrect ? 'none' : '';
       });
     }
@@ -223,12 +246,57 @@
     document.getElementById('submitBtn').addEventListener('click', () => {
       const answers = collectAnswers();
       lockQuiz();
-      showResults(answers);
-      const y = document.getElementById('scoreBox').getBoundingClientRect().top + window.pageYOffset - 80;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      stopLiveTimer();
+      // Compute score summary
+      let correctCount = 0;
+      const total = questions.length;
+      questions.forEach(q => {
+        const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+        if (checked && parseInt(checked.value,10) === q.answer) correctCount++;
+      });
+      const score = Math.round((correctCount/total)*100);
+      // Duration
+      let durationMs = null;
+      try {
+        const s = sessionStorage.getItem('quiz_start');
+        const started = s ? Number(s) : Date.now();
+        durationMs = Date.now() - started;
+        sessionStorage.setItem('quiz_end', String(Date.now()));
+        sessionStorage.setItem('quiz_last_duration', String(durationMs));
+      } catch(_) {}
+      // Title
+      let title = document.querySelector('h1') ? document.querySelector('h1').innerText.trim() : 'Quiz';
+      // Persist payload and answers, redirect
+      try {
+        const payload = { correctCount, total, score, durationMs, title };
+        sessionStorage.setItem('quiz_answers', JSON.stringify(answers));
+        sessionStorage.setItem('quiz_payload', JSON.stringify(payload));
+      } catch(_) {}
+      setTimeout(() => { window.location.href = 'quiz-result.html'; }, 240);
     });
     document.getElementById('retryBtn').addEventListener('click', resetQuiz);
     document.getElementById('showOnlyIncorrect').addEventListener('change', e => applyIncorrectFilter(e.target.checked));
+
+    // Review mode: support returning from results page to highlight answers and filter
+    (function maybeReview(){
+      try {
+        const mode = sessionStorage.getItem('quiz_review');
+        const src = sessionStorage.getItem('quiz_last_source');
+        if (!mode || src !== 'quiz-prefix.html') return;
+        const raw = sessionStorage.getItem('quiz_answers');
+        const answers = raw ? JSON.parse(raw) : null;
+        if (!answers) return;
+        showResults(answers);
+        lockQuiz();
+        document.getElementById('filterWrap').classList.remove('hidden');
+        if (mode === 'incorrect') {
+          document.getElementById('showOnlyIncorrect').checked = true;
+          applyIncorrectFilter(true);
+        }
+        // clear review flag so it doesn't auto-apply next visits
+        sessionStorage.removeItem('quiz_review');
+      } catch(_) {}
+    })();
   </script>
 </body>
 </html>

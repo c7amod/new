@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نتيجة اختبار Word root & Suffix</title>
+  <title>نتيجة الاختبار</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { transition: opacity 600ms ease; }
@@ -33,18 +33,16 @@
     </div>
   </header>
 
-  
-
   <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="rounded-lg border bg-white p-6 card-enter">
-      <h1 class="text-2xl font-bold mb-2">نتيجة اختبار Word root & Suffix</h1>
+      <h1 id="resultTitle" class="text-2xl font-bold mb-2">نتيجة الاختبار</h1>
       <p id="scoreText" class="text-slate-700">—</p>
       <p id="timeText" class="text-slate-600 mb-6">—</p>
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <a id="btnRetry" href="#" class="rounded-md bg-indigo-600 text-white px-4 py-1.5 text-sm shadow-sm hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">إعادة الاختبار</a>
         <a id="btnReviewIncorrect" href="#" class="rounded-md border border-slate-300 text-slate-700 px-4 py-1.5 text-sm hover:bg-slate-50 transition-transform hover:-translate-y-0.5">استعراض الإجابات الخاطئة</a>
         <a id="btnReviewAll" href="#" class="rounded-md border border-slate-300 text-slate-700 px-4 py-1.5 text-sm hover:bg-slate-50 transition-transform hover:-translate-y-0.5">استعراض كل الإجابات</a>
-        <a href="terminology.html#tests" class="ml-auto rounded-md border border-slate-300 text-slate-700 px-4 py-1.5 text-sm hover:bg-slate-50">العودة إلى قائمة الاختبارات</a>
+        <a id="btnBack" href="terminology.html#tests" class="ml-auto rounded-md border border-slate-300 text-slate-700 px-4 py-1.5 text-sm hover:bg-slate-50">العودة إلى قائمة الاختبارات</a>
       </div>
     </div>
 
@@ -81,40 +79,32 @@
       document.body.classList.remove('page-enter');
     });
 
-    // Back button logic removed: using logo link instead
-
-    // Load payload
     function loadPayload() {
       try {
-        const raw = sessionStorage.getItem('terminology_quiz_payload');
+        const raw = sessionStorage.getItem('quiz_payload');
         return raw ? JSON.parse(raw) : null;
       } catch (e) { return null; }
     }
 
-    const payload = loadPayload();
     function formatMs(ms){
       const n = Number(ms);
-      const safe = Number.isFinite(n) ? Math.max(0, Math.round(n/1000)) : 0;
-      const totalSec = safe;
-      const m = Math.floor(totalSec/60).toString().padStart(2,'0');
-      const s = (totalSec%60).toString().padStart(2,'0');
+      const sec = Number.isFinite(n) ? Math.max(0, Math.round(n/1000)) : 0;
+      const m = Math.floor(sec/60).toString().padStart(2,'0');
+      const s = (sec%60).toString().padStart(2,'0');
       return `${m}:${s}`;
     }
 
     function resolveDurationMs(payload){
-      // 1) payload.durationMs
       if (payload && payload.durationMs != null && Number.isFinite(Number(payload.durationMs))) {
         return Number(payload.durationMs);
       }
-      // 2) standalone last_duration
       try {
-        const d = sessionStorage.getItem('terminology_last_duration');
+        const d = sessionStorage.getItem('quiz_last_duration');
         if (d && Number.isFinite(Number(d))) return Number(d);
       } catch(_) {}
-      // 3) compute from start/end
       try {
-        const s = sessionStorage.getItem('terminology_quiz_start');
-        const e = sessionStorage.getItem('terminology_quiz_end');
+        const s = sessionStorage.getItem('quiz_start');
+        const e = sessionStorage.getItem('quiz_end');
         if (s && e) {
           const ms = Number(e) - Number(s);
           if (Number.isFinite(ms)) return ms;
@@ -123,9 +113,11 @@
       return 0;
     }
 
+    const payload = loadPayload();
     if (payload) {
-      let { correctCount, total, score } = payload;
+      const { correctCount, total, score, title } = payload;
       const durationMs = resolveDurationMs(payload);
+      document.getElementById('resultTitle').textContent = title ? `نتيجة الاختبار — ${title}` : 'نتيجة الاختبار';
       document.getElementById('correctCount').textContent = correctCount;
       document.getElementById('totalCount').textContent = total;
       document.getElementById('percentVal').textContent = score + '%';
@@ -135,37 +127,33 @@
       document.getElementById('scoreText').textContent = 'لم يتم العثور على نتيجة. برجاء إجراء الاختبار مرة أخرى.';
     }
 
-    // Buttons
+    // Actions
     document.getElementById('btnRetry').addEventListener('click', (e) => {
       e.preventDefault();
-      // Clear review + payload but keep questions in quiz file
-      sessionStorage.removeItem('terminology_quiz_review');
-      // We keep payload optional; quiz will reset UI anyway
-      window.location.href = 'quiz-terminology.html';
+      try {
+        const next = sessionStorage.getItem('quiz_last_source');
+        if (next) { window.location.href = next; return; }
+      } catch(_) {}
+      window.location.href = 'terminology.html#tests';
     });
-
     document.getElementById('btnReviewIncorrect').addEventListener('click', (e) => {
       e.preventDefault();
-      sessionStorage.setItem('terminology_quiz_review', 'incorrect');
-      window.location.href = 'quiz-terminology.html';
+      sessionStorage.setItem('quiz_review', 'incorrect');
+      try {
+        const next = sessionStorage.getItem('quiz_last_source');
+        if (next) { window.location.href = next; return; }
+      } catch(_) {}
+      window.location.href = 'terminology.html#tests';
     });
-
     document.getElementById('btnReviewAll').addEventListener('click', (e) => {
       e.preventDefault();
-      sessionStorage.setItem('terminology_quiz_review', 'all');
-      window.location.href = 'quiz-terminology.html';
+      sessionStorage.setItem('quiz_review', 'all');
+      try {
+        const next = sessionStorage.getItem('quiz_last_source');
+        if (next) { window.location.href = next; return; }
+      } catch(_) {}
+      window.location.href = 'terminology.html#tests';
     });
-
-    // Reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal-active');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
