@@ -1,10 +1,22 @@
-<!doctype html>
+ <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>منصة ClearMed - الرئيسية</title>
+  <link rel="icon" href="assets/lo.png" type="image/png" sizes="32x32" />
+  <link rel="shortcut icon" href="assets/lo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/lo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+
+    gtag('config', 'G-7WSXYQGC2G');
+  </script>
   <style>
     /* Page fade-in */
     body { transition: opacity 600ms ease; }
@@ -28,7 +40,7 @@
 
   <!-- Top Full-Width Banner -->
   <section class="reveal-on-scroll">
-    <div class="relative w-full aspect-[1536/709]">
+    <div class="relative w-full aspect-[1536/709] lg:h-[320px] xl:h-[360px]">
       <img src="assets/logo1.png" alt="شعار ClearMed" class="w-full h-full object-contain block"/>
       <!-- Bottom gradient to blend into white -->
       <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 sm:h-32 bg-gradient-to-b from-transparent to-white"></div>
@@ -75,7 +87,10 @@
   </section>
 
   <footer class="border-t bg-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 flex flex-col sm:flex-row-reverse sm:items-center sm:justify-between gap-1">
+      <div class="text-left">© 2025 clearmed.site</div>
+      <div class="text-xs text-slate-400">تم التطوير بواسطة د. أحمد عمر</div>
+    </div>
   </footer>
   <script>
     // Page fade-in

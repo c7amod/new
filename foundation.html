@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Foundation</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+
+    gtag('config', 'G-7WSXYQGC2G');
+  </script>
   <style>
     body { transition: opacity 600ms ease; }
     body.page-enter { opacity: 0; }
@@ -27,32 +36,27 @@
       </div>
       <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
         <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-      </nav>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <h1 class="text-2xl font-bold mb-6 ltr">Foundation</h1>
-
+  
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal-on-scroll ltr">
-      <a href="histology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">1. Histology</div>
-      </a>
       <a href="biochemistry.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">2. Biochemistry</div>
-        <div class="text-sm text-slate-600">قريبًا</div>
+        <div class="font-semibold ltr">1. Biochemistry</div>
       </a>
-      <a href="anatomy.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">3. Anatomy</div>
-        <div class="text-sm text-slate-600">قريبًا</div>
-      </a>
-      <a href="embryology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">4. Embryology</div>
-        <div class="text-sm text-slate-600">قريبًا</div>
+      <a href="histology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+        <div class="font-semibold ltr">2. Histology</div>
       </a>
       <a href="physiology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">5. Physiology</div>
-        <div class="text-sm text-slate-600">قريبًا</div>
+        <div class="font-semibold ltr">3. Physiology</div>
+      </a>
+      <a href="anatomy.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+        <div class="font-semibold ltr">4. Anatomy</div>
+      </a>
+      <a href="embryology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+        <div class="font-semibold ltr">5. Embryology</div>
       </a>
     </div>
   </main>

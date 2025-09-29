@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orientation - English</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+
+    gtag('config', 'G-7WSXYQGC2G');
+  </script>
   <style>
     body { transition: opacity 600ms ease; }
     body.page-enter { opacity: 0; }
@@ -57,7 +66,7 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ltr">
     <div class="mb-6 reveal-on-scroll">
       <h1 class="text-2xl font-bold mb-2 ltr">English</h1>
       <div class="mt-4 flex justify-center">
@@ -67,6 +76,24 @@
       </div>
     </div>
     <div class="space-y-6">
+      <!-- PDF Material (above lectures) -->
+      <section class="reveal-on-scroll">
+        <div class="rounded-lg border bg-white p-4">
+          <div class="flex items-start gap-4">
+            <!-- Tall, compact, non-interactive preview -->
+            <div class="rounded overflow-hidden bg-slate-100 w-20 sm:w-24 h-32 sm:h-40 flex-shrink-0">
+              <img src="assets/en.jpeg" alt="English PDF thumbnail" class="w-full h-full object-cover select-none" draggable="false"/>
+            </div>
+            <div class="grow">
+              <h2 class="font-semibold mb-2"><span class="ltr">English PDF</span></h2>
+              <div class="flex flex-wrap gap-2">
+                <a href="assets/en.pdf" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح الملف</a>
+                <a id="pdfDownloadBtn" href="assets/en.pdf" download class="inline-flex items-center rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <!-- Player (top) -->
       <section id="playerWrap" class="hidden reveal-on-scroll">
         <div class="rounded-lg border bg-white p-4">
