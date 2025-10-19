@@ -9,6 +9,18 @@
     } catch (_) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+  function prefixNumbersKeepTitles(ul){
+    const lis = Array.from(ul.querySelectorAll('li[data-video], li[data-drive], li[data-src]'));
+    lis.forEach((li, i) => {
+      const span = li.querySelector('.video-title');
+      if (!span) return;
+      const txt = String(span.textContent || '').trim();
+      // Avoid double prefixing if numbers already exist
+      if (/^\d+\.\s/.test(txt)) return;
+      span.textContent = `${i + 1}. ${txt}`;
+    });
+  }
   }
   function addThumbNumbers(ul){
     // Apply numeric overlays only to non-YouTube items
@@ -131,6 +143,14 @@
     const providerSelect = document.getElementById('providerSelect');
     if (!ul || !playerWrap || !player) return;
 
+    // Hide the entire controls row (provider + download) if present
+    try {
+      const controlsRow = downloadBtn?.parentElement || providerSelect?.parentElement || null;
+      if (controlsRow) controlsRow.classList.add('hidden');
+      if (downloadBtn) downloadBtn.classList.add('hidden');
+      if (providerSelect) providerSelect.classList.add('hidden');
+    } catch(_) {}
+
     let currentVideoId = null;
 
     function setPlayerSize(size){
@@ -161,7 +181,7 @@
       const ytId = li.getAttribute('data-video');
       const driveId = li.getAttribute('data-drive');
       const directSrc = li.getAttribute('data-src');
-      const sizePref = li.getAttribute('data-size') || 'small';
+      const sizePref = li.getAttribute('data-size') || 'large';
       const isYouTube = !!ytId;
       const isDrive = !!driveId;
       const hasDirect = !!directSrc;
@@ -176,6 +196,8 @@
       if (isYouTube) {
         player.src = `https://www.youtube.com/embed/${ytId}`;
         if (downloadBtn && providerSelect) {
+          // Show and enable download for YouTube
+          downloadBtn.classList.remove('hidden');
           downloadBtn.disabled = false;
           downloadBtn.title = '';
           downloadBtn.onclick = () => {
@@ -189,6 +211,8 @@
         // Google Drive preview embed
         player.src = `https://drive.google.com/file/d/${driveId}/preview`;
         if (downloadBtn) {
+          // Hide download button for Drive sources
+          downloadBtn.classList.add('hidden');
           downloadBtn.disabled = true;
           downloadBtn.title = 'التنزيل متاح ليوتيوب فقط';
           downloadBtn.onclick = null;
@@ -196,6 +220,8 @@
       } else if (hasDirect) {
         player.src = directSrc;
         if (downloadBtn) {
+          // Hide download button for direct sources
+          downloadBtn.classList.add('hidden');
           downloadBtn.disabled = true;
           downloadBtn.title = 'التنزيل متاح ليوتيوب فقط';
           downloadBtn.onclick = null;
@@ -207,13 +233,21 @@
       li.addEventListener('click', () => selectLecture(li));
     });
 
-    // Always ensure numbering is prefixed
-    prefixNumbers(ul);
-    // Add numeric badges on thumbnails
-    addThumbNumbers(ul);
-    if (opts.autoTitle) {
-      autoUpdateTitles(ul);
+    // Respect pages that want to keep custom titles as-is
+    const keepTitles = ul && ul.hasAttribute('data-keep-titles');
+    // Numbering and auto titles only when not preserving custom titles
+    if (!keepTitles) {
+      prefixNumbers(ul);
+      if (opts.autoTitle) {
+        autoUpdateTitles(ul);
+      }
     }
+    // If custom titles are preserved but we still want numeric prefixes, do it non-destructively
+    if (keepTitles && ul && ul.hasAttribute('data-prefix-numbers')) {
+      prefixNumbersKeepTitles(ul);
+    }
+    // Numeric badges are visual only; safe to keep
+    addThumbNumbers(ul);
 
     // expose for debugging if needed
     window.__lectures = window.__lectures || {};

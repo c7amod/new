@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biochemistry Practical</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+    gtag('config', 'G-7WSXYQGC2G');
+  </script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
+    /* Lectures UI (match Histology) */
+    .lecture-item.active .lecture-card { outline: 2px solid rgb(79 70 229); outline-offset: 0; box-shadow: 0 10px 20px rgba(79,70,229,0.12); }
+    .lecture-card { transition: transform 220ms ease, box-shadow 220ms ease, outline-color 220ms ease; }
+    .lecture-card:hover { transform: translateY(-2px); box-shadow: 0 10px 18px rgba(0,0,0,0.08); }
+    .thumb { position: relative; }
+    .play-badge { position: absolute; inset-inline-end: 8px; inset-block-end: 8px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 2px 6px; border-radius: 999px; display: flex; align-items: center; gap: 6px; }
+    .play-badge svg { width: 12px; height: 12px; }
+    #lectures .lecture-card .p-3 { padding: 0.75rem; }
+    #lectures .lecture-card .video-title { font-size: 0.9rem; line-height: 1.3; }
+    #lectures.compact .lecture-card .video-title { font-size: 0.8rem; }
+    #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
+    #lectures.compact .lecture-card { box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+    @media (max-width: 640px) {
+      #lectures.compact { gap: 0.5rem; }
+      #lectures.compact .lecture-card { display: grid; grid-template-columns: 96px 1fr; align-items: center; }
+      #lectures.compact .lecture-card .thumb { width: 96px; }
+      #lectures.compact .lecture-card .thumb .aspect-video { width: 96px; }
+      #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
+      #lectures.compact .lecture-card .video-title { font-size: 0.85rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      #lectures.compact .play-badge { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+      <div class="flex items-center gap-2">
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
+        </a>
+      </div>
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="foundation.html" class="hover:text-indigo-600 nav-anim">Foundation</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ltr">
+    <div class="mb-6 reveal-on-scroll">
+      <h1 class="text-2xl font-bold mb-2 ltr">Biochemistry Practical</h1>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Player (top) -->
+      <section id="playerWrap" class="hidden reveal-on-scroll">
+        <div id="playerCard" class="rounded-lg border bg-white p-4 max-w-5xl mx-auto">
+          <div id="playerFrameWrap" class="aspect-video bg-slate-100 rounded overflow-hidden">
+            <iframe id="player" class="w-full h-full" src="" title="Biochemistry Practical Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <div id="driveHint" class="mt-3 text-center text-sm text-slate-600 hidden" dir="rtl">
+            إذا تأخر التشغيل، <a id="driveHintLink" href="#" target="_blank" rel="noopener" class="text-indigo-700 underline">اضغط هنا</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lectures Section -->
+      <section class="space-y-4 reveal-on-scroll">
+        <div class="rounded-lg border bg-white">
+          <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
+          <ul id="lectures" class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact ltr">
+            <li class="lecture-item" data-drive="1Cwm9hmKZvBw5Btlyl2fZ3koG82-qGsq7" data-size="small">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100"></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Record 1</span></div>
+              </div>
+            </li>
+            <li class="lecture-item" data-drive="1A8s57fcx46zBRRUKGJWTAK3HYC940W7e" data-size="small">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100"></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Record 2</span></div>
+              </div>
+            </li>
+            <li class="lecture-item" data-drive="1--3oseGU4pbPmYhKBV2iWh1qrLMijhQs" data-size="small">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100"></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Record 3</span></div>
+              </div>
+            </li>
+            <li class="lecture-item" data-drive="1Hg584HFFLpLero4WIBEmytbWzkJeYLfV" data-size="small">
+              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                <div class="thumb aspect-video bg-slate-100"></div>
+                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Record 4</span></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Files Section -->
+      <section id="filesSection" class="space-y-4 reveal-on-scroll">
+        <div class="rounded-lg border bg-white">
+          <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">الملفات</h2>
+          <div class="p-4 space-y-4" dir="ltr">
+            <!-- Group: Dr agha -->
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg">Dr agha</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" dir="ltr">
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Dr Agha — File 1</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1HysX9nErJYaHYBogp1UWm9ikW5ZNcAta/view?usp=share_link" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1HysX9nErJYaHYBogp1UWm9ikW5ZNcAta" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Group: slides -->
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg">slides</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" dir="ltr">
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Slide 1</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1J0pwl1-cSaEwNEj91ERDmHNyti0X7Xv8/view?usp=share_link" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1J0pwl1-cSaEwNEj91ERDmHNyti0X7Xv8" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Slide 2</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/192dBHMpU0ZD-TlNL-N4t84dcYmGp_d3i/view?usp=share_link" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=192dBHMpU0ZD-TlNL-N4t84dcYmGp_d3i" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Slide 3</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1trI0vpk6bzitHyfqdjXnPZjkPHF1ZkhQ/view?usp=share_link" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1trI0vpk6bzitHyfqdjXnPZjkPHF1ZkhQ" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Slide 4</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1fmuqkC5UqMvmXw1xV-aTlnivWtaGoPEc/view?usp=share_link" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1fmuqkC5UqMvmXw1xV-aTlnivWtaGoPEc" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Exams Section -->
+      <section id="examsSection" class="space-y-4 reveal-on-scroll">
+        <div class="rounded-lg border bg-white">
+          <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">الاختبارات</h2>
+          <div class="p-4 space-y-3">
+            <!-- Dr Agha Exams Group -->
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg ltr">Dr Agha</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <div class="grid grid-cols-1 gap-3">
+                  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfPJw3ditSYUx64qE81mdQFJo4UWqyU8gigOnHVgV6BbRgUSA/viewform" target="_blank" rel="noopener" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">google form Dr Agha Practical</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
+  </footer>
+
+  <script src="assets/js/lectures.js"></script>
+  <script>
+    // Page enter + reveal
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { root: null, threshold: 0, rootMargin: '0px 0px -5% 0px' });
+      const revealEls = Array.from(document.querySelectorAll('.reveal-on-scroll'));
+      revealEls.forEach(el => observer.observe(el));
+      // Initialize unified lectures behavior
+      try { initLectures({ autoTitle: false }); } catch(_) {}
+      // Wire simple accordions (exams)
+      try {
+        document.querySelectorAll('.file-toggle').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const wasExpanded = btn.getAttribute('aria-expanded') === 'true';
+            const nowExpanded = !wasExpanded;
+            btn.setAttribute('aria-expanded', String(nowExpanded));
+            const panel = btn.nextElementSibling;
+            if (panel) panel.hidden = !nowExpanded;
+          });
+        });
+      } catch(_) {}
+    });
+    // Handle browser back/forward cache
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+  </script>
+</body>
+</html>

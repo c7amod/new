@@ -27,6 +27,7 @@
     .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
     .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
     .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
+    .choice-selected { background-color: #eff6ff; border-color: #2563eb; }
     /* Top-centered result icon with fixed size */
     #quizContainer [data-qid] { position: relative; }
     .badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
@@ -39,6 +40,8 @@
     .opt-key { width: 1.5rem; display: inline-flex; justify-content: center; font-weight: 600; color: #475569; }
     /* Left position for question number */
     #quizContainer [data-role="num"] { position: absolute; left: 12px; top: 12px; font-weight: 700; }
+    /* Blue accent for radios */
+    input[type="radio"] { accent-color: #2563eb; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
@@ -321,8 +324,12 @@
         const options = card.querySelectorAll('label.choice');
         options.forEach((lab, idx) => {
           lab.classList.remove('correct','incorrect');
+          lab.classList.remove('choice-selected');
           if (idx === q.answer) lab.classList.add('correct');
           if (selected !== null && idx === selected && selected !== q.answer) lab.classList.add('incorrect');
+          const input = lab.querySelector('input[type="radio"]');
+          if (input) input.checked = (idx === selected);
+          if (selected !== null && idx === selected) lab.classList.add('choice-selected');
         });
         if (selected === q.answer) {
           correctCount++;

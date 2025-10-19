@@ -51,6 +51,18 @@
     /* Collapsible file groups */
     .file-toggle .chev { transition: transform 200ms ease; }
     .file-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+    /* Doctor chooser + transitions */
+    .doc-btn { transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease, color 200ms ease, border-color 200ms ease; }
+    .doc-btn:hover { transform: translateY(-1px); }
+    .doc-btn-active { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(79,70,229,0.18); }
+    @keyframes choosePulse { 0% { box-shadow: 0 0 0 0 rgba(79,70,229,0.35);} 70% { box-shadow: 0 0 0 14px rgba(79,70,229,0);} 100% { box-shadow: 0 0 0 0 rgba(79,70,229,0);} }
+    .pulse-choose { animation: choosePulse 600ms ease; }
+    @keyframes fadeslide { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+    .fade-slide { animation: fadeslide 420ms ease both; }
+    /* Swap animations on doctor change */
+    @keyframes fadeslideOut { from { opacity: 1; transform: translateY(0);} to { opacity: 0; transform: translateY(6px);} }
+    .swap-leave { animation: fadeslideOut 160ms ease both; }
+    .swap-enter { animation: fadeslide 320ms ease both; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
@@ -72,54 +84,190 @@
     <div class="mb-6 reveal-on-scroll">
       <h1 class="text-2xl font-bold mb-2 ltr">Biochemistry</h1>
     </div>
+    <!-- Doctor selector -->
+    <section class="mb-4 reveal-on-scroll" dir="rtl">
+      <div id="doctorChooser" class="rounded-2xl border bg-white p-4 sm:p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          <button id="docBtn-agha" type="button" data-doc="agha" class="doc-btn inline-flex items-center justify-center rounded-lg px-4 py-2 text-base md:text-lg font-semibold border bg-white text-slate-800 border-slate-300 hover:bg-slate-50 transition-all duration-200 shadow-sm">
+            Dr Agha
+          </button>
+          <button id="docBtn-adham" type="button" data-doc="adham" class="doc-btn inline-flex items-center justify-center rounded-lg px-4 py-2 text-base md:text-lg font-semibold border bg-white text-slate-800 border-slate-300 hover:bg-slate-50 transition-all duration-200 shadow-sm">
+            Dr Adham Saleh
+          </button>
+        </div>
+      </div>
+    </section>
     <div class="space-y-6">
       <!-- Player (top) -->
       <section id="playerWrap" class="hidden reveal-on-scroll">
-        <div id="playerCard" class="rounded-lg border bg-white p-4 max-w-5xl mx-auto">
+        <div id="playerCard" class="rounded-lg border bg-white p-4 max-w-6xl mx-auto">
           <div id="playerFrameWrap" class="aspect-video bg-slate-100 rounded overflow-hidden">
             <iframe id="player" class="w-full h-full" src="" title="Biochemistry Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <div class="mt-2 flex items-center gap-2">
+            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+              <option value="savefrom" selected>SaveFrom</option>
+              <option value="ssyoutube">ssYouTube</option>
+            </select>
+            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+          </div>
+          <div id="driveHint" class="mt-3 text-center text-sm text-slate-600 hidden" dir="rtl">
+            إذا تأخر التشغيل، <a id="driveHintLink" href="#" target="_blank" rel="noopener" class="text-indigo-700 underline">اضغط هنا</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Files (inline - shown after choosing a doctor) -->
+      <section id="filesHost" class="reveal-on-scroll hidden">
+        <div class="rounded-lg border bg-white p-6">
+          <h2 class="mb-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-center" dir="rtl">الملفات </h2>
+          <div id="filesContainer" class="p-4 space-y-4" dir="ltr">
+            <div class="text-center text-slate-500 py-6">جارٍ تجهيز الملفات...</div>
           </div>
         </div>
       </section>
 
-      <!-- Lectures List (below) -->
-      <section class="space-y-4 reveal-on-scroll">
+      <!-- Lectures (inline - shown after choosing a doctor) -->
+      <section id="lecturesHost" class="space-y-4 reveal-on-scroll hidden">
         <div class="rounded-lg border bg-white">
           <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
-          <ul id="lectures" class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact ltr">
-            <li class="lecture-item" data-video="tFNRGD3oWSQ" data-size="large">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100 relative overflow-hidden">
-                  <img src="https://img.youtube.com/vi/tFNRGD3oWSQ/hqdefault.jpg" alt="Lecture 1 thumbnail" class="w-full h-full object-cover select-none pointer-events-none"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 1</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-drive="1l4Gp7uWlAGH5uhZ4djuwdGelCASGedK0" data-size="small">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100 flex items-center justify-center text-slate-500 text-sm">
-                  Google Drive
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 2</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-drive="1cRydv4f1Q-wNEBbCgoTRQc0QiwOgUB9L" data-size="small">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100 flex items-center justify-center text-slate-500 text-sm">
-                  Google Drive
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 3</span></div>
-              </div>
-            </li>
-          </ul>
+          <div id="lectures" class="p-4 space-y-4 ltr compact" data-keep-titles></div>
         </div>
       </section>
 
-      <!-- Files (PDFs) -->
-      <section class="space-y-4 reveal-on-scroll">
+      <!-- Questions (collapsible) -->
+      <section id="bio-questions-section" class="space-y-4 reveal-on-scroll">
+        <div class="rounded-lg border bg-white">
+          <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border-b px-4 py-4 bg-indigo-50 border-indigo-200 text-indigo-700 text-2xl sm:text-3xl font-extrabold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+            <span class="ltr">الأسئلة</span>
+            <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+          </button>
+          <div class="mt-3" hidden>
+            <div class="p-4 space-y-4" dir="ltr">
+            <!-- Group: Dr Agha MCQ GOOGLE FORMS -->
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg">Dr Agha MCQ GOOGLE FORMS</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">CHO Chemistry MCQ</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://forms.gle/CWYxSVAPNBxRcPHX9" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">lipid chemistry</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://forms.gle/cETBz7iejutWMJJu6" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Group: Dr Agha pdfs -->
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg">Dr Agha pdfs</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">CHO</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/18ZhVUgGfuvdAlAWcYxgI7IKY1rNHy7EG/view" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=18ZhVUgGfuvdAlAWcYxgI7IKY1rNHy7EG" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">lipids</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1xXhlGBcgW4VEkxxqH7BEIgCFoRP7rAGO/view" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1xXhlGBcgW4VEkxxqH7BEIgCFoRP7rAGO" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">protein</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/13nmLpylSo5hA61-aVlnwYuVfZWbMkOpG/view" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=13nmLpylSo5hA61-aVlnwYuVfZWbMkOpG" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">enzymes</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1i4Yusqspgo_qyasGpTGPyYZj3bJU7LUo/view" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1i4Yusqspgo_qyasGpTGPyYZj3bJU7LUo" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Molecular biology</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://drive.google.com/file/d/1jXF-QgBG9f1VK_19yQVnu7V3ePqh_P1f/view" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                      <a target="_blank" href="https://drive.google.com/uc?export=download&id=1jXF-QgBG9f1VK_19yQVnu7V3ePqh_P1f" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Group: Quizlet -->
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg">Quizlet</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">CHO</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://quizlet.com/eg/985686575/biochemistry-cho-flash-cards/?i=6oycie&x=1jqY" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Lipids</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://quizlet.com/eg/987711166/biochemistry-lipids-flash-cards/?i=6oycie&x=1jqY" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Protein</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://quizlet.com/eg/987193434/biochemistry-protein-flash-cards/?i=6oycie&x=1jqY" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">Enzymes</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://quizlet.com/eg/987207811/biochemistry-enzymes-flash-cards/?i=6oycie&x=1jqY" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">DNA</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://quizlet.com/eg/987005494/biochemistry-dna-flash-cards/?i=6oycie&x=1jqY" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                  <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                    <div class="font-medium">cell signaling</div>
+                    <div class="flex items-center gap-2">
+                      <a target="_blank" href="https://quizlet.com/eg/987560402/biochemistry-cell-signaling-flash-cards/?i=6oycie&x=1jqY" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">فتح</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      <!-- Files (PDFs) (kept in DOM but hidden to avoid heavy load) -->
+      <section id="bio-files-section" class="space-y-4 reveal-on-scroll" hidden>
         <div class="rounded-lg border bg-white">
           <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">الملفات</h2>
           <div class="p-4 space-y-4" dir="ltr">
@@ -595,6 +743,378 @@
   
   <script src="assets/js/lectures.js"></script>
   <script>
+    // Dynamic doctor switching and lectures rendering
+    document.addEventListener('DOMContentLoaded', () => {
+      const ul = document.getElementById('lectures');
+      const btns = Array.from(document.querySelectorAll('.doc-btn'));
+      const filesHost = document.getElementById('filesHost');
+      const filesContainer = document.getElementById('filesContainer');
+      if (!ul) return;
+
+      const DOCTORS = {
+        agha: [
+          { group: 'CHO', items: [
+            { type: 'youtube', id: 'tFNRGD3oWSQ', size: 'large' },
+            { type: 'drive', id: '1cRydv4f1Q-wNEBbCgoTRQc0QiwOgUB9L' },
+            { type: 'drive', id: '1l4Gp7uWlAGH5uhZ4djuwdGelCASGedK0' },
+            { type: 'drive', id: '1su1-fXLSZmImT3w0HErfB4be3wsvhioJ' }
+          ]},
+          { group: 'LIPIDS', items: [
+            { type: 'drive', id: '1-wSTHFQS43bgA1XtHHo0Fdu_dR8cD_ZT' },
+            { type: 'drive', id: '1wwi-Q04R4jwIg2qcMHG59kwRVL0MNzZf' },
+            { type: 'drive', id: '17xCVL5JAQX95iClyqPqJOwbxne6_rzf1' }
+          ]},
+          { group: 'PROTEIN', items: [
+            { type: 'drive', id: '1nunm5R20TvmwUesvL2vufvFm3T65UqCp' },
+            { type: 'drive', id: '1LWy9fuz-PZ2GqU3vogmdTktW8KVWJNWR' },
+            { type: 'drive', id: '1fhqkLfbPo6EJOrdSAZDYrU7BOC0ROudN' },
+            { type: 'drive', id: '1a7yeEtc82-vmR1fmsjTkVZxdeQOtjF1W' }
+          ]},
+          { group: 'ENZYMES', items: [
+            { type: 'drive', id: '1Gt-BKZvrbQYNdyFVH9O8DdSkv2XYZ3UH' },
+            { type: 'drive', id: '13SUQWGjJ-hhn_M6GFVhrhGRr-VHX2dGU' },
+            { type: 'drive', id: '1L1vv5_AcpuBLnqVR01omtNa6Uh6MeIxQ' },
+            { type: 'drive', id: '1fu--NwH8yLKGW2rdWSe8lXMEAm2bXSeu' }
+          ]},
+          { group: 'DNA', items: [
+            { type: 'drive', id: '1UWhyq86A3ddv1PE17ThB4lubnYEXQGg9' },
+            { type: 'drive', id: '1kjnyEjdAzrL0Q3lBLrcOXzP3PkpAxyi1' },
+            { type: 'drive', id: '184wQyOuNo46lHnS7cDaAGHGTiLB6HcQX' },
+            { type: 'drive', id: '19JoF2bOL7o1i2C1pFYE5M_i6c9uGQiB7' },
+            { type: 'drive', id: '197ubn-QTwrbBli-nLX-FtDJ52erwN-py' },
+            { type: 'drive', id: '1F-NvUHXQD3YQ0LD5YfBxKxGYpvncAV3x' }
+          ]}
+        ],
+        adham: [
+          { group: 'CHO', items: [
+            { type: 'youtube', id: 'Lb-Of1GQwbA', title: 'Lecture 1: monosaccharides 1' },
+            { type: 'youtube', id: 'x3QNUR_xZb8', title: 'Lecture 2: monosaccharides 2' },
+            { type: 'youtube', id: 'TR4vCZunkCw', title: 'Lecture 3: disaccharides' },
+            { type: 'youtube', id: '4dxdrpV4Jhw', title: 'Lecture 4: polysaccharides' },
+            { type: 'youtube', id: 'M_-MEvAuuy8', title: 'Revision' }
+          ]},
+          { group: 'Lipid', items: [
+            { type: 'youtube', id: 'NkxfEgESwzI', title: 'Lecture 1: Simple Lipids' },
+            { type: 'youtube', id: 'iHTGUIulICg', title: 'Lecture 2: Complex Lipids' },
+            { type: 'youtube', id: 'Y86TR9pvgPg', title: 'Lecture 3: Derived Lipids' }
+          ]},
+          { group: 'Protein', items: [
+            { type: 'youtube', id: 'Zt6NNhCnScw', title: 'Lecture 1: Protein 1' },
+            { type: 'youtube', id: 'ox4tN81UJ2A', title: 'Lecture 2: Protein 2' },
+            { type: 'youtube', id: '3aPESKT47_8', title: 'Lecture 3: Protein 3' },
+            { type: 'youtube', id: 'UNf1Bm-brfs', title: 'Lecture 4: Protein 4' }
+          ]}
+        ]
+      };
+
+      function thumbFor(item){
+        return item.type === 'youtube' ? `https://img.youtube.com/vi/${item.id}/hqdefault.jpg` : '';
+      }
+
+      function renderLectures(docKey){
+        const list = DOCTORS[docKey] || [];
+        ul.innerHTML = '';
+
+        // Helper to build a single lecture item <li>
+        const buildLectureLi = (item) => {
+          const li = document.createElement('li');
+          li.className = 'lecture-item';
+          if (item.type === 'youtube') li.setAttribute('data-video', item.id);
+          if (item.type === 'drive') li.setAttribute('data-drive', item.id);
+          li.setAttribute('data-size', item.size || (docKey === 'adham' ? 'large' : 'small'));
+
+          const card = document.createElement('div');
+          card.className = 'lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer';
+
+          const thumb = document.createElement('div');
+          thumb.className = 'thumb aspect-video bg-slate-100 relative overflow-hidden flex items-center justify-center text-slate-500 text-sm';
+          const imgSrc = thumbFor(item);
+          if (imgSrc) {
+            thumb.classList.remove('flex','items-center','justify-center','text-slate-500','text-sm');
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = 'Lecture thumbnail';
+            img.className = 'w-full h-full object-cover select-none pointer-events-none';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            thumb.appendChild(img);
+          } else {
+            thumb.appendChild(document.createTextNode('Google Drive'));
+          }
+          const badge = document.createElement('div');
+          badge.className = 'play-badge';
+          badge.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل';
+          thumb.appendChild(badge);
+
+          const body = document.createElement('div');
+          body.className = 'p-3 text-sm font-medium';
+          const span = document.createElement('span');
+          span.className = 'video-title ltr';
+          span.textContent = item.title || 'Lecture';
+          body.appendChild(span);
+
+          card.appendChild(thumb);
+          card.appendChild(body);
+          li.appendChild(card);
+        return li;
+      };
+
+        // Detect grouped data generically
+        const isGrouped = Array.isArray(list) && list.some(e => e && e.group && Array.isArray(e.items));
+        if (!isGrouped) {
+          const ulGrid = document.createElement('ul');
+          ulGrid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2';
+          list.forEach(item => ulGrid.appendChild(buildLectureLi(item)));
+          ul.appendChild(ulGrid);
+          return;
+        }
+
+        // Render collapsible groups
+        list.forEach(entry => {
+          if (entry && entry.group && Array.isArray(entry.items)) {
+            const group = document.createElement('div');
+            group.className = 'file-group';
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm';
+            btn.setAttribute('aria-expanded', 'false');
+            btn.innerHTML = `<span class="text-lg ltr">${entry.group}</span><svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>`;
+
+            const panel = document.createElement('div');
+            panel.className = 'mt-3';
+            panel.hidden = true;
+
+            const ulGroup = document.createElement('ul');
+            ulGroup.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2';
+            entry.items.forEach(item => ulGroup.appendChild(buildLectureLi(item)));
+            panel.appendChild(ulGroup);
+
+            group.appendChild(btn);
+            group.appendChild(panel);
+            ul.appendChild(group);
+          }
+        });
+
+        // Wire up toggle behavior for generated groups
+        try {
+          ul.querySelectorAll('.file-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const expanded = btn.getAttribute('aria-expanded') === 'true';
+              btn.setAttribute('aria-expanded', String(!expanded));
+              const panel = btn.nextElementSibling;
+              if (panel) panel.hidden = expanded;
+            });
+          });
+        } catch(_) {}
+
+        // init player behavior
+        try { initLectures({ autoTitle: false }); } catch(_) {}
+
+        // Drive hint handling for this page
+        function syncDriveHint(){
+          try {
+            const hint = document.getElementById('driveHint');
+            const link = document.getElementById('driveHintLink');
+            if (!hint || !link) return;
+            const active = document.querySelector('#lectures li.active');
+            if (!active) { hint.classList.add('hidden'); return; }
+            const driveId = active.getAttribute('data-drive');
+            if (driveId) {
+              link.href = `https://drive.google.com/file/d/${driveId}/view`;
+              hint.classList.remove('hidden');
+            } else {
+              hint.classList.add('hidden');
+            }
+          } catch(_) {}
+        }
+        ul.querySelectorAll('li').forEach(li => li.addEventListener('click', () => setTimeout(syncDriveHint, 50)));
+        setTimeout(syncDriveHint, 200);
+      }
+
+      function setActiveButton(docKey){
+        btns.forEach(btn => {
+          const active = btn.dataset.doc === docKey;
+          btn.classList.toggle('bg-indigo-600', active);
+          btn.classList.toggle('text-white', active);
+          btn.classList.toggle('border-indigo-600', active);
+          btn.classList.toggle('hover:bg-indigo-700', active);
+          btn.classList.toggle('bg-white', !active);
+          btn.classList.toggle('text-slate-800', !active);
+          btn.classList.toggle('border-slate-300', !active);
+          btn.classList.toggle('hover:bg-slate-50', !active);
+          btn.classList.toggle('doc-btn-active', active);
+        });
+      }
+
+      // Files: clone from hidden #bio-files-section (always repopulate for freshness)
+      function populateFilesFromHidden(){
+        if (!filesContainer) return;
+        try {
+          const hiddenSection = document.getElementById('bio-files-section');
+          if (!hiddenSection) return;
+          const src = hiddenSection.querySelector('.p-4.space-y-4');
+          if (!src) return;
+          filesContainer.innerHTML = src.innerHTML;
+          // Sort groups numerically like standalone page
+          try {
+            const groups = Array.from(filesContainer.querySelectorAll(':scope > .file-group'));
+            groups.sort((a,b)=>{
+              const ta = a.querySelector('button .text-lg');
+              const tb = b.querySelector('button .text-lg');
+              const na = parseInt((ta?.textContent||'').trim(), 10);
+              const nb = parseInt((tb?.textContent||'').trim(), 10);
+              const va = Number.isFinite(na) ? na : 1e9;
+              const vb = Number.isFinite(nb) ? nb : 1e9;
+              return va - vb;
+            });
+            groups.forEach(g => filesContainer.appendChild(g));
+          } catch(_) {}
+          // Event delegation for accordions (robust to re-rendering)
+          if (!filesContainer.dataset.delegated) {
+            filesContainer.addEventListener('click', (ev) => {
+              const btn = ev.target.closest('.file-toggle');
+              if (!btn || !filesContainer.contains(btn)) return;
+              const expanded = btn.getAttribute('aria-expanded') === 'true';
+              btn.setAttribute('aria-expanded', String(!expanded));
+              const panel = btn.nextElementSibling;
+              if (panel) panel.hidden = expanded;
+            });
+            filesContainer.dataset.delegated = '1';
+          }
+          // Fallback if none
+          if (!filesContainer.querySelector('.file-group')) {
+            filesContainer.innerHTML = '<div class="text-center text-slate-500 py-10">لا توجد ملفات للعرض حاليا.</div>';
+          }
+        } catch(_) {}
+      }
+
+      function setFilesVisibility(docKey){
+        if (!filesHost) return;
+        filesHost.style.display = '';
+        if (docKey === 'agha') {
+          populateFilesFromHidden();
+        } else {
+          if (filesContainer) {
+            // Render Dr Adham files: CHO and Lipids
+            filesContainer.innerHTML = `
+              <div class="file-group">
+                <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                  <span class="text-lg">CHO</span>
+                  <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                </button>
+                <div class="mt-3" hidden>
+                  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
+                    <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                      <div class="font-medium">CHO PDF</div>
+                      <div class="flex items-center gap-2">
+                        <a target="_blank" href="https://drive.google.com/file/d/1RXrfTipx-ms-NiCpzByMZ7PpG-KGZfsF/view?usp=drivesdk" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                        <a target="_blank" href="https://drive.google.com/uc?export=download&id=1RXrfTipx-ms-NiCpzByMZ7PpG-KGZfsF" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="file-group">
+                <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                  <span class="text-lg">Lipids</span>
+                  <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                </button>
+                <div class="mt-3" hidden>
+                  <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
+                    <li class="rounded-lg border bg-white p-4 flex items-center justify-between gap-3">
+                      <div class="font-medium">Lipids PDF</div>
+                      <div class="flex items-center gap-2">
+                        <a target="_blank" href="https://drive.google.com/file/d/1xXhlGBcgW4VEkxxqH7BEIgCFoRP7rAGO/view?usp=drivesdk" class="rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                        <a target="_blank" href="https://drive.google.com/uc?export=download&id=1xXhlGBcgW4VEkxxqH7BEIgCFoRP7rAGO" class="rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            `;
+            // Ensure accordions work via delegation even if Adham chosen first
+            if (!filesContainer.dataset.delegated) {
+              filesContainer.addEventListener('click', (ev) => {
+                const btn = ev.target.closest('.file-toggle');
+                if (!btn || !filesContainer.contains(btn)) return;
+                const expanded = btn.getAttribute('aria-expanded') === 'true';
+                btn.setAttribute('aria-expanded', String(!expanded));
+                const panel = btn.nextElementSibling;
+                if (panel) panel.hidden = expanded;
+              });
+              filesContainer.dataset.delegated = '1';
+            }
+          }
+        }
+      }
+
+      // Close/hide player and clear current playback state
+      function closePlayer(){
+        try {
+          const wrap = document.getElementById('playerWrap');
+          const iframe = document.getElementById('player');
+          if (iframe) iframe.src = '';
+          if (wrap) wrap.classList.add('hidden');
+          // remove any active selection
+          document.querySelectorAll('#lectures .lecture-item.active').forEach(li => li.classList.remove('active'));
+          // hide Drive hint
+          const hint = document.getElementById('driveHint');
+          if (hint) hint.classList.add('hidden');
+        } catch(_) {}
+      }
+
+      // Do not auto-select a doctor on first load; wait for user action
+
+      // Animate swap helper
+      function swapAnimate(el, doUpdate){
+        try {
+          if (!el) { doUpdate(); return; }
+          el.classList.remove('swap-enter');
+          el.classList.add('swap-leave');
+          setTimeout(() => {
+            doUpdate();
+            el.classList.remove('swap-leave');
+            el.classList.add('swap-enter');
+            setTimeout(() => { el.classList.remove('swap-enter'); }, 360);
+          }, 170);
+        } catch(_) { doUpdate(); }
+      }
+
+      btns.forEach(btn => btn.addEventListener('click', () => {
+        const key = btn.dataset.doc;
+        try { localStorage.setItem('bio_doc', key); } catch(_) {}
+        setActiveButton(key);
+        closePlayer();
+        // Reveal hosts on first interaction
+        try {
+          const chooser = document.getElementById('doctorChooser');
+          if (chooser) {
+            chooser.classList.remove('pulse-choose');
+            // force reflow to restart animation
+            void chooser.offsetWidth;
+            chooser.classList.add('pulse-choose');
+          }
+          const lect = document.getElementById('lecturesHost');
+          const files = document.getElementById('filesHost');
+          const firstReveal = (lect && lect.classList.contains('hidden')) || (files && files.classList.contains('hidden'));
+          if (firstReveal) {
+            if (lect && lect.classList.contains('hidden')) { lect.classList.remove('hidden'); lect.classList.remove('swap-enter','swap-leave'); lect.classList.add('fade-slide'); }
+            if (files && files.classList.contains('hidden')) { files.classList.remove('hidden'); files.classList.remove('swap-enter','swap-leave'); files.classList.add('fade-slide'); }
+            // On first reveal, render directly without swap animations to avoid conflicting transitions
+            renderLectures(key);
+            setFilesVisibility(key);
+            return;
+          }
+        } catch(_) {}
+        const lectRoot = document.getElementById('lectures');
+        const filesRoot = document.getElementById('filesContainer');
+        swapAnimate(lectRoot, () => renderLectures(key));
+        swapAnimate(filesRoot, () => setFilesVisibility(key));
+      }));
+    });
+  </script>
+  <script>
     // Page enter
     document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(() => {
@@ -623,7 +1143,47 @@
       }
       revealIfVisible();
       window.addEventListener('load', revealIfVisible);
-      try { initLectures({ autoTitle: true }); } catch (_) {}
+      // Defer lectures initialization to idle time to reduce main-thread work on load
+      try {
+        const init = () => { try { initLectures({ autoTitle: false }); } catch(_) {} };
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(init, { timeout: 500 });
+        } else {
+          setTimeout(init, 100);
+        }
+      } catch (_) {}
+
+      // Performance: lazy-load lecture thumbnails and player iframe
+      try {
+        document.querySelectorAll('#lectures img').forEach(img => {
+          img.loading = 'lazy';
+          img.decoding = 'async';
+        });
+        const iframeEl = document.getElementById('player');
+        if (iframeEl) iframeEl.setAttribute('loading', 'lazy');
+      } catch(_) {}
+
+      // Show Drive hint link when Drive recording is selected
+      try {
+        function syncDriveHint(){
+          try {
+            const hint = document.getElementById('driveHint');
+            const link = document.getElementById('driveHintLink');
+            if (!hint || !link) return;
+            const active = document.querySelector('#lectures li.active');
+            if (!active) { hint.classList.add('hidden'); return; }
+            const driveId = active.getAttribute('data-drive');
+            if (driveId) {
+              link.href = `https://drive.google.com/file/d/${driveId}/view`;
+              hint.classList.remove('hidden');
+            } else {
+              hint.classList.add('hidden');
+            }
+          } catch(_) {}
+        }
+        document.querySelectorAll('#lectures li').forEach(li => li.addEventListener('click', () => setTimeout(syncDriveHint, 50)));
+        setTimeout(syncDriveHint, 200);
+      } catch(_) {}
 
       // Collapsible file groups (lectures / boards)
       document.querySelectorAll('.file-toggle').forEach(btn => {

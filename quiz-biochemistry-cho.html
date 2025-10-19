@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biochemistry CHO Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+
+    gtag('config', 'G-7WSXYQGC2G');
+  </script>
+  <style>
+    body { transition: opacity 600ms ease; }
+    body.page-enter { opacity: 0; }
+    body.page-enter-active { opacity: 1; }
+    .reveal-on-scroll { opacity: 0; transform: translateY(10px); transition: opacity 600ms ease, transform 600ms ease; }
+    .reveal-active { opacity: 1; transform: translateY(0); }
+    .nav-anim { position: relative; }
+    .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
+    .nav-anim:hover::after { width: 100%; }
+    .ltr { direction: ltr; text-align: left; }
+    .choice { transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease; }
+    .choice.correct { background-color: #ecfdf5; border-color: #10b981; }
+    .choice.incorrect { background-color: #fef2f2; border-color: #ef4444; }
+    .choice-selected { background-color: #eff6ff; border-color: #2563eb; }
+    #quizContainer [data-qid] { position: relative; }
+    .badge { position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 40px; font-size: 22px; line-height: 1; padding: 0; border-radius: 9999px;
+      background: transparent; border: none; display: flex; align-items: center; justify-content: center; }
+    .badge-correct { color: #059669; }
+    .badge-incorrect { color: #dc2626; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-enter { animation: fadeUp 420ms ease both; }
+    .opt-key { display: inline-block; font-weight: 700; color: #475569; margin-inline-end: 4px; }
+    #quizContainer [data-role="num"] { position: absolute; left: 12px; top: 12px; font-weight: 700; }
+    /* Blue accent for radios */
+    input[type="radio"] { accent-color: #2563eb; }
+    /* Prominent countdown timer */
+    .timer-badge { display: inline-block; font-weight: 800; font-size: 1.5rem; line-height: 1; padding: 0.3rem 0.7rem; color: #1e40af; background: #eff6ff; border: 2px solid #93c5fd; border-radius: 9999px; letter-spacing: 1px; }
+    /* Header timer layout */
+    .header-timer { display: inline-flex; align-items: center; gap: 10px; }
+    @media (max-width: 640px) { .timer-badge { font-size: 1.3rem; padding: 0.25rem 0.6rem; } }
+    /* Large Incorrect-only toggle */
+    .filter-toggle { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 9999px; border: 2px solid #c7d2fe; background: #eef2ff; color: #1e1b4b; font-weight: 700; }
+    .filter-toggle input { transform: scale(1.2); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 page-enter">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+      <div class="flex items-center gap-2">
+        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
+          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
+        </a>
+      </div>
+      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 header-timer">
+        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
+        <a href="biochemistry.html" class="hover:text-indigo-600 nav-anim ltr">Biochemistry</a>
+        <span id="liveTimer" class="timer-badge">70:00</span>
+      </nav>
+    </div>
+  </header>
+  
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold mb-2 ltr">Biochemistry CHO Quiz</h1>
+      <p class="text-slate-700">اختر الإجابة الصحيحة لكل سؤال ثم اضغط "إنهاء الاختبار" لعرض الدرجة.</p>
+    </div>
+    <div class="mb-4 hidden" id="filterWrapTop">
+      <label class="filter-toggle" dir="rtl">
+        <input type="checkbox" id="showOnlyIncorrectTop" class="rounded border-slate-300" />
+        <span>عرض الأسئلة الخاطئة فقط</span>
+      </label>
+    </div>
+
+    <div id="quizContainer" class="space-y-4"></div>
+
+    <div class="mt-6 flex flex-wrap items-center gap-3">
+      <button id="submitBtn" class="rounded-lg bg-indigo-600 text-white px-5 py-2 hover:bg-indigo-700 transition-transform hover:-translate-y-0.5">إنهاء الاختبار</button>
+      <button id="retryBtn" class="rounded-lg border px-5 py-2 hover:bg-slate-50 hidden">إعادة المحاولة</button>
+      <label class="inline-flex items-center gap-2 text-sm hidden" id="filterWrap">
+        <input type="checkbox" id="showOnlyIncorrect" class="rounded border-slate-300" />
+        <span>عرض الأسئلة الخاطئة فقط</span>
+      </label>
+      <div id="scoreBox" class="text-sm text-slate-700 hidden"></div>
+      <a href="biochemistry.html" class="ml-auto rounded-lg border px-5 py-2 hover:bg-slate-50">الرجوع إلى Biochemistry</a>
+    </div>
+  </main>
+
+  <footer class="border-t bg-white mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-sm text-slate-600 text-left">© 2025 clearmed.site</div>
+  </footer>
+
+  <script>
+    // Page enter
+    document.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-enter-active');
+        document.body.classList.remove('page-enter');
+      });
+      // Start time + remember source
+      try {
+        const t = Date.now();
+        sessionStorage.setItem('quiz_start', String(t));
+        sessionStorage.setItem('quiz_last_source', 'quiz-biochemistry-cho.html');
+      } catch(_) {}
+      // start countdown timer UI (skip if returning for review)
+      try {
+        const mode = sessionStorage.getItem('quiz_review');
+        const src = sessionStorage.getItem('quiz_last_source');
+        if (!(mode && src === 'quiz-biochemistry-cho.html')) {
+          startLiveTimer(4200000); // 70 minutes
+        }
+      } catch(_) {}
+    });
+    window.addEventListener('pageshow', () => {
+      document.body.classList.add('page-enter-active');
+      document.body.classList.remove('page-enter');
+    });
+
+    // Quiz data (Biochemistry CHO)
+    const questions = [
+      { id: 'q1', text: '1) All the following Monosaccharides have asymmetric carbon atom except', choices: ['Glucose', 'Glyceraldehyde', 'Fructose', 'Dihydroxyacetone', 'None of the above'], answer: 3 },
+      { id: 'q2', text: '2. Glucose and galactose are:', choices: ['Anomers.', 'Constituents of sucrose.', 'D&L isomers.', 'Epimers.'], answer: 3 },
+      { id: 'q3', text: '3. D-glucose and D-mannose are Epimers with respect to carbon atom number:', choices: ['3', '2', '4', '5', '1'], answer: 1 },
+      { id: 'q4', text: '4. D-glucuronic acid is an example of:', choices: ['Aldonic acid', 'Aldaric acid', 'Uronic acid', 'Saccharic acid', 'None of the above'], answer: 2 },
+      { id: 'q5', text: '5. Reduction of Monosaccharides yields:', choices: ['Sugar alcohols', 'Sugar acids', 'amino sugars', 'Deoxy-sugar', 'None of the above'], answer: 0 },
+      { id: 'q6', text: '6. Hydrogen gas in presence of a metal can reduce fructose to:', choices: ['Mannitol', 'Ribitol', 'Glycerol', 'Glucose', 'None of the above'], answer: 0 },
+      { id: 'q7', text: '7. Ascorbic acid is an example of:', choices: ['Sugar acid', 'Sugar alcohol', 'Sugar phosphate', 'Deoxy-sugar'], answer: 0 },
+      { id: 'q8', text: '8. All the following are reducing sugars except:', choices: ['Maltose', 'Lactose', 'Sucrose', 'None of the above'], answer: 2 },
+      { id: 'q9', text: '9. A disaccharide formed of two glucose units is:', choices: ['Lactose', 'Maltose', 'Sucrose', 'Amylose', 'Amylopectin'], answer: 1 },
+      { id: 'q10', text: '10. Milk sugar is:', choices: ['Sucrose', 'Maltose', 'Cellobiose', 'Lactose', 'None of the above'], answer: 3 },
+      { id: 'q11', text: '11. Cane sugar is:', choices: ['Maltose', 'Cellobiose', 'Lactose', 'Sucrose', 'None of the above'], answer: 3 },
+      { id: 'q12', text: '12. Malt sugar is:', choices: ['Lactose', 'Maltose', 'Sucrose', 'Cellobiose', 'None of the above'], answer: 1 },
+      { id: 'q13', text: '13. Starch is an example of:', choices: ['Galactosans', 'Fructosans', 'Mannosans', 'Glucosaminans', 'Glucosans'], answer: 4 },
+      { id: 'q14', text: '14. Starch is an example of:', choices: ['Structural polysaccharides present in animals', 'Structural polysaccharides present in plants', 'Nutrient polysaccharides present in animals', 'Nutrient polysaccharides present in plants', 'none of the above'], answer: 3 },
+      { id: 'q15', text: '15. A polysaccharide indigestible by man is', choices: ['Amylopectin', 'Glycogen', 'Cellulose', 'Amylose', 'Cellobiose'], answer: 2 },
+      { id: 'q16', text: '16. A branch component of starch is:', choices: ['Glucose', 'Amylopectin', 'Amylose', 'Maltose', 'None of the above'], answer: 1 },
+      { id: 'q17', text: '17. Which of the following statements characterizes glucose:', choices: ['It usually exists in the furanose form', 'It is a ketose', 'Carbon 2 is the anomeric carbon atom', 'It forms part of the disaccharide sucrose', 'It is oxidized to form sorbitol'], answer: 3 },
+      { id: 'q18', text: '18. Glucuronic acid is produced from ……………… of Glucose.', choices: ['Oxidation of first carbon', 'Oxidation of last carbon', 'Reduction of first carbon', 'Reduction of last carbon'], answer: 1 },
+      { id: 'q19', text: '19. Ribitol is', choices: ['Deoxy sugar', 'Amino sugar', 'Sugar alcohol', 'Sugar acid'], answer: 2 },
+      { id: 'q20', text: '20. Inulin is a simple polysaccharide built up of:', choices: ['Glucosamine', 'Galactose', 'Fructose', 'Aldose', 'None of the above'], answer: 2 },
+      { id: 'q21', text: '21. The end products of glycogen hydrolysis by acid is', choices: ['Dextrin', 'Maltose', 'Both dextrin and maltose', 'Glucose'], answer: 3 },
+      { id: 'q22', text: '22. The richest site for fructose in the body is', choices: ['Mammary gland', 'Seminal fluid', 'Thyroid gland', 'Prostate'], answer: 1 },
+      { id: 'q23', text: '23. Which statement is incorrect', choices: ['Glucose and mannose are Epimers', 'α- and β-glucose are Anomers', 'Glucose and galactose are Anomers', 'Ribose and xylose are epimers'], answer: 2 },
+      { id: 'q24', text: '24. All the following sugars and sugar derivatives are L form except:', choices: ['Ascorbic acid', 'Iduronic acid of Heparan sulfate', 'Fucose of glycoproteins', 'Glucuronic acid'], answer: 3 },
+      { id: 'q25', text: '25. Sorbitol is', choices: ['A sugar alcohol', 'Obtained from glucose', 'Obtained from fructose', 'All of these'], answer: 3 },
+      { id: 'q26', text: '26. Cellulose is', choices: ['Formed of β-glucose', 'Not digested in human intestine', 'A simple polysaccharide', 'All of the above'], answer: 3 },
+      { id: 'q27', text: '27. Dextrose is', choices: ['An aldopentose', 'An aldohexose', 'A ketohexose', 'A ketopentose'], answer: 1 },
+      { id: 'q28', text: '28. Starch is', choices: ['A heterogeneous polysaccharide', 'Composed of β-glucose', 'Not digested by amylase', 'All of the above', 'None of the above'], answer: 4 },
+      { id: 'q29', text: '29. Carbohydrates in Glycoproteins are always O-linked.', choices: ['True', 'False'], answer: 1 },
+      { id: 'q30', text: '30. Lactose is', choices: ['A non-reducing sugar', 'Formed of α-glucose and β-fructose', 'both of these', 'None of these'], answer: 3 },
+      { id: 'q31', text: '31. Carbohydrates in Proteoglycans are usually O-linked.', choices: ['True', 'False'], answer: 0 },
+      { id: 'q32', text: '32. Amylase enzyme can hydrolyse', choices: ['Starch', 'Dextrins', 'Glycogen', 'All of these'], answer: 3 },
+      { id: 'q33', text: '33. Which carbohydrate will you find in greatest abundance in potatoes?', choices: ['Starch', 'Cellulose', 'sucrose', 'Glycogen', 'Lactose'], answer: 0 },
+      { id: 'q34', text: '34. A pair of sugars that differ in the configuration around the functional group is called:', choices: ['Anomers', 'Epimers', 'Racemers', 'Stereoisomers'], answer: 0 },
+      { id: 'q35', text: '35. All of the following are sugar alcohols except :', choices: ['Galactitol', 'Mannitol', 'Xylulose', 'Sorbitol'], answer: 2 },
+      { id: 'q36', text: '36. The glycosidic linkage seen in sucrose is :', choices: ['Alpha 1-4', 'Beta 1-4', 'Alpha 1-6', 'Alpha 1-2'], answer: 3 },
+      { id: 'q37', text: '37. All the following have glycosidic bonds except :', choices: ['Maltose', 'Sucrose', 'N-acetyl glucosamine', 'lactose'], answer: 2 },
+      { id: 'q38', text: '38. Sucrose consists of:', choices: ['α-glucose + β glucose', 'α-glucose + β fructose', 'α-glucose + β galactose', 'α-glucose + β mannose'], answer: 1 },
+      { id: 'q39', text: '39. All the following bonds are non-covalent except', choices: ['Bond between core proteins and GAGs', 'Bond between hyaluronic acid and link protein', 'Bond between link protein and core protein', 'Both A and B'], answer: 0 },
+      { id: 'q40', text: '40. The glycosidic linkage seen in lactose is :', choices: ['Alpha 1-4', 'Beta 1-4', 'Alpha 1-6', 'Alpha 1-2'], answer: 1 },
+      { id: 'q41', text: '41. The glycosidic linkage seen in maltose is:', choices: ['Alpha 1-4', 'Beta 1-4', 'Alpha 1-6', 'Alpha 1-2'], answer: 0 },
+      { id: 'q42', text: '42. Hetero polysaccharide that doesn\'t contain uronic acid is:', choices: ['Keratan sulphate', 'Dermatan sulphate', 'Chondroitin sulphate', 'Hyaluronic acid'], answer: 0 },
+      { id: 'q43', text: '43. D-glucose and D-fructose are:', choices: ['Epimers at C 2', 'Epimers at C 4', 'Anomers', 'Aldose ketose isomers'], answer: 3 },
+      { id: 'q44', text: '44. All of the following are glucosans except', choices: ['Starch', 'Inulin', 'Cellulose', 'Glycogen'], answer: 1 },
+      { id: 'q45', text: '45. Amylopectin is characterized by all of the following except', choices: ['It is a branched polymer', 'It\'s structure is very close to glycogen', 'Contains α 1-4 and α 1-6 bonds', 'Hydrolysis by amylase gives maltose and fructose'], answer: 3 },
+      { id: 'q46', text: '46. Cellulose is characterized by all of the following except', choices: ['It is a glucosan', 'It is linear polymer', 'Consists of β-glucose units', 'Easily digested as it contains glycosidic bonds'], answer: 3 },
+      { id: 'q47', text: '47. The only sulfate free GAG is', choices: ['Heparin', 'Hyaluronic acid', 'Keratan sulphate', 'Dermatan sulfate'], answer: 1 },
+      { id: 'q48', text: '48. Cellulose is not digested as it contains:', choices: ['It contains α-glucosidic bonds', 'It contains β-galactosidic bonds', 'It contains β-glucosidic bonds', 'It contains α-fructosidic bonds'], answer: 2 },
+      { id: 'q49', text: '49. Storage CHO in plants:', choices: ['Starch', 'Cellulose', 'Glycogen', 'GAGs'], answer: 0 },
+      { id: 'q50', text: '50. Storage CHO in animals:', choices: ['Starch', 'Cellulose', 'Glycogen', 'GAGs'], answer: 2 },
+      { id: 'q51', text: '51. Structural CHO in plants:', choices: ['Starch', 'Cellulose', 'Glycogen', 'GAGs'], answer: 1 },
+      { id: 'q52', text: '52. Structural CHO in animals:', choices: ['Starch', 'Cellulose', 'Glycogen', 'GAGs'], answer: 3 },
+      { id: 'q53', text: '53. The only Sulfate free GAG is', choices: ['Hyaluronic acid', 'Chondroitin Sulfate', 'Keratan Sulfate', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 0 },
+      { id: 'q54', text: '54. The only Uronic acid free GAG is', choices: ['Hyaluronic acid', 'Chondroitin Sulfate', 'Keratan Sulfate', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 2 },
+      { id: 'q55', text: '55. The major GAG present in cartilage is:', choices: ['Hyaluronic acid', 'Chondroitin Sulfate', 'Keratan Sulfate', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 1 },
+      { id: 'q56', text: '56. Important for corneal transparency:', choices: ['Hyaluronic acid', 'Chondroitin Sulfate', 'Keratan Sulfate', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 2 },
+      { id: 'q57', text: '57. Important anti-coagulant GAG:', choices: ['Hyaluronic acid', 'Chondroitin Sulfate', 'Heparin', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 2 },
+      { id: 'q58', text: '58. GAG that plays a role in cell membrane receptors:', choices: ['Hyaluronic acid', 'Chondroitin Sulfate', 'Keratan Sulfate', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 3 },
+      { id: 'q59', text: '59. GAG that is important for maintenance of shape of sclera:', choices: ['Chondroitin Sulfate', 'Keratan Sulfate', 'Heparan Sulfate', 'Dermatan Sulfate'], answer: 3 },
+      { id: 'q60', text: '60. The major component of proteoglycans is usually:', choices: ['Carbohydrates', 'Lipids', 'Proteins', 'None of the above'], answer: 0 },
+      { id: 'q61', text: '61. The major component of Glycoproteins is usually:', choices: ['Carbohydrates', 'Lipids', 'Proteins', 'None of the above'], answer: 2 },
+      { id: 'q62', text: '62. 2 Monosaccharides that differ from each other in 1 carbon not the anomeric:', choices: ['Epimers', 'D & L isomers', 'Aldose Ketose isomers', 'Alpha and Beta anomers'], answer: 0 },
+      { id: 'q63', text: '63. 2 Monosaccharides that differ from each other in 1 carbon which is the anomeric:', choices: ['Epimers', 'D & L isomers', 'Aldose Ketose isomers', 'Alpha and Beta anomers'], answer: 3 },
+      { id: 'q64', text: '64. 2 Monosaccharides that differ from each other in Functional group:', choices: ['Epimers', 'D & L isomers', 'Aldose Ketose isomers', 'Alpha and Beta anomers'], answer: 2 },
+      { id: 'q65', text: '65. 2 Monosaccharides that differ from each other around the Functional group', choices: ['Epimers', 'D & L isomers', 'Aldose Ketose isomers', 'Alpha and Beta anomers'], answer: 3 },
+      { id: 'q66', text: '66. Which of the following describes the structure of Amylose?', choices: ['It is a Linear Homopolysaccharide.', 'It contains Sulfate.', 'It is composed of β-Glucose units.', 'It is a Neutral Heteropolysaccharide.'], answer: 0 },
+      { id: 'q67', text: '67. Which of the following is a Fructose Homopolysaccharide?', choices: ['Cellulose.', 'Glycogen.', 'Starch.', 'Inulin.'], answer: 3 },
+      { id: 'q68', text: '68. How are the following two structures related?', choices: ['They are Anomers.', 'They are Aldose Ketose Isomers.', 'They are D & L Isomers.', 'They are Epimers.'], answer: 3 },
+      { id: 'q69', text: '69. Which of the following describes GAGs?', choices: ['They tend to attract each other in solutions.', 'Formed of short branched oligosaccharide chains.', 'Attached covalently to core protein by O-Glycosidic bonds.', 'Attached to core protein by Hydrogen Bonds.'], answer: 2 },
+      { id: 'q70', text: '70. How are the following two structures related?', choices: ['They are Anomers.', 'They are Aldose Ketose Isomers.', 'They are D & L Isomers.', 'They are Epimers.'], answer: 2 }
+    ];
+
+    function renderQuiz() {
+      const wrap = document.getElementById('quizContainer');
+      wrap.innerHTML = '';
+      const letters = ['a', 'b', 'c', 'd', 'e'];
+      let qNum = 0; // count only real questions, skip info items
+      questions.forEach((q) => {
+        const card = document.createElement('div');
+        card.className = 'rounded-lg border bg-white p-4 card-enter';
+        card.dataset.qid = q.id;
+        const head = document.createElement('div');
+        head.className = 'flex items-start justify-between gap-3 mb-3';
+        if (q.type === 'info') {
+          head.innerHTML = `<div class="font-semibold"></div><div class="hidden" data-role="badge"></div>`;
+        } else {
+          qNum += 1;
+          head.innerHTML = `<div class="font-semibold"></div><div class="hidden" data-role="badge"></div>`;
+        }
+        card.appendChild(head);
+        if (q.type === 'info') {
+          const label = document.createElement('div');
+          label.className = 'text-sm font-semibold text-indigo-700 ltr mb-1';
+          label.textContent = 'Article';
+          card.appendChild(label);
+          const text = document.createElement('div');
+          text.className = 'mb-3 ltr';
+          text.textContent = q.text;
+          card.appendChild(text);
+        } else {
+          const text = document.createElement('div');
+          text.className = 'mb-3 ltr';
+          text.textContent = `${q.text}`;
+          card.appendChild(text);
+        }
+        if (!q.type || q.type !== 'info') {
+          const ul = document.createElement('ul');
+          ul.className = 'space-y-2';
+          q.choices.forEach((c, ci) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <label class="choice flex items-center gap-1 rounded border px-3 py-2 cursor-pointer">
+                <input type="radio" name="${q.id}" value="${ci}" class="peer" />
+                <span class="ltr grow"><span class="opt-key">${letters[ci] || ''}-</span> ${c}</span>
+              </label>`;
+            ul.appendChild(li);
+          });
+          card.appendChild(ul);
+        }
+        wrap.appendChild(card);
+      });
+    }
+
+    function collectAnswers() {
+      const answers = {};
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+        answers[q.id] = checked ? parseInt(checked.value, 10) : null;
+      });
+      return answers;
+    }
+
+    function lockQuiz() { document.querySelectorAll('#quizContainer input[type="radio"]').forEach(i=>i.disabled=true); }
+    function unlockQuiz() { document.querySelectorAll('#quizContainer input[type="radio"]').forEach(i=>i.disabled=false); }
+
+    // Live timer UI
+    let timerInterval = null;
+    let countdownEndTs = null;
+    let autoSubmitted = false;
+    function startLiveTimer(durationMs){
+      const el = document.getElementById('liveTimer');
+      if (!el) return;
+      const end = Date.now() + Math.max(0, Number(durationMs)||0);
+      countdownEndTs = end;
+      function renderRemaining(now){
+        const remainingSec = Math.max(0, Math.ceil((end - now)/1000));
+        const m = String(Math.floor(remainingSec/60)).padStart(2,'0');
+        const s = String(remainingSec%60).padStart(2,'0');
+        el.textContent = `${m}:${s}`;
+      }
+      renderRemaining(Date.now());
+      if (timerInterval) { clearInterval(timerInterval); }
+      timerInterval = setInterval(() => {
+        const now = Date.now();
+        if (now >= end) {
+          clearInterval(timerInterval); timerInterval = null;
+          renderRemaining(end);
+          if (!autoSubmitted) {
+            autoSubmitted = true;
+            try { alert('لقد انتهى الوقت'); } catch(_) {}
+            try { document.getElementById('submitBtn').click(); } catch(_) {}
+          }
+        } else {
+          renderRemaining(now);
+        }
+      }, 200);
+    }
+    function stopLiveTimer(){ if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+
+    function showResults(answers) {
+      let correctCount = 0;
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const selected = answers[q.id];
+        const card = document.querySelector(`[data-qid="${q.id}"]`);
+        const badge = card.querySelector('[data-role="badge"]');
+        badge.classList.remove('hidden');
+        const options = card.querySelectorAll('label.choice');
+        options.forEach((lab, idx) => {
+          lab.classList.remove('correct','incorrect');
+          lab.classList.remove('choice-selected');
+          if (idx === q.answer) lab.classList.add('correct');
+          if (selected !== null && idx === selected && selected !== q.answer) lab.classList.add('incorrect');
+          // Mark selected option with blue highlight and check the radio
+          const input = lab.querySelector('input[type="radio"]');
+          if (input) input.checked = (idx === selected);
+          if (selected !== null && idx === selected) lab.classList.add('choice-selected');
+        });
+        if (selected === q.answer) {
+          correctCount++;
+          badge.className='badge badge-correct';
+          badge.textContent='✓';
+        } else {
+          badge.className='badge badge-incorrect';
+          badge.textContent='✗';
+        }
+      });
+      const total = questions.filter(q => q.type !== 'info').length;
+      const score = Math.round((correctCount/total)*100);
+      const box = document.getElementById('scoreBox');
+      box.classList.remove('hidden');
+      box.textContent = `درجتك: ${correctCount} / ${total} (${score}%)`;
+      document.getElementById('retryBtn').classList.remove('hidden');
+      document.getElementById('filterWrap').classList.remove('hidden');
+    }
+
+    function applyIncorrectFilter(onlyIncorrect) {
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const card = document.querySelector(`[data-qid="${q.id}"]`);
+        const badge = card.querySelector('[data-role="badge"]');
+        const isIncorrect = badge && badge.classList.contains('badge-incorrect');
+        card.style.display = onlyIncorrect && !isIncorrect ? 'none' : '';
+      });
+    }
+
+    function resetQuiz() {
+      renderQuiz();
+      unlockQuiz();
+      const box = document.getElementById('scoreBox');
+      box.classList.add('hidden');
+      box.textContent = '';
+      document.getElementById('retryBtn').classList.add('hidden');
+      document.getElementById('filterWrap').classList.add('hidden');
+      document.getElementById('filterWrapTop').classList.add('hidden');
+      document.getElementById('showOnlyIncorrect').checked = false;
+      const topCb = document.getElementById('showOnlyIncorrectTop'); if (topCb) topCb.checked = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      try { autoSubmitted = false; startLiveTimer(4200000); const tEl = document.getElementById('liveTimer'); if (tEl) { tEl.style.display = ''; } } catch(_) {}
+    }
+
+    // Init
+    renderQuiz();
+
+    // Events
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const answers = collectAnswers();
+      lockQuiz();
+      stopLiveTimer();
+      // Compute score summary
+      let correctCount = 0;
+      const total = questions.filter(q => q.type !== 'info').length;
+      questions.forEach(q => {
+        if (q.type === 'info') return;
+        const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+        if (checked && parseInt(checked.value,10) === q.answer) correctCount++;
+      });
+      const score = Math.round((correctCount/total)*100);
+      // Duration
+      let durationMs = null;
+      try {
+        const s = sessionStorage.getItem('quiz_start');
+        const started = s ? Number(s) : Date.now();
+        durationMs = Date.now() - started;
+        sessionStorage.setItem('quiz_end', String(Date.now()));
+        sessionStorage.setItem('quiz_last_duration', String(durationMs));
+      } catch(_) {}
+      // Title
+      let title = document.querySelector('h1') ? document.querySelector('h1').innerText.trim() : 'Biochemistry CHO Quiz';
+      // Persist payload and redirect
+      try {
+        const answers = collectAnswers();
+        const payload = { correctCount, total, score, durationMs, title };
+        sessionStorage.setItem('quiz_answers', JSON.stringify(answers));
+        sessionStorage.setItem('quiz_payload', JSON.stringify(payload));
+      } catch(_) {}
+      setTimeout(() => { window.location.href = 'quiz-result.html'; }, 240);
+    });
+    document.getElementById('retryBtn').addEventListener('click', resetQuiz);
+    // Sync both incorrect-only toggles
+    document.getElementById('showOnlyIncorrect').addEventListener('change', e => {
+      const v = e.target.checked; const t = document.getElementById('showOnlyIncorrectTop'); if (t) t.checked = v; applyIncorrectFilter(v);
+    });
+    document.getElementById('showOnlyIncorrectTop').addEventListener('change', e => {
+      const v = e.target.checked; const b = document.getElementById('showOnlyIncorrect'); if (b) b.checked = v; applyIncorrectFilter(v);
+    });
+
+    // Review mode
+    (function maybeReview(){
+      try {
+        const mode = sessionStorage.getItem('quiz_review');
+        const src = sessionStorage.getItem('quiz_last_source');
+        if (!mode || src !== 'quiz-biochemistry-cho.html') return;
+        const raw = sessionStorage.getItem('quiz_answers');
+        const answers = raw ? JSON.parse(raw) : null;
+        if (!answers) return;
+        // Hide timer in review
+        try { const t = document.getElementById('liveTimer'); if (t) t.style.display = 'none'; } catch(_) {}
+        showResults(answers);
+        lockQuiz();
+        document.getElementById('filterWrap').classList.remove('hidden');
+        document.getElementById('filterWrapTop').classList.remove('hidden');
+        if (mode === 'incorrect') {
+          document.getElementById('showOnlyIncorrect').checked = true;
+          const tcb = document.getElementById('showOnlyIncorrectTop'); if (tcb) tcb.checked = true;
+          applyIncorrectFilter(true);
+        }
+        sessionStorage.removeItem('quiz_review');
+      } catch(_) {}
+    })();
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منصة ClearMed - Histology</title>
+  <title>Histlology</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
@@ -39,6 +39,12 @@
     .ltr { direction: ltr; text-align: left; }
     /* Ensure lecture titles are always LTR */
     #lectures .video-title { direction: ltr; text-align: left; }
+    /* Collapsible file groups (copied from Biochemistry) */
+    .file-toggle .chev { transition: transform 200ms ease; }
+    .file-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+    /* Collapsible file groups (match biochemistry) */
+    .file-toggle .chev { transition: transform 200ms ease; }
+    .file-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
     /* Mobile layout: small thumbnail (right), title on the left */
     @media (max-width: 640px) {
       #lectures.compact { gap: 0.5rem; }
@@ -68,344 +74,859 @@
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-6 reveal-on-scroll">
-      <div class="text-sm text-slate-600 mb-2 ltr">Histology</div>
       <h1 class="text-2xl font-bold mb-2 ltr">Histology</h1>
-      <p class="text-slate-700"></p>
     </div>
-
-    <div class="space-y-6">
-      <!-- Player (top) -->
-      <section id="playerWrap" class="hidden reveal-on-scroll">
-        <div class="rounded-lg border bg-white p-4">
-          <div class="aspect-video bg-slate-100 rounded overflow-hidden">
-            <iframe id="player" class="w-full h-full" src="" title="Histology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-          </div>
-          <div class="mt-2 flex items-center gap-2">
-            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
-              <option value="savefrom" selected>SaveFrom</option>
-              <option value="ssyoutube">ssYouTube</option>
-            </select>
-            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+    <!-- PDF Material (above lectures) -->
+    <section class="reveal-on-scroll ltr">
+      
+    <div class="rounded-lg border bg-white p-4 mt-4">
+      <div class="flex items-start gap-4">
+        <!-- Tall, compact, non-interactive preview -->
+        <div class="rounded overflow-hidden bg-slate-100 w-20 sm:w-24 h-32 sm:h-40 flex-shrink-0">
+          <img src="assets/iman.png" alt="Iman PDF thumbnail" class="w-full h-full object-cover select-none" draggable="false"/>
+        </div>
+        <div class="grow">
+          <h2 class="font-semibold mb-2"><span class="ltr">Histology Dr Iman Nabil PDF</span></h2>
+          <div class="flex flex-wrap gap-2">
+            <a href="https://drive.google.com/file/d/1ocELoiQ7VO9KrGoeEI6LkEUv0wlLhUHQ/view?usp=share_link" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+            <a href="https://drive.google.com/uc?export=download&id=1ocELoiQ7VO9KrGoeEI6LkEUv0wlLhUHQ" download class="inline-flex items-center rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
           </div>
         </div>
-      </section>
-
-      <!-- Lectures List (below) -->
-      <section class="space-y-4 reveal-on-scroll">
-        <div class="rounded-lg border bg-white">
-          <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
-          <ul id="lectures" class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact ltr">
-            <li class="lecture-item" data-video="lO5lgPCKFNI">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/lO5lgPCKFNI/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 1</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="VFF4mGBFLbI">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/VFF4mGBFLbI/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 2</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="HiI0kPuLMUQ">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/HiI0kPuLMUQ/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 3</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="pDdc50ROeVw">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/pDdc50ROeVw/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 4</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="GuEOdAnAJs8">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/GuEOdAnAJs8/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 5</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="oD0q2Scir-M">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/oD0q2Scir-M/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 6</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="-Ejq674xbSA">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/-Ejq674xbSA/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 7</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="MrABegQEfgY">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/MrABegQEfgY/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 8</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="6f2xCso-1lg">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/6f2xCso-1lg/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 9</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="D928PgI8ebM">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/D928PgI8ebM/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 10</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="l0mmHpWj4q0">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/l0mmHpWj4q0/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 11</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="r4-ksXFExcI">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/r4-ksXFExcI/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 12</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="NwqNIuSI5kg">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/NwqNIuSI5kg/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 13</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="r4-ksXFExcI">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/r4-ksXFExcI/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 14</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="r3rb9eT6iuY">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/r3rb9eT6iuY/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 15</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="tAm7YKu504Y">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/tAm7YKu504Y/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 16</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="5RshA2OVkig">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/5RshA2OVkig/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 17</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="W5NwOeXZY1U">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/W5NwOeXZY1U/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 18</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="d8ScyX2MGt0">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/d8ScyX2MGt0/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 19</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="vP2Kr_Bgrlk">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/vP2Kr_Bgrlk/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 20</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="9TMcxQOPUeU">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/9TMcxQOPUeU/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 21</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="k--w25BI4lw">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/k--w25BI4lw/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 22</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="0brvgDu6ekY">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/0brvgDu6ekY/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 23</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="ijgVOSEz7EE">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/ijgVOSEz7EE/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 24</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="Jy_fsR1PtD8">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/Jy_fsR1PtD8/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 25</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="TCf6O_24t0w">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/TCf6O_24t0w/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 26</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="m9RsM54F_Uo">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/m9RsM54F_Uo/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 27</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="gjOxPyOm8o8">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/gjOxPyOm8o8/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 28</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="bJ0t7EjmuAM">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/bJ0t7EjmuAM/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 29</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="-SW9kIiCdJI">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/-SW9kIiCdJI/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 30</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="KbmDwRk3H3M">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/KbmDwRk3H3M/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 31</span></div>
-              </div>
-            </li>
-            <!-- Inserted new Lecture 32 -->
-            <li class="lecture-item" data-video="VPZ0Q4IrEXs">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/VPZ0Q4IrEXs/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 32</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="QdgVZd2ZFzU">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/QdgVZd2ZFzU/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 33</span></div>
-              </div>
-            </li>
-            <li class="lecture-item" data-video="O0-aaACSzD0">
-              <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
-                <div class="thumb aspect-video bg-slate-100">
-                  <img src="https://i.ytimg.com/vi/O0-aaACSzD0/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
-                </div>
-                <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 34</span></div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </div>
     </div>
+    </section>
+
+    <!-- Player (top) -->
+    <section id="playerWrap" class="hidden reveal-on-scroll">
+      <div id="playerCard" class="rounded-lg border bg-white p-4 max-w-6xl mx-auto">
+        <div id="playerFrameWrap" class="aspect-video bg-slate-100 rounded overflow-hidden">
+          <iframe id="player" class="w-full h-full" src="" title="Histology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="mt-2 flex items-center gap-2">
+          <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+            <option value="savefrom" selected>SaveFrom</option>
+            <option value="ssyoutube">ssYouTube</option>
+          </select>
+          <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+        </div>
+        <div id="driveHint" class="mt-3 text-center text-sm text-slate-600 hidden" dir="rtl">
+          إذا تأخر التشغيل، <a id="driveHintLink" href="#" target="_blank" rel="noopener" class="text-indigo-700 underline">اضغط هنا</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sections (collapsible) -->
+    <section class="space-y-4 reveal-on-scroll">
+      <div class="rounded-lg border bg-white">
+        <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
+        <div id="lectures" class="p-4 space-y-4 ltr compact" data-keep-titles data-prefix-numbers>
+          <!-- Group: Cell -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">Cell</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                <li class="lecture-item" data-video="lO5lgPCKFNI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/lO5lgPCKFNI/hqdefault.jpg" alt="1a-Structure of cell membrane-Part1- Lipids and Proteins" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1a-Structure of cell membrane-Part1- Lipids and Proteins</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="VFF4mGBFLbI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/VFF4mGBFLbI/hqdefault.jpg" alt="1b-Structure of cell membrane part2-Carbohydrates-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1b-Structure of cell membrane part2-Carbohydrates-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="HiI0kPuLMUQ">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/HiI0kPuLMUQ/hqdefault.jpg" alt="MCQs- Histology of cell membrane" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology of cell membrane</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="pDdc50ROeVw">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/pDdc50ROeVw/hqdefault.jpg" alt="1c-Vesicular transport  across the cell membrane- Endocytosis and Exocytosis-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1c-Vesicular transport  across the cell membrane- Endocytosis and Exocytosis-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="GuEOdAnAJs8">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/GuEOdAnAJs8/hqdefault.jpg" alt="MCQs- Histology- Vesicular transport across the cell membrane" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Vesicular transport across the cell membrane</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="oD0q2Scir-M">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/oD0q2Scir-M/hqdefault.jpg" alt="2a- Cell organelles-Part1- Ribosomes-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2a- Cell organelles-Part1- Ribosomes-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="-Ejq674xbSA">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/-Ejq674xbSA/hqdefault.jpg" alt="2b- Cell organelles part 2-Endoplasmic reticulum-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2b- Cell organelles part 2-Endoplasmic reticulum-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="MrABegQEfgY">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/MrABegQEfgY/hqdefault.jpg" alt="MCQs- Histology- Ribosomes and endoplasmic reticulum" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Ribosomes and endoplasmic reticulum</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="6f2xCso-1lg">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/6f2xCso-1lg/hqdefault.jpg" alt="2c- Cell organelles- Part 3-Golgi- endosomes and lysosomes-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2c- Cell organelles- Part 3-Golgi- endosomes and lysosomes-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="D928PgI8ebM">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/D928PgI8ebM/hqdefault.jpg" alt="MCQs- Histology-Golgi apparatus,lysosomes and endosomes" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology-Golgi apparatus,lysosomes and endosomes</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="l0mmHpWj4q0">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/l0mmHpWj4q0/hqdefault.jpg" alt="2d-Cell organelles part4-Mitochondria and peroxisome-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2d-Cell organelles part4-Mitochondria and peroxisome-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="r4-ksXFExcI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/r4-ksXFExcI/hqdefault.jpg" alt="MCQs- Histology- Mitochondria and peroxisome" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Mitochondria and peroxisome</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="NwqNIuSI5kg">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/NwqNIuSI5kg/hqdefault.jpg" alt="3a-Cytoskeleton part1-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">3a-Cytoskeleton part1-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="i6dowjJ42yY">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/i6dowjJ42yY/hqdefault.jpg" alt="MCQs- Histology- Cell cytockeleton" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Cell cytockeleton</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="r3rb9eT6iuY">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/r3rb9eT6iuY/hqdefault.jpg" alt="3b- Centrosome and cell inclusions- Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">3b- Centrosome and cell inclusions- Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="tAm7YKu504Y">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/tAm7YKu504Y/hqdefault.jpg" alt="MCQs- Histology- Cell inclusions" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Cell inclusions</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="5RshA2OVkig">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/5RshA2OVkig/hqdefault.jpg" alt="4-Nucleus-Cell- Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">4-Nucleus-Cell- Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="W5NwOeXZY1U">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/W5NwOeXZY1U/hqdefault.jpg" alt="MCQs- Histology- Nucleus" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Nucleus</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="d8ScyX2MGt0">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/d8ScyX2MGt0/hqdefault.jpg" alt="5a-Cell cycle part1-Interphase-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">5a-Cell cycle part1-Interphase-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="vP2Kr_Bgrlk">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/vP2Kr_Bgrlk/hqdefault.jpg" alt="5b-Cell cycle part2-Mitosis-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">5b-Cell cycle part2-Mitosis-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="9TMcxQOPUeU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/9TMcxQOPUeU/hqdefault.jpg" alt="MCQs- Histology- Cell cycle" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Cell cycle</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="k--w25BI4lw">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/k--w25BI4lw/hqdefault.jpg" alt="5c-Cell cycle part3-Meiosis-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">5c-Cell cycle part3-Meiosis-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="0brvgDu6ekY">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/0brvgDu6ekY/hqdefault.jpg" alt="5d- Cell cycle part4-Comparison between mitosis and meiosis-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">5d- Cell cycle part4-Comparison between mitosis and meiosis-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="ijgVOSEz7EE">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/ijgVOSEz7EE/hqdefault.jpg" alt="MCQs- Histology- Cell division" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Cell division</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="Jy_fsR1PtD8">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/Jy_fsR1PtD8/hqdefault.jpg" alt="6a- Cell proliferation and stem cells-cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">6a- Cell proliferation and stem cells-cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="TCf6O_24t0w">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/TCf6O_24t0w/hqdefault.jpg" alt="6b-Cell death-Cell-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">6b-Cell death-Cell-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="m9RsM54F_Uo">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/m9RsM54F_Uo/hqdefault.jpg" alt="MCQs- Histology- Cell proliferation,stem cells and cell death" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Cell proliferation,stem cells and cell death</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="gjOxPyOm8o8">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/gjOxPyOm8o8/hqdefault.jpg" alt="Fluid mosaic model of the cell membrane-Histology-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Fluid mosaic model of the cell membrane-Histology-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="bJ0t7EjmuAM">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/bJ0t7EjmuAM/hqdefault.jpg" alt="Proteasome-Cell-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Proteasome-Cell-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="-SW9kIiCdJI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/-SW9kIiCdJI/hqdefault.jpg" alt="Nuclear pore complex and parts of nucleolus-1- Cell-Nucleus" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Nuclear pore complex and parts of nucleolus-1- Cell-Nucleus</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="KbmDwRk3H3M">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/KbmDwRk3H3M/hqdefault.jpg" alt="Induced pluripotent stem cells-First year-1-Cell-Foundation" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Induced pluripotent stem cells-First year-1-Cell-Foundation</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="VPZ0Q4IrEXs">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/VPZ0Q4IrEXs/hqdefault.jpg" alt="Cell revision 2019" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Cell revision 2019</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="QdgVZd2ZFzU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/QdgVZd2ZFzU/hqdefault.jpg" alt="Cell revision-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Cell revision-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="O0-aaACSzD0">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/O0-aaACSzD0/hqdefault.jpg" alt="Cell answers" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Cell answers</span></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Group: Epithelium -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">Epithelium</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                <li class="lecture-item" data-video="_hcnkrs9lDg">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/_hcnkrs9lDg/hqdefault.jpg" alt="1a- Simple epithelium Part1-2025" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1a- Simple epithelium Part1-2025</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="67J9zv_taWU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/67J9zv_taWU/hqdefault.jpg" alt="1b-Simple epithelium Part2-Pseudostratified columnar epithelium-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1b-Simple epithelium Part2-Pseudostratified columnar epithelium-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="-XENuno86TU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/-XENuno86TU/hqdefault.jpg" alt="1c-Stratified epithelium-Histology-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1c-Stratified epithelium-Histology-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="UrlsvGb3-wA">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/UrlsvGb3-wA/hqdefault.jpg" alt="MCQs- Histology- Lining epithelium" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Lining epithelium</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="j-hBrjCqaaM">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/j-hBrjCqaaM/hqdefault.jpg" alt="2a- Glandular epithelium-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2a- Glandular epithelium-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="o_cZo1WyAeA">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/o_cZo1WyAeA/hqdefault.jpg" alt="2b-Specialized types of epithelium-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2b-Specialized types of epithelium-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="uGd9Fneukwo">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/uGd9Fneukwo/hqdefault.jpg" alt="MCQs- Histology-Glandular epithelium" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology-Glandular epithelium</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="SJTKxLf8ovg">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/SJTKxLf8ovg/hqdefault.jpg" alt="3-Cell polarity 2021-Histology-First year-1-Foundation-2-Epithelium 2021" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">3-Cell polarity 2021-Histology-First year-1-Foundation-2-Epithelium 2021</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="nKlRjZrqe0U">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/nKlRjZrqe0U/hqdefault.jpg" alt="MCQs- Histology-Cell polarity" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology-Cell polarity</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="GRlfphFQfnA">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/GRlfphFQfnA/hqdefault.jpg" alt="4a- Intercellular junctions Part1-Histology-Epithelium-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">4a- Intercellular junctions Part1-Histology-Epithelium-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="4lzg_gdqYtg">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/4lzg_gdqYtg/hqdefault.jpg" alt="4b-Cell junctions Part2-Gap junction and Hemidesmosome" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">4b-Cell junctions Part2-Gap junction and Hemidesmosome</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="mKCyq9JF09g">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/mKCyq9JF09g/hqdefault.jpg" alt="4c-Summary of Intercellular junctions with animations" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">4c-Summary of Intercellular junctions with animations</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="qM0g7zYR7L8">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/qM0g7zYR7L8/hqdefault.jpg" alt="MCQs- Histology- Intercellular junctions" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Intercellular junctions</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="7Bk0vGFgcOw">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/7Bk0vGFgcOw/hqdefault.jpg" alt="Structure of Basement membrane-2-Epithelium" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Structure of Basement membrane-2-Epithelium</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="Rsz04H_GUK4">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/Rsz04H_GUK4/hqdefault.jpg" alt="Cell adhesions molecules-Cell junctions-First year-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Cell adhesions molecules-Cell junctions-First year-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="fiwVvCW4cGw">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/fiwVvCW4cGw/hqdefault.jpg" alt="Epithelium revision- First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Epithelium revision- First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="EZDiWmige08">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/EZDiWmige08/hqdefault.jpg" alt="Revision epithelium, connective tissue and skin 2019" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Revision epithelium, connective tissue and skin 2019</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="j7rvsmqm3CI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/j7rvsmqm3CI/hqdefault.jpg" alt="Epithelium Test answers" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Epithelium Test answers</span></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Group: Connective tissue -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">Connective tissue</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                <li class="lecture-item" data-video="fxErP2a0_po">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/fxErP2a0_po/hqdefault.jpg" alt="1a-Connective tissue componenets part1-Ground substances - Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1a-Connective tissue componenets part1-Ground substances - Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="Z2lJx0OBgs4">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/Z2lJx0OBgs4/hqdefault.jpg" alt="1b- Connective tissue fibers 2024" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1b- Connective tissue fibers 2024</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="92VgTpObxGU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/92VgTpObxGU/hqdefault.jpg" alt="MCQs- Histology- Ground substance and fibers of connective tissue" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Ground substance and fibers of connective tissue</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="S5cC0oE0FLs">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/S5cC0oE0FLs/hqdefault.jpg" alt="2-Connective tissue cells" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2-Connective tissue cells</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="XcM5l2mXTJQ">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/XcM5l2mXTJQ/hqdefault.jpg" alt="MCQs- Histology -Types of connective tissue cells" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology -Types of connective tissue cells</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="-7Dftbd_dWc">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/-7Dftbd_dWc/hqdefault.jpg" alt="3a-Types of connective tissue part1-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">3a-Types of connective tissue part1-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="3-w6MPtTm5k">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/3-w6MPtTm5k/hqdefault.jpg" alt="3b- Types of connective tissue part 2-Connective tissue proper-Histology" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">3b- Types of connective tissue part 2-Connective tissue proper-Histology</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="UiLqKWd_xj4">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/UiLqKWd_xj4/hqdefault.jpg" alt="MCQs- Histology-Types of connective tissue" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology-Types of connective tissue</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="DPiS_LVEHmI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/DPiS_LVEHmI/hqdefault.jpg" alt="Connective tissue revision-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Connective tissue revision-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="6XXZ5tN5Q4g">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/6XXZ5tN5Q4g/hqdefault.jpg" alt="Connective tissue Test answer" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Connective tissue Test answer</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="TP_9LavwRNE">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/TP_9LavwRNE/hqdefault.jpg" alt="Adipose tissue and obesity" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Adipose tissue and obesity</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="Rcd2QAVSzHM">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/Rcd2QAVSzHM/hqdefault.jpg" alt="Collagen synthesis, Banding pattern and degradation-Connective tissue" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Collagen synthesis, Banding pattern and degradation-Connective tissue</span></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Group: Skin -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">Skin</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                <li class="lecture-item" data-video="bWRCEN9RVFI">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/bWRCEN9RVFI/hqdefault.jpg" alt="1a-Histology of the epidermis part1-Introduction-Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1a-Histology of the epidermis part1-Introduction-Skin</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="957d260HHT4">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/957d260HHT4/hqdefault.jpg" alt="1b- Histology of the epidermis part2-Keratinocytes and epidermal layers -Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1b- Histology of the epidermis part2-Keratinocytes and epidermal layers -Skin</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="b93XPOr1-lM">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/b93XPOr1-lM/hqdefault.jpg" alt="1c-Histology of the epidermis part3-Non keratinocytes-Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">1c-Histology of the epidermis part3-Non keratinocytes-Skin</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="Eapsab6okEU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/Eapsab6okEU/hqdefault.jpg" alt="MCQs- Histology- Skin epidermis" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology- Skin epidermis</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="4wOw3fzaifA">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/4wOw3fzaifA/hqdefault.jpg" alt="2a-Histology of the dermis part1-Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2a-Histology of the dermis part1-Skin</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="J-gdYcG9AMg">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/J-gdYcG9AMg/hqdefault.jpg" alt="2b-Histology of the dermis part2-Skin appenges- Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">2b-Histology of the dermis part2-Skin appenges- Skin</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="q2IuwLU2cGU">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/q2IuwLU2cGU/hqdefault.jpg" alt="MCQs- Histology-Skin Dermis" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">MCQs- Histology-Skin Dermis</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="KRRbkV23I9A">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/KRRbkV23I9A/hqdefault.jpg" alt="Hair and nail-Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Hair and nail-Skin</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="CKkFyXwV-CM">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/CKkFyXwV-CM/hqdefault.jpg" alt="Skin revision-First year" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Skin revision-First year</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="4SezL50AdUc">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/4SezL50AdUc/hqdefault.jpg" alt="Skin Test answers" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">Skin Test answers</span></div>
+                  </div>
+                </li>
+                <li class="lecture-item" data-video="mLLX3DexVa8">
+                  <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                    <div class="thumb aspect-video bg-slate-100">
+                      <img src="https://i.ytimg.com/vi/mLLX3DexVa8/hqdefault.jpg" alt="3-Cutaneous wound healing-فيديوهات المعادلة-Skin" class="w-full h-full object-cover"/>
+                      <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                    </div>
+                    <div class="p-3 text-sm font-medium"><span class="video-title ltr">3-Cutaneous wound healing-فيديوهات المعادلة-Skin</span></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Files Section -->
+    <section id="filesSection" class="space-y-4 reveal-on-scroll">
+      <div class="rounded-lg border bg-white">
+        <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">الاختبارات</h2>
+        <div class="p-4 space-y-4">
+          <!-- quizlet group (new, top) -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">quizlet</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <ol class="space-y-2">
+                <li>
+                  <a href="https://quizlet.com/eg/984339588/histology-cell-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">1) Cell</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://quizlet.com/eg/984543272/histology-cell-cycle-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">2) Cell cycle</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://quizlet.com/eg/984420954/histology-epithelium-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">3) Epithelium</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://quizlet.com/eg/984605019/histology-connective-tissue-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">4) Connective Tissue</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://quizlet.com/eg/984631995/histology-skin-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">5) Skin</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Nebras group (new, above) -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">Nebras</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <a href="https://drive.google.com/file/d/1_ZcMyc1ybi_lVzKMVr-dS72acIr9G08K/view?usp=share_link" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                  <span class="font-medium ltr">Nebras MCQs</span>
+                  <span class="text-indigo-600 text-sm">فتح</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dr Iman group (existing, now only forms) -->
+          <div class="file-group">
+            <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+              <span class="text-lg ltr">Dr Iman Nabil</span>
+              <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+            <div class="mt-3" hidden>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSciqVdHe8FfVtcGxh17p0713yomXjP1KCZ8clpN2ASkmzxoog/viewform?vc=0&c=0&w=1&flr=0&hl=en" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                  <span class="font-medium ltr">Dr Iman Nabil — GOOGLE FORMS</span>
+                  <span class="text-indigo-600 text-sm">فتح</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="border-t bg-white mt-10">
@@ -414,45 +935,33 @@
 
   <script src="assets/js/lectures.js"></script>
   <script>
-    // Page enter
+    // Minimal page enter
     document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(() => {
         document.body.classList.add('page-enter-active');
         document.body.classList.remove('page-enter');
       });
+      // Ensure reveal sections are visible (like biochemistry-files)
+      try { document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('reveal-active')); } catch(_) {}
+      // Init unified lectures behavior (use titles as-is)
+      try { initLectures({ autoTitle: false }); } catch(_) {}
+      // Wire accordions (copied from biochemistry)
+      try {
+        document.querySelectorAll('.file-toggle').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const wasExpanded = btn.getAttribute('aria-expanded') === 'true';
+            const nowExpanded = !wasExpanded;
+            btn.setAttribute('aria-expanded', String(nowExpanded));
+            const panel = btn.nextElementSibling;
+            if (panel) panel.hidden = !nowExpanded;
+          });
+        });
+      } catch(_) {}
     });
-
-    // Smooth transition on nav links
-    document.querySelectorAll('a[href$=".html"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const href = a.getAttribute('href');
-        if (!href || href.startsWith('#') || a.target === '_blank') return;
-        e.preventDefault();
-        document.body.classList.add('page-enter');
-        document.body.classList.remove('page-enter-active');
-        setTimeout(() => { window.location.href = href; }, 180);
-      });
-    });
-
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal-active');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-
-    // Handle browser back/forward cache to avoid blank page
     window.addEventListener('pageshow', () => {
       document.body.classList.add('page-enter-active');
       document.body.classList.remove('page-enter');
     });
-
-    // Unified lectures behavior
-    initLectures({ autoTitle: true });
   </script>
 </body>
 </html>

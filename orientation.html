@@ -4,7 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orientation</title>
+  <!-- Early theme set to avoid FOUC -->
+  <script>
+    (function(){
+      try {
+        const ls = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (ls === 'dark' || (!ls && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {}
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
   <script>
@@ -24,19 +41,59 @@
     .nav-anim::after { content: ""; position: absolute; right: 0; bottom: -4px; height: 2px; width: 0; background: rgb(79 70 229); transition: width 300ms ease; }
     .nav-anim:hover::after { width: 100%; }
     .ltr { direction: ltr; text-align: left; }
+    /* Glass effect helper (fallback safe) */
+    .glass { background: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.35); box-shadow: 0 10px 30px rgba(15,23,42,.08); }
+    @supports (backdrop-filter: blur(8px)) {
+      .glass { backdrop-filter: blur(12px); background: rgba(255,255,255,0.35); }
+    }
+
+    /* Dark mode overrides */
+    .dark body { color: #e5e7eb; }
+    /* Smoother multi-stop gradient to eliminate banding */
+    .dark body { background-image: linear-gradient(180deg, #0b1220 0%, #0c1424 45%, #0e1627 70%, #0f172a 100%) !important; }
+    /* Prevent footer strip in dark mode */
+    .dark footer { background-color: transparent !important; }
+    .dark header { background-color: transparent; }
+    .dark .bg-white { background-color: rgba(2,6,23,0.6) !important; }
+    .dark .border, .dark .border-b { border-color: rgba(148,163,184,0.22) !important; }
+    .dark .text-slate-900 { color: #f1f5f9 !important; }
+    .dark .text-slate-800 { color: #e5e7eb !important; }
+    .dark .text-slate-700 { color: #e2e8f0 !important; }
+    .dark .text-slate-600, .dark .text-slate-500 { color: #cbd5e1 !important; }
+    .dark .shadow-lg, .dark .shadow { box-shadow: 0 10px 30px rgba(0,0,0,.35) !important; }
+
+    /* Theme switch transition helper */
+    .theme-transition, .theme-transition * {
+      transition-property: background-color, color, border-color, fill, stroke, box-shadow, filter;
+      transition-duration: 320ms;
+      transition-timing-function: ease;
+    }
+    /* Dark glass */
+    .dark .glass { background: rgba(15,23,42,0.55); border-color: rgba(148,163,184,0.25); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    @supports (backdrop-filter: blur(8px)) {
+      .dark .glass { backdrop-filter: blur(12px); background: rgba(15,23,42,0.35); }
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
-      <div class="flex items-center gap-2">
-        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
-          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
+  <header class="sticky top-0 z-30">
+    <div class="glass">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between flex-row-reverse">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="leading-tight">
+            <div class="font-extrabold text-slate-900">ClearMed</div>
+          </div>
+          <img src="assets/lo.png" alt="ClearMed" class="h-9 w-9 rounded-xl shadow"/>
         </a>
+        <nav class="flex items-center gap-2 sm:gap-3 text-sm">
+          <button id="themeToggle" type="button" aria-label="تبديل الوضع الليلي" class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+            <svg id="iconSun" class="w-5 h-5 hidden dark:inline" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79L3.17 4.84l1.79 1.79 1.8-1.79zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.79 1.8 1.79-1.8-1.79-1.79-1.79 1.79zM20 13h3v-2h-3v2zM12 1h2v3h-2V1zm7.78 3.84l-1.8-1.79-1.79 1.79 1.79 1.79 1.8-1.79zM12 7a5 5 0 100 10 5 5 0 000-10zm5.99 12.01l-1.79-1.79-1.8 1.79 1.8 1.8 1.79-1.8z"/></svg>
+            <svg id="iconMoon" class="w-5 h-5 dark:hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          </button>
+          <a href="index.html" class="nav-anim">الرئيسية</a>
+          <a href="https://t.me/clearmedsite" target="_blank" class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:text-white">تيليجرام</a>
+        </nav>
       </div>
-      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
-        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-      </nav>
     </div>
   </header>
 
@@ -45,11 +102,17 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <h1 class="text-2xl font-bold mb-6 ltr">Orientation</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal-on-scroll ltr">
-      <a href="terminology.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">1. Terminology</div>
+      <a href="terminology.html" class="group relative rounded-2xl border bg-white p-5 overflow-hidden transition shadow-sm hover:shadow-lg transform-gpu hover:-translate-y-1">
+        <div class="absolute pointer-events-none -inset-1 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="relative">
+          <div class="font-semibold ltr">1. Terminology</div>
+        </div>
       </a>
-      <a href="english.html" class="rounded-lg border bg-white p-5 hover:border-indigo-300 transition-transform hover:-translate-y-0.5 hover:shadow-lg">
-        <div class="font-semibold ltr">2. English</div>
+      <a href="english.html" class="group relative rounded-2xl border bg-white p-5 overflow-hidden transition shadow-sm hover:shadow-lg transform-gpu hover:-translate-y-1">
+        <div class="absolute pointer-events-none -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-sky-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="relative">
+          <div class="font-semibold ltr">2. English</div>
+        </div>
       </a>
     </div>
   </main>
@@ -91,6 +154,23 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
     // Back button logic removed: using logo link instead
+
+    // Theme toggle
+    (function setupThemeToggle(){
+      const btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      const root = document.documentElement;
+      const setTheme = (mode) => {
+        root.classList.add('theme-transition');
+        if (mode === 'dark') { root.classList.add('dark'); localStorage.setItem('theme','dark'); }
+        else { root.classList.remove('dark'); localStorage.setItem('theme','light'); }
+        window.setTimeout(() => root.classList.remove('theme-transition'), 380);
+      };
+      btn.addEventListener('click', () => {
+        const isDark = root.classList.contains('dark');
+        setTheme(isDark ? 'light' : 'dark');
+      });
+    })();
   </script>
 </body>
 </html>

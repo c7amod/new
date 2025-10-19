@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>منصتي التعليمية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      background-color: #f5f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); width: 340px; text-align: center; }
+    input { display: block; width: 90%; margin: 10px auto; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px; text-align: center; }
+    button { background-color: #111827; color: white; border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; margin-top: 10px; width: 95%; }
+    button:hover {
+      opacity: 0.9;
+    }
+    h2 {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="authContainer">
+    <h2>تسجيل دخول</h2>
+    <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+    <div style="position: relative; width: 90%; margin: 10px auto;">
+      <input type="password" id="loginPassword" placeholder="كلمة المرور" style="width: 100%; padding-left: 40px;" />
+      <button type="button" id="togglePwLogin" aria-label="إظهار/إخفاء" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); background: transparent; width: 28px; height: 28px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <button onclick="signIn()">تسجيل دخول</button>
+    <p style="margin-top:12px;font-size:14px;color:#6b7280;">ليس لديك حساب؟ <a href="#" id="showSignup" style="color:#2563eb;">إنشاء حساب</a></p>
+
+    <div id="signupBox" style="display:none; margin-top:18px;">
+      <h2>إنشاء حساب</h2>
+      <div class="grid grid-cols-1 gap-2" style="direction: rtl;">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="firstName" placeholder="الاسم الأول">
+          <input type="text" id="lastName" placeholder="الاسم الثاني">
+        </div>
+      </div>
+      <select id="batch" style="display:block;width:90%;margin:10px auto;padding:12px;border:1px solid #d1d5db;border-radius:12px;text-align:center;">
+        <option value="" disabled selected>اختر الدفعة</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+        <option value="2028">2028</option>
+        <option value="2029">2029</option>
+        <option value="2030">2030</option>
+      </select>
+      <input type="email" id="email" placeholder="البريد الإلكتروني">
+      <div style="position: relative; width: 90%; margin: 10px auto;">
+        <input type="password" id="password" placeholder="كلمة المرور" style="width: 100%; padding-left: 40px;" />
+        <button type="button" id="togglePw" aria-label="إظهار/إخفاء" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); background: transparent; width: 28px; height: 28px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div style="position: relative; width: 90%; margin: 10px auto;">
+        <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور" style="width: 100%; padding-left: 40px;" />
+        <button type="button" id="togglePw2" aria-label="إظهار/إخفاء" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); background: transparent; width: 28px; height: 28px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <button onclick="signUp()">إنشاء حساب</button>
+      <p style="margin-top:12px;font-size:14px;color:#6b7280;">لديك حساب؟ <a href="#" id="showLogin" style="color:#2563eb;">تسجيل دخول</a></p>
+    </div>
+  </div>
+
+  <div class="container" id="userContainer" style="display:none;">
+    <h2>أهلاً <span id="userName"></span> 👋</h2>
+    <button onclick="signOutUser()">تسجيل خروج</button>
+  </div>
+
+  <div id="msgBox" class="mt-4 text-center" style="display:none;"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    import { 
+      getDatabase, 
+      ref, 
+      set, 
+      get, 
+      child 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1Tf8sDzzue1fDrcxWg__qL6EQn9ZhIY8",
+      authDomain: "clearmed-f8d63.firebaseapp.com",
+      databaseURL: "https://clearmed-f8d63-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "clearmed-f8d63",
+      storageBucket: "clearmed-f8d63.appspot.com",
+      messagingSenderId: "30890364132",
+      appId: "1:30890364132:web:4b4d45f87fd02eb43898f3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // إنشاء حساب
+    function setMsg(text, type){
+      const box = document.getElementById('msgBox');
+      box.textContent = text || '';
+      box.style.display = text ? 'block' : 'none';
+      box.className = 'mt-4 text-center max-w-xs mx-auto rounded-xl px-3 py-2 text-sm ' + (type==='ok' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-rose-50 text-rose-700 border border-rose-200');
+    }
+
+    async function signUp() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const batch = document.getElementById("batch").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+      if (!firstName || !lastName || !batch || !email || !password || !confirmPassword) {
+        setMsg('من فضلك املأ كل الحقول', 'err');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        setMsg('كلمتا المرور غير متطابقتين ❌', 'err');
+        return;
+      }
+
+      if (password.length < 6) {
+        setMsg('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'err');
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await set(ref(db, "users/" + user.uid), {
+          firstName,
+          lastName,
+          batch,
+          email
+        });
+
+        setMsg('تم إنشاء الحساب بنجاح ✅', 'ok');
+      } catch (error) {
+        console.error(error);
+        setMsg('حدث خطأ أثناء الإنشاء: ' + error.message, 'err');
+      }
+    }
+
+    // تسجيل دخول
+    async function signIn() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        setMsg('تم تسجيل الدخول ✅', 'ok');
+      } catch (error) {
+        console.error(error);
+        setMsg('خطأ في تسجيل الدخول: ' + error.message, 'err');
+      }
+    }
+
+    // تسجيل خروج
+    function signOutUser() {
+      signOut(auth);
+    }
+
+    // متابعة حالة المستخدم
+    onAuthStateChanged(auth, (user) => {
+      const authContainer = document.getElementById("authContainer");
+      const userContainer = document.getElementById("userContainer");
+      const userName = document.getElementById("userName");
+
+      if (user) {
+        const dbRef = ref(db);
+        get(child(dbRef, "users/" + user.uid)).then(snapshot => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            userName.innerText = data.firstName + " " + data.lastName;
+          }
+        });
+        authContainer.style.display = "none";
+        userContainer.style.display = "block";
+      } else {
+        authContainer.style.display = "block";
+        userContainer.style.display = "none";
+      }
+    });
+
+    // Show/Hide password toggles
+    function toggleType(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.type = el.type === 'password' ? 'text' : 'password';
+    }
+    document.getElementById('togglePw')?.addEventListener('click', ()=>toggleType('password'));
+    document.getElementById('togglePw2')?.addEventListener('click', ()=>toggleType('confirmPassword'));
+    document.getElementById('togglePwLogin')?.addEventListener('click', ()=>toggleType('loginPassword'));
+
+    // Toggle signup/login sections
+    document.getElementById('showSignup')?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      document.getElementById('signupBox').style.display = 'block';
+      document.getElementById('showSignup').parentElement.style.display = 'none';
+    });
+    document.getElementById('showLogin')?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      document.getElementById('signupBox').style.display = 'none';
+      const p = document.getElementById('showSignup').parentElement;
+      if(p) p.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

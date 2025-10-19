@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Physiology - سنة أولى</title>
+  <title>Physiology</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
@@ -32,20 +32,34 @@
     .thumb { position: relative; }
     .play-badge { position: absolute; inset-inline-end: 8px; inset-block-end: 8px; background: rgba(0,0,0,0.7); color: white; font-size: 12px; padding: 2px 6px; border-radius: 999px; display: flex; align-items: center; gap: 6px; }
     .play-badge svg { width: 12px; height: 12px; }
-    #lectures .lecture-card .p-3 { padding: 0.75rem; }
-    #lectures .lecture-card .video-title { font-size: 0.9rem; line-height: 1.3; }
-    #lectures.compact .lecture-card .video-title { font-size: 0.8rem; }
-    #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
-    #lectures.compact .lecture-card { box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+    [data-role="lectures"] .lecture-card .p-3 { padding: 0.75rem; }
+    [data-role="lectures"] .lecture-card .video-title { font-size: 0.9rem; line-height: 1.3; }
+    [data-role="lectures"].compact .lecture-card .video-title { font-size: 0.8rem; }
+    [data-role="lectures"].compact .lecture-card .p-3 { padding: 0.5rem; }
+    [data-role="lectures"].compact .lecture-card { box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
     @media (max-width: 640px) {
-      #lectures.compact { gap: 0.5rem; }
-      #lectures.compact .lecture-card { display: grid; grid-template-columns: 96px 1fr; align-items: center; }
-      #lectures.compact .lecture-card .thumb { width: 96px; }
-      #lectures.compact .lecture-card .thumb .aspect-video { width: 96px; }
-      #lectures.compact .lecture-card .p-3 { padding: 0.5rem; }
-      #lectures.compact .lecture-card .video-title { font-size: 0.85rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-      #lectures.compact .play-badge { display: none; }
+      [data-role="lectures"].compact { gap: 0.5rem; }
+      [data-role="lectures"].compact .lecture-card { display: grid; grid-template-columns: 96px 1fr; align-items: center; }
+      [data-role="lectures"].compact .lecture-card .thumb { width: 96px; }
+      [data-role="lectures"].compact .lecture-card .thumb .aspect-video { width: 96px; }
+      [data-role="lectures"].compact .lecture-card .p-3 { padding: 0.5rem; }
+      [data-role="lectures"].compact .lecture-card .video-title { font-size: 0.85rem; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      [data-role="lectures"].compact .play-badge { display: none; }
     }
+    /* Doctor chooser styles (aligned with Biochemistry) */
+    .doc-btn { transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease, color 200ms ease, border-color 200ms ease; }
+    .doc-btn:hover { transform: translateY(-1px); }
+    .doc-btn-active { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(79,70,229,0.18); }
+    .file-toggle .chev { transition: transform 200ms ease; }
+    .file-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+    /* Swap / pulse animations (from Biochemistry) */
+    @keyframes choosePulse { 0% { box-shadow: 0 0 0 0 rgba(79,70,229,0.35);} 70% { box-shadow: 0 0 0 14px rgba(79,70,229,0);} 100% { box-shadow: 0 0 0 0 rgba(79,70,229,0);} }
+    .pulse-choose { animation: choosePulse 600ms ease; }
+    @keyframes fadeslide { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+    .fade-slide { animation: fadeslide 420ms ease both; }
+    @keyframes fadeslideOut { from { opacity: 1; transform: translateY(0);} to { opacity: 0; transform: translateY(6px);} }
+    .swap-leave { animation: fadeslideOut 160ms ease both; }
+    .swap-enter { animation: fadeslide 320ms ease both; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 page-enter">
@@ -67,37 +81,52 @@
     <div class="mb-6 reveal-on-scroll">
       <h1 class="text-2xl font-bold mb-2 ltr">Physiology</h1>
     </div>
-    <div class="space-y-6">
+    <!-- Doctor selector -->
+    <section class="mb-4 reveal-on-scroll" dir="rtl">
+      <div id="doctorChooser" class="rounded-2xl border bg-white p-4 sm:p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          <button id="docBtn-gawad" type="button" data-doc="gawad" class="doc-btn inline-flex items-center justify-center rounded-lg px-4 py-2 text-base md:text-lg font-semibold border bg-white text-slate-800 border-slate-300 hover:bg-slate-50 transition-all duration-200 shadow-sm">
+            Dr Gawad
+          </button>
+          <button id="docBtn-adham" type="button" data-doc="adham" class="doc-btn inline-flex items-center justify-center rounded-lg px-4 py-2 text-base md:text-lg font-semibold border bg-white text-slate-800 border-slate-300 hover:bg-slate-50 transition-all duration-200 shadow-sm">
+            Dr Adham Saleh
+          </button>
+        </div>
+      </div>
+    </section>
+    <div class="space-y-6" id="docContents">
+      <!-- Dr Gawad content (existing content moved here) -->
+      <div id="docContent-gawad" data-doc-content="gawad" class="space-y-6" hidden>
       <!-- PDF Material (above lectures) -->
       <section class="reveal-on-scroll">
-        <div class="rounded-lg border bg-white p-4">
+        <div class="rounded-lg border bg-white p-4 mt-4">
           <div class="flex items-start gap-4">
             <!-- Tall, compact, non-interactive preview -->
             <div class="rounded overflow-hidden bg-slate-100 w-20 sm:w-24 h-32 sm:h-40 flex-shrink-0">
               <img src="assets/ph1.png" alt="Physiology PDF thumbnail" class="w-full h-full object-cover select-none" draggable="false"/>
             </div>
             <div class="grow">
-              <h2 class="font-semibold mb-2"><span class="ltr">Physiology PDF</span></h2>
+              <h2 class="font-semibold mb-2"><span class="ltr">Physiology Dr Gawad PDF</span></h2>
               <div class="flex flex-wrap gap-2">
-                <a href="assets/ph1.pdf" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">فتح الملف</a>
-                <a id="pdfDownloadBtn" href="assets/ph1.pdf" download class="inline-flex items-center rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
+                <a href="https://drive.google.com/file/d/1ab8-ArN_i8grQTy9jCZzOTDiJFFpvbuu/view?usp=share_link" target="_blank" class="inline-flex items-center rounded-lg border px-3 py-1.5 text-sm hover:bg-slate-50">عرض</a>
+                <a id="pdfDownloadBtn" href="https://drive.google.com/uc?export=download&id=1ab8-ArN_i8grQTy9jCZzOTDiJFFpvbuu" download class="inline-flex items-center rounded-lg bg-indigo-600 text-white px-3 py-1.5 text-sm hover:bg-indigo-700">تحميل</a>
               </div>
             </div>
           </div>
         </div>
       </section>
       <!-- Player (top) -->
-      <section id="playerWrap" class="hidden reveal-on-scroll">
+      <section id="playerWrap" data-role="playerWrap" class="hidden reveal-on-scroll">
         <div class="rounded-lg border bg-white p-4">
           <div class="aspect-video bg-slate-100 rounded overflow-hidden">
-            <iframe id="player" class="w-full h-full" src="" title="Physiology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe id="player" data-role="player" class="w-full h-full" src="" title="Physiology Lecture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
           <div class="mt-2 flex items-center gap-2">
-            <select id="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+            <select id="providerSelect" data-role="providerSelect" class="grow rounded border px-3 py-2 text-sm">
               <option value="savefrom" selected>SaveFrom</option>
               <option value="ssyoutube">ssYouTube</option>
             </select>
-            <button id="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+            <button id="downloadBtn" data-role="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
           </div>
         </div>
       </section>
@@ -106,7 +135,7 @@
       <section class="space-y-4 reveal-on-scroll">
         <div class="rounded-lg border bg-white">
           <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
-          <ul id="lectures" class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact">
+          <ul id="lectures" data-role="lectures" class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact">
             <li class="lecture-item" data-video="Vh2DDjipaU0">
               <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
                 <div class="thumb aspect-video bg-slate-100">
@@ -156,7 +185,7 @@
               <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
                 <div class="thumb aspect-video bg-slate-100">
                   <img src="https://img.youtube.com/vi/BKtIMq0jLZg/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
                 </div>
                 <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 6</span></div>
               </div>
@@ -165,7 +194,7 @@
               <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
                 <div class="thumb aspect-video bg-slate-100">
                   <img src="https://img.youtube.com/vi/W2IYCpeUu5A/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
-                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14ل11-7z"/></svg>تشغيل</div>
+                  <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
                 </div>
                 <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 7</span></div>
               </div>
@@ -173,6 +202,148 @@
           </ul>
         </div>
       </section>
+
+      <!-- Exams Section -->
+      <section id="physioExams" class="space-y-4 reveal-on-scroll">
+        <div class="rounded-lg border bg-white">
+          <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">الاختبارات</h2>
+          <div class="p-4 space-y-4">
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg ltr">quizlet</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+                <div class="grid grid-cols-1 gap-3">
+                  <a href="https://quizlet.com/eg/987751737/physiology-nervous-system-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">Nervous system</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                  <a href="https://quizlet.com/eg/987835459/physiology-general-physiology-flash-cards/?x=1jqt" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                    <span class="font-medium ltr">General physiology</span>
+                    <span class="text-indigo-600 text-sm">فتح</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="file-group">
+              <button type="button" class="file-toggle relative w-full flex items-center justify-center rounded-xl border px-4 py-3 bg-indigo-50 border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 shadow-sm" aria-expanded="false">
+                <span class="text-lg ltr">Dr Adham Saleh</span>
+                <svg class="chev w-4 h-4 text-slate-600 absolute right-3" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              </button>
+              <div class="mt-3" hidden>
+              <div class="grid grid-cols-1 gap-3">
+                <a href="https://drive.google.com/file/d/1yUUbs4Ah7ws6D6DnUuyPXYEfIJlAh-D6/view?usp=share_link" target="_blank" class="rounded-lg border p-4 hover:bg-slate-50 flex items-center justify-between ltr">
+                  <span class="font-medium ltr">Physiology questions Dr Adham Saleh</span>
+                  <span class="text-indigo-600 text-sm">فتح</span>
+                </a>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      </div>
+
+      <!-- Dr Adham Saleh content -->
+      <div id="docContent-adham" data-doc-content="adham" class="space-y-6" hidden>
+        <!-- Player (top) for Adham -->
+        <section class="hidden reveal-on-scroll" data-role="playerWrap">
+          <div class="rounded-lg border bg-white p-4">
+            <div class="aspect-video bg-slate-100 rounded overflow-hidden">
+              <iframe class="w-full h-full" data-role="player" src="" title="Physiology Lecture - Dr Adham Saleh" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="mt-2 flex items-center gap-2">
+              <select data-role="providerSelect" class="grow rounded border px-3 py-2 text-sm">
+                <option value="savefrom" selected>SaveFrom</option>
+                <option value="ssyoutube">ssYouTube</option>
+              </select>
+              <button data-role="downloadBtn" class="rounded-lg bg-emerald-600 text-white px-4 py-2 hover:bg-emerald-700 transition-transform hover:-translate-y-0.5">تحميل</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lectures List (Adham) -->
+        <section class="space-y-4 reveal-on-scroll">
+          <div class="rounded-lg border bg-white">
+            <h2 class="px-4 py-4 border-b text-center text-2xl sm:text-3xl font-extrabold tracking-tight" dir="rtl">المحاضرات</h2>
+            <ul class="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 compact" data-role="lectures">
+              <li class="lecture-item" data-video="CNaXJUfzCMU">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/CNaXJUfzCMU/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 1: Passive transport</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="X4geL2EaGvg">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/X4geL2EaGvg/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 2: Active transport</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="xZfmho8T_iE">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/xZfmho8T_iE/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 3: Osmosis</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="FIqcox6540w">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/FIqcox6540w/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 4: Homeostasis</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="MllAw9bw6ow">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/MllAw9bw6ow/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 5: Introduction to ANS</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="-BY20ZSp4NU">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/-BY20ZSp4NU/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 6: Sympathetic nervous system</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="Ln0OAGq1-Mw">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/Ln0OAGq1-Mw/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 7: Parasympathetic nervous system</span></div>
+                </div>
+              </li>
+              <li class="lecture-item" data-video="clkpe_UqYhA">
+                <div class="lecture-card rounded-lg border bg-white overflow-hidden cursor-pointer">
+                  <div class="thumb aspect-video bg-slate-100">
+                    <img src="https://img.youtube.com/vi/clkpe_UqYhA/hqdefault.jpg" alt="thumb" class="w-full h-full object-cover"/>
+                    <div class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>تشغيل</div>
+                  </div>
+                  <div class="p-3 text-sm font-medium"><span class="video-title ltr">Lecture 8: Chemical transmission</span></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
   </main>
 
@@ -213,54 +384,133 @@
     const revealEls = Array.from(document.querySelectorAll('.reveal-on-scroll'));
     revealEls.forEach(el => observer.observe(el));
 
-    // Player + lectures interactions (like terminology)
-    const player = document.getElementById('player');
-    const playerWrap = document.getElementById('playerWrap');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const providerSelect = document.getElementById('providerSelect');
-    let currentVideoId = null;
-    const lecturesUl = document.getElementById('lectures');
-
-    function selectLecture(li) {
-      document.querySelectorAll('#lectures li').forEach(x => x.classList.remove('active'));
-      li.classList.add('active');
-      const id = li.getAttribute('data-video');
-      currentVideoId = id;
-      if (playerWrap.classList.contains('hidden')) {
-        playerWrap.classList.remove('hidden');
+    // Player + lectures interactions per doctor
+    function initDoctor(container) {
+      const playerWrap = container.querySelector('[data-role="playerWrap"]');
+      const player = container.querySelector('[data-role="player"]');
+      const downloadBtn = container.querySelector('[data-role="downloadBtn"]');
+      const providerSelect = container.querySelector('[data-role="providerSelect"]');
+      const lecturesUl = container.querySelector('[data-role="lectures"]');
+      if (!lecturesUl) return;
+      let currentVideoId = null;
+      function selectLecture(li) {
+        if (!li) return;
+        lecturesUl.querySelectorAll('li').forEach(x => x.classList.remove('active'));
+        li.classList.add('active');
+        const id = li.getAttribute('data-video');
+        currentVideoId = id;
+        if (playerWrap && playerWrap.classList.contains('hidden')) {
+          playerWrap.classList.remove('hidden');
+        }
+        if (lecturesUl) {
+          lecturesUl.classList.add('compact');
+          lecturesUl.classList.add('sm:grid-cols-3', 'lg:grid-cols-4');
+        }
+        try {
+          const header = document.querySelector('header');
+          const offset = (header && header.offsetHeight) ? header.offsetHeight + 12 : 76;
+          const rect = playerWrap ? playerWrap.getBoundingClientRect() : { top: 0 };
+          const y = rect.top + window.pageYOffset - offset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        } catch (_) {}
+        if (player) player.src = `https://www.youtube.com/embed/${id}`;
+        if (downloadBtn) {
+          downloadBtn.onclick = () => {
+            if (!currentVideoId) return;
+            const provider = providerSelect ? providerSelect.value : 'savefrom';
+            let url = `https://youtu.be/${currentVideoId}`;
+            switch (provider) {
+              case 'savefrom':
+                url = `https://en.savefrom.net/1-youtube-video-downloader/?url=https://youtu.be/${currentVideoId}`;
+                break;
+              case 'ssyoutube':
+                url = `https://ssyoutube.com/watch?v=${currentVideoId}`;
+                break;
+            }
+            window.open(url, '_blank');
+          };
+        }
       }
-      lecturesUl.classList.add('compact');
-      lecturesUl.classList.add('sm:grid-cols-3', 'lg:grid-cols-4');
-      // Smooth scroll to player (account for sticky header)
+      // Attach listeners once per init
+      lecturesUl.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', () => selectLecture(li));
+      });
+      // Lazy loading within container
       try {
-        const header = document.querySelector('header');
-        const offset = (header && header.offsetHeight) ? header.offsetHeight + 12 : 76;
-        const rect = playerWrap.getBoundingClientRect();
-        const y = rect.top + window.pageYOffset - offset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      } catch (_) {}
-      player.src = `https://www.youtube.com/embed/${id}`;
-      if (downloadBtn) {
-        downloadBtn.onclick = () => {
-          if (!currentVideoId) return;
-          const provider = providerSelect ? providerSelect.value : 'savefrom';
-          let url = `https://youtu.be/${currentVideoId}`;
-          switch (provider) {
-            case 'savefrom':
-              url = `https://en.savefrom.net/1-youtube-video-downloader/?url=https://youtu.be/${currentVideoId}`;
-              break;
-            case 'ssyoutube':
-              url = `https://ssyoutube.com/watch?v=${currentVideoId}`;
-              break;
-          }
-          window.open(url, '_blank');
-        };
-      }
+        container.querySelectorAll('img').forEach(img => {
+          img.loading = 'lazy';
+          img.decoding = 'async';
+        });
+        const iframeEl = container.querySelector('[data-role="player"]');
+        if (iframeEl) iframeEl.setAttribute('loading', 'lazy');
+      } catch(_) {}
     }
 
-    document.querySelectorAll('#lectures li').forEach(li => {
-      li.addEventListener('click', () => selectLecture(li));
-    });
+    // Doctor chooser logic
+    (function() {
+      const buttons = Array.from(document.querySelectorAll('[id^="docBtn-"]'));
+      const contents = Array.from(document.querySelectorAll('[data-doc-content]'));
+      function swapAnimate(el, doUpdate){
+        try {
+          if (!el) { doUpdate(); return; }
+          el.classList.remove('swap-enter');
+          el.classList.add('swap-leave');
+          setTimeout(() => {
+            doUpdate();
+            el.classList.remove('swap-leave');
+            el.classList.add('swap-enter');
+            setTimeout(() => { el.classList.remove('swap-enter'); }, 360);
+          }, 170);
+        } catch(_) { doUpdate(); }
+      }
+      function showDoc(doc) {
+        const chooser = document.getElementById('doctorChooser');
+        if (chooser) {
+          chooser.classList.remove('pulse-choose');
+          void chooser.offsetWidth; // reflow
+          chooser.classList.add('pulse-choose');
+        }
+        const current = contents.find(c => !c.hidden);
+        const next = document.querySelector(`[data-doc-content="${doc}"]`);
+        const doUpdate = () => {
+          contents.forEach(c => { c.hidden = c !== next; });
+        };
+        swapAnimate(current, doUpdate);
+        buttons.forEach(b => {
+          const isActive = b.getAttribute('data-doc') === doc;
+          b.classList.toggle('bg-indigo-600', isActive);
+          b.classList.toggle('text-white', isActive);
+          b.classList.toggle('border-indigo-600', isActive);
+          b.classList.toggle('doc-btn-active', isActive);
+          b.classList.toggle('bg-white', !isActive);
+          b.classList.toggle('text-slate-800', !isActive);
+          b.classList.toggle('border-slate-300', !isActive);
+          // Fix hover color clash: keep indigo bg when active
+          b.classList.toggle('hover:bg-indigo-600', isActive);
+          b.classList.toggle('hover:bg-slate-50', !isActive);
+        });
+        const active = document.querySelector(`[data-doc-content="${doc}"]`);
+        if (active && !active.dataset.initialized) {
+          initDoctor(active);
+          active.dataset.initialized = 'true';
+        }
+      }
+      buttons.forEach(b => b.addEventListener('click', () => showDoc(b.getAttribute('data-doc'))));
+      // No default doctor selected on load; waits for user click
+    })();
+
+    // Wire exams accordions (file-toggle)
+    try {
+      document.querySelectorAll('.file-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const wasExpanded = btn.getAttribute('aria-expanded') === 'true';
+          const nowExpanded = !wasExpanded;
+          btn.setAttribute('aria-expanded', String(nowExpanded));
+          const panel = btn.nextElementSibling;
+          if (panel) panel.hidden = !nowExpanded;
+        });
+      });
+    } catch(_) {}
   </script>
 </body>
 </html>
