@@ -4,7 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Anatomy</title>
+  <!-- Early theme set to avoid FOUC -->
+  <script>
+    (function(){
+      try {
+        var ls = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (ls === 'dark' || (!ls && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <!-- Early base background to prevent white flash before CSS loads -->
+  <style>
+    html, body { background: #f8fafc; }
+    @media (prefers-color-scheme: dark) { html, body { background: #0b1220; } }
+    .dark, .dark body { background: #0b1220 !important; }
+  </style>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-7WSXYQGC2G"></script>
   <script>
@@ -57,21 +80,63 @@
     @keyframes fadeslideOut { from { opacity: 1; transform: translateY(0);} to { opacity: 0; transform: translateY(6px);} }
     .swap-leave { animation: fadeslideOut 160ms ease both; }
     .swap-enter { animation: fadeslide 320ms ease both; }
+    /* Glass header (match foundation) */
+    .glass { background: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.35); box-shadow: 0 10px 30px rgba(15,23,42,.08); }
+    @supports (backdrop-filter: blur(8px)) { .glass { backdrop-filter: blur(12px); background: rgba(255,255,255,0.35); } }
+    /* Global dark colors (no size changes) */
+    .dark body { background-color: #0b1220; color: #e5e7eb; }
+    .dark header .glass { background: rgba(15,23,42,0.22); border-color: rgba(148,163,184,0.18); box-shadow: none; }
+    .dark .bg-white, .dark .bg-white\/60 { background-color: rgba(2,6,23,0.6) !important; }
+    .dark .border, .dark .border-b, .dark .border-t { border-color: rgba(148,163,184,0.22) !important; }
+    .dark .text-slate-900 { color: #f1f5f9 !important; }
+    .dark .text-slate-800 { color: #e5e7eb !important; }
+    .dark .text-slate-700 { color: #e2e8f0 !important; }
+    .dark .text-slate-600, .dark .text-slate-500 { color: #cbd5e1 !important; }
+  </style>
+  <style>
+    /* Dark: generic link cards (avoid white on anchors with p-4) */
+    .dark a.rounded-lg.border.p-4 { background-color: rgba(2,6,23,0.6) !important; }
+    .dark a.rounded-lg.border.p-4:hover { background-color: rgba(30,41,59,0.6) !important; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
-      <div class="flex items-center gap-2">
-        <a href="index.html" aria-label="العودة للصفحة الرئيسية" class="absolute left-3 md:-left-3 lg:-left-4 top-1/2 -translate-y-1/2 inline-flex items-center">
-          <img src="assets/clearmed.png" alt="ClearMed banner" class="h-10 w-auto object-contain"/>
+  <header class="sticky top-0 z-30 safe-top">
+    <div class="glass">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between flex-row-reverse">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="leading-tight">
+            <div class="font-extrabold text-slate-900">ClearMed</div>
+          </div>
+          <img src="assets/lo.png" alt="ClearMed" class="h-9 w-9 rounded-xl shadow"/>
         </a>
+        <nav class="flex items-center gap-2 sm:gap-3 text-sm">
+          <div class="relative z-40">
+            <button id="themeToggle" type="button" aria-label="تبديل الثيم" class="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+              <svg id="iconSun" class="w-5 h-5 hidden dark:inline" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79L3.17 4.84l1.79 1.79 1.8-1.79zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.79 1.8 1.79-1.8-1.79-1.79-1.79 1.79zM20 13h3v-2h-3v2zM12 1h2v3h-2V1zm7.78 3.84l-1.8-1.79-1.79 1.79 1.79 1.79 1.8-1.79zM12 7a5 5 0 100 10 5 5 0 000-10zm5.99 12.01l-1.79-1.79-1.8 1.79 1.8 1.8 1.79-1.8z"/></svg>
+              <svg id="iconMoon" class="w-5 h-5 dark:hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
+            <div id="themeMenu" class="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-lg hidden dark:bg-slate-900 dark:border-slate-800" role="menu" aria-label="تبديل الثيم">
+              <button data-choice="light" role="menuitemradio" aria-checked="false" class="flex items-center gap-2 w-full text-right px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 dark:hover:bg-slate-700">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6.76 4.84l-1.8-1.79-1.79 1.79 1.79 1.79 1.8-1.79zM1 13h3v-2H1v2zm10 10h2v-3h-2v3zM4.22 19.78l1.79 1.8 1.79-1.8-1.79-1.79-1.79 1.79zM20 13h3v-2h-3v2zM12 1h2v3h-2V1zm7.78 3.84l-1.8-1.79-1.79 1.79 1.79 1.79 1.8-1.79zM12 7a5 5 0 100 10 5 5 0 000-10zm5.99 12.01l-1.79-1.79-1.8 1.79 1.8 1.8 1.79-1.8z"/></svg>
+                <span class="grow">الوضع الفاتح</span>
+                <svg class="w-4 h-4 opacity-0" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l8.1-8.1 1.4 1.4z"/></svg>
+              </button>
+              <button data-choice="dark" role="menuitemradio" aria-checked="false" class="flex items-center gap-2 w-full text-right px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 dark:hover:bg-slate-700">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                <span class="grow">الوضع الداكن</span>
+                <svg class="w-4 h-4 opacity-0" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l8.1-8.1 1.4 1.4z"/></svg>
+              </button>
+              <button data-choice="system" role="menuitemradio" aria-checked="true" class="flex items-center gap-2 w-full text-right px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 dark:hover:bg-slate-700">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M4 5h16a1 1 0 011 1v8a1 1 0 01-1 1h-7v2h3a1 1 0 010 2H8a1 1 0 010-2h3v-2H4a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg>
+                <span class="grow">اتباع إعدادات النظام</span>
+                <svg class="w-4 h-4 opacity-100" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l8.1-8.1 1.4 1.4z"/></svg>
+              </button>
+            </div>
+          </div>
+          <a href="index.html" class="nav-anim inline-block">الرئيسية</a>
+          <a href="foundation.html" class="nav-anim inline-block">Foundation</a>
+        </nav>
       </div>
-
-      <nav class="flex items-center gap-4 sm:gap-6 absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
-        <a href="index.html" class="hover:text-indigo-600 nav-anim">الرئيسية</a>
-        <a href="foundation.html" class="hover:text-indigo-600 nav-anim">Foundation</a>
-      </nav>
     </div>
   </header>
 
@@ -526,24 +591,58 @@
       buttons.forEach(b => b.addEventListener('click', () => showDoc(b.getAttribute('data-doc'))));
       // Start with no doctor selected; wait for user click
     })();
+  </script>
 
-    // Performance: lazy-load thumbnails, pdf images, and player iframe (global fallback)
-    try {
-      document.querySelectorAll('img').forEach(img => { img.loading = 'lazy'; img.decoding = 'async'; });
-    } catch(_) {}
+  <script>
+    (function(){
+      function applyThemeColor(){
+        try { var meta=document.querySelector('meta[name="theme-color"]'); if(meta) meta.setAttribute('content','#0b1220'); } catch(_){ }
+      }
+      applyThemeColor();
+      try {
+        var mql = window.matchMedia('(prefers-color-scheme: dark)');
+        // Respond to system scheme changes when no explicit preference stored
+        if (mql && mql.addEventListener) {
+          mql.addEventListener('change', function(e){
+            var ls = null; try { ls = localStorage.getItem('theme'); } catch(_){ }
+            if (!ls) { document.documentElement.classList.toggle('dark', e.matches); }
+            applyThemeColor();
+          });
+        } else if (mql && mql.addListener) {
+          mql.addListener(function(e){
+            var ls = null; try { ls = localStorage.getItem('theme'); } catch(_){ }
+            if (!ls) { document.documentElement.classList.toggle('dark', e.matches); }
+            applyThemeColor();
+          });
+        }
 
-    // Wire exams accordion for quizlet
-    try {
-      document.querySelectorAll('.file-toggle').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const wasExpanded = btn.getAttribute('aria-expanded') === 'true';
-          const nowExpanded = !wasExpanded;
-          btn.setAttribute('aria-expanded', String(nowExpanded));
-          const panel = btn.nextElementSibling;
-          if (panel) panel.hidden = !nowExpanded;
-        });
-      });
-    } catch(_) {}
+        var btnTheme = document.getElementById('themeToggle');
+        var menuTheme = document.getElementById('themeMenu');
+        function setThemeMode(mode){
+          var root = document.documentElement;
+          if (mode === 'dark') {
+            root.classList.add('dark');
+            try { localStorage.setItem('theme','dark'); } catch(_){ }
+          } else if (mode === 'light') {
+            root.classList.remove('dark');
+            try { localStorage.setItem('theme','light'); } catch(_){ }
+          } else { // system
+            try { localStorage.removeItem('theme'); } catch(_){ }
+            var prefer = !!(mql && mql.matches);
+            root.classList.toggle('dark', prefer);
+          }
+          applyThemeColor();
+        }
+        if (btnTheme && menuTheme){
+          btnTheme.addEventListener('click', function(e){ e.stopPropagation(); menuTheme.classList.toggle('hidden'); });
+          menuTheme.querySelectorAll('[data-choice]')?.forEach(function(el){
+            el.addEventListener('click', function(){ var choice = el.getAttribute('data-choice'); setThemeMode(choice); menuTheme.classList.add('hidden'); });
+          });
+          document.addEventListener('click', function(){ menuTheme.classList.add('hidden'); });
+          document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ menuTheme.classList.add('hidden'); }});
+        }
+      } catch(_){ }
+    })();
   </script>
 </body>
 </html>
